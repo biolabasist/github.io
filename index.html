@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tıbbi Biyokimya Asistanı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- TEMA DEĞİŞKENLERİ --- */
+        :root {
+            --primary: #0d9488; --primary-dark: #0f766e; --primary-light: #ccfbf1;
+            --bg-body: #f3f4f6; --bg-card: #ffffff; --bg-input: #f9fafb;
+            --text-main: #111827; --text-light: #6b7280; --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --danger: #dc2626; --low: #2563eb; --success: #16a34a;
+            --warning-bg: #fff7ed; --warning-text: #9a3412; --warning-border: #fdba74;
+            --radius: 16px;
+            --header-bg: linear-gradient(135deg, #0d9488, #115e59);
+        }
+        [data-theme="dark"] {
+            --primary: #2dd4bf; --primary-dark: #14b8a6; --primary-light: #134e4a;
+            --bg-body: #111827; --bg-card: #1f2937; --bg-input: #374151;
+            --text-main: #f9fafb; --text-light: #9ca3af; --border-color: #374151;
+            --header-bg: linear-gradient(135deg, #134e4a, #042f2e);
+            --danger: #ef4444; --low: #60a5fa;
+            --warning-bg: #431407; --warning-text: #fed7aa; --warning-border: #9a3412;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; }
+
+        /* --- HEADER --- */
+        header { 
+            position: relative; 
+            background: var(--header-bg); 
+            color: white; 
+            padding: 1.5rem 1rem 0.5rem 1rem; 
+            border-bottom-left-radius: 24px; 
+            border-bottom-right-radius: 24px; 
+            box-shadow: var(--shadow); 
+            z-index: 100; 
+            display: flex; 
+            align-items: flex-start;
+        }
+
+        .header-content { 
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            flex: none; 
+            text-align: center; 
+            width: 70%; 
+            z-index: 1;
+        }
+
+        header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px; line-height: 1.2; }
+        header p { font-size: 0.85rem; opacity: 0.9; margin-top: 5px; font-weight: 400; }
+        
+        .header-controls { 
+            margin-left: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            align-items: center; 
+            position: relative;
+            z-index: 10; 
+        }
+
+        .control-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background 0.3s; }
+        .control-btn:hover { background: rgba(255,255,255,0.3); }
+        .lang-btn { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; border-radius: 12px; width: auto; padding: 0 10px; }
+
+        /* --- NAV TABS --- */
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; width: fit-content; min-width: 280px; margin: -20px auto 20px auto; background: var(--bg-card); padding: 6px 10px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15); position: relative; z-index: 101; border: 1px solid var(--border-color); }
+        .nav-btn { width: 85px; border: none; background: transparent; padding: 8px 4px; border-radius: 14px; color: var(--text-light); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; white-space: nowrap; }
+        .nav-btn i { font-size: 1.2rem; margin-bottom: 0; pointer-events: none; }
+        .nav-btn.active { background-color: var(--primary-light); color: var(--primary-dark); }
+        [data-theme="dark"] .nav-btn.active { color: #fff; background-color: var(--primary); }
+
+        /* --- CONTAINER --- */
+        .container { max-width: 900px; margin: 0 auto; padding: 0 15px 80px 15px; flex: 1; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ARAMA & LİSTE ORTAK STİLLERİ --- */
+        .search-container { position: relative; background: var(--bg-body); padding-bottom: 10px; z-index: 10; padding-top: 5px; }
+        .search-input { width: 100%; padding: 15px; border-radius: 30px; background: var(--bg-card); border: 1px solid var(--border-color); outline: none; box-shadow: var(--shadow); font-size: 1rem; padding-left: 45px; color: var(--text-main); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 1.1rem; }
+        
+        .suggestions-box { position: absolute; top: 100%; left: 15px; right: 15px; background: var(--bg-card); border: 1px solid var(--border-color); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 999; max-height: 300px; overflow-y: auto; display: none; }
+        .suggestion-item { padding: 15px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; color: var(--text-main); font-weight: 500; display: flex; align-items: center; gap: 10px; }
+        .suggestion-item:hover { background-color: var(--bg-input); color: var(--primary); }
+        .suggestion-item:last-child { border-bottom: none; }
+
+        .back-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 15px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-size: 0.85rem; font-weight: 600; margin-bottom: 15px; box-shadow: var(--shadow); }
+
+        /* --- HESAPLA STİLLERİ --- */
+        .grid-menu { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px; 
+        }
+        .calc-card-mini { background: var(--bg-card); padding: 20px 10px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; cursor: pointer; border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 110px; }
+        .calc-icon { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; display: block; }
+        .calc-title { font-weight: 600; font-size: 0.8rem; color: var(--text-main); line-height: 1.3; }
+        
+        .calculator-view { background: var(--bg-card); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); position: relative; border: 1px solid var(--border-color); display: none; }
+        
+        .calc-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: end; }
+        .full-width { grid-column: span 2; }
+        
+        .input-group { margin-bottom: 5px; }
+        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .input-group label { display: block; font-weight: 600; color: var(--text-main); font-size: 0.85rem; margin-bottom: 0; }
+        .unit-badge { font-size: 0.7rem; background: var(--bg-body); color: var(--primary); padding: 3px 8px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: all 0.2s; user-select: none; border: 1px solid var(--primary-light); display: inline-flex; align-items: center; gap: 5px; }
+        .unit-badge:hover { background: var(--primary-light); }
+        .unit-badge i { font-size: 0.7rem; opacity: 0.7; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.95rem; color: var(--text-main); outline: none; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+        
+        .radio-vertical-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .radio-option { display: flex; align-items: center; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-input); cursor: pointer; transition: all 0.2s; }
+        .radio-option:hover { border-color: var(--primary-light); }
+        .radio-option.selected { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); font-weight: 600; }
+        .radio-circle { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text-light); margin-right: 10px; position: relative; }
+        .radio-option.selected .radio-circle { border-color: var(--primary); }
+        .radio-option.selected .radio-circle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: var(--primary); border-radius: 50%; }
+
+        .mini-result { font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-top: 8px; min-height: 1.2em; display: flex; justify-content: space-between; align-items: center; padding: 0 2px; }
+        .final-result-box { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px; grid-column: span 2; }
+        .formula-display { font-size: 0.7rem; color: var(--text-light); margin-top: 5px; font-family: 'Courier New', monospace; display: block; width: 100%; text-align: right; opacity: 0.8; }
+        
+        .warning-box { background-color: var(--warning-bg); border: 1px solid var(--warning-border); color: var(--warning-text); padding: 15px; border-radius: 12px; font-size: 0.8rem; margin-top: 15px; line-height: 1.5; grid-column: span 2; }
+        .warning-title { font-weight: 700; margin-bottom: 5px; display: block; font-size: 0.85rem; }
+        .ref-text { font-size: 0.7rem; color: var(--text-light); font-style: italic; margin-top: 10px; display: block; }
+
+        .info-card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s; }
+        .info-card:hover { transform: translateY(-3px); }
+        .info-header { padding: 18px 20px; background: var(--bg-body); border-bottom: 1px solid var(--border-color); font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
+        .info-body { padding: 25px; text-align: center; color: var(--primary); font-weight: 600; }
+
+        .notepad { background: var(--bg-card); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); height: 100%; display: flex; flex-direction: column; border: 1px solid var(--border-color); }
+        .note-area { width: 100%; height: 350px; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; font-size: 1rem; line-height: 1.6; resize: none; outline: none; background: var(--bg-input); color: var(--text-main); }
+        .note-status { font-size: 0.8rem; color: var(--success); margin-top: 10px; text-align: right; min-height: 20px; }
+
+        footer { text-align: center; padding: 10px; margin-top: auto; border-top: 1px solid var(--border-color); background: var(--bg-card); }
+        footer p { font-size: 0.65rem; color: var(--text-light); margin-bottom: 4px; line-height: 1.2; max-width: 95%; margin-left: auto; margin-right: auto; }
+        .signature { font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-top: 5px; display: inline-block; }
+
+        @media (max-width: 600px) {
+            .grid-menu { grid-template-columns: repeat(2, 1fr); }
+            header h1 { font-size: 1.15rem; } 
+            .nav-tabs { width: 95%; margin-top: -20px; justify-content: space-between; gap: 5px; } 
+            .nav-btn { font-size: 0.75rem; width: auto; flex: 1; }
+            .calc-input-grid { grid-template-columns: 1fr; gap: 10px; } 
+            .full-width { grid-column: span 1; }
+            .final-result-box { grid-column: span 1; }
+            .warning-box { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1 data-key="title">TIBBİ BİYOKİMYA ASİSTANI</h1>
+            <p data-key="subtitle">Profesyonel Laboratuvar Yönetim Aracı</p>
+        </div>
+        <div class="header-controls">
+            <button class="control-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-moon"></i></button>
+            <button class="control-btn lang-btn" onclick="toggleLanguage()" id="langBtn">TR</button>
+            <button class="control-btn lang-btn" onclick="toggleSI()" id="siBtn">SI</button>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('tab-calc', this)">
+            <i class="fa-solid fa-calculator"></i> <span data-key="tab_calc">Hesapla</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('tab-info', this)">
+            <i class="fa-solid fa-book-medical"></i> <span data-key="tab_guide">Rehber</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('tab-notes', this)">
+            <i class="fa-solid fa-sticky-note"></i> <span data-key="tab_notes">Notlar</span>
+        </button>
+    </div>
+
+    <div class="container">
+        
+        <div id="tab-calc" class="section active">
+            <div class="search-container">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="calcSearchInput" class="search-input" placeholder="Hesaplama ara..." data-placeholder="search_calc" onkeyup="showCalcSuggestions()">
+                <div id="calcSuggestions" class="suggestions-box"></div>
+            </div>
+
+            <div id="calc-list-view">
+                <div id="calc-menu" class="grid-menu"></div>
+            </div>
+            
+            <div id="calc-detail-view" style="display: none;">
+                <button class="back-btn" onclick="closeCalcDetail()"><i class="fa-solid fa-arrow-left"></i> <span data-key="back_btn">Listeye Dön</span></button>
+                
+                <div id="calc-spot-urine" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_spot">Spot İdrar Analizi</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group full-width">
+                            <div class="label-row"><label>Spot İdrar Kreatinin</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="spot-crea" placeholder="Zorunlu Alan" oninput="calculateSpotUrine()">
+                        </div>
+                        <div style="grid-column: span 2; border-top: 1px solid var(--border-color); margin: 5px 0 15px 0;"></div>
+                        
+                        <div class="input-group">
+                            <div class="label-row"><label>Spot Protein</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="spot-prot" oninput="calculateSpotUrine()">
+                            <div id="res-spot-prot" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Spot Albümin</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="spot-alb" oninput="calculateSpotUrine()">
+                            <div id="res-spot-alb" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Spot Kalsiyum</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="spot-ca" oninput="calculateSpotUrine()">
+                            <div id="res-spot-ca" class="mini-result"></div>
+                        </div>
+                        <div style="grid-column: span 2; border-top: 1px solid var(--border-color); margin: 5px 0 15px 0;"></div>
+                        
+                        <div class="input-group">
+                            <div class="label-row"><label>Spot Sodyum</label><span class="unit-badge">mmol/L</span></div>
+                            <input type="number" id="spot-na" oninput="calculateSpotUrine()">
+                            <div id="res-spot-na" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Spot Potasyum</label><span class="unit-badge">mmol/L</span></div>
+                            <input type="number" id="spot-k" oninput="calculateSpotUrine()">
+                            <div id="res-spot-k" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Spot Klor</label><span class="unit-badge">mmol/L</span></div>
+                            <input type="number" id="spot-cl" oninput="calculateSpotUrine()">
+                            <div id="res-spot-cl" class="mini-result"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="calc-urine24" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_urine">24 Saatlik İdrar</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group full-width">
+                            <div class="label-row"><label data-key="lbl_vol">İdrar Volümü</label><span class="unit-badge">mL</span></div>
+                            <input type="number" id="uVol" placeholder="..." oninput="calculateUrineMulti()">
+                        </div>
+                        <div style="grid-column: span 2; border-top: 1px solid var(--border-color); margin: 5px 0 15px 0;"></div>
+                        
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_u_prot">İdrar Protein</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="uProt" placeholder="..." oninput="calculateUrineMulti()">
+                            <div id="res-uProt" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_u_alb">İdrar Albumin</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="uAlb" placeholder="..." oninput="calculateUrineMulti()">
+                            <div id="res-uAlb" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_u_crea">İdrar Kreatinin</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="uCrea" placeholder="..." oninput="calculateUrineMulti()">
+                            <div id="res-uCrea" class="mini-result"></div>
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_u_ca">İdrar Kalsiyum</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="uCa" placeholder="..." oninput="calculateUrineMulti()">
+                            <div id="res-uCa" class="mini-result"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="calc-gfr" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_gfr">GFR Hesaplayıcı</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group full-width">
+                            <label style="margin-bottom:5px;">Hesaplama Yöntemi Seçiniz</label>
+                            <select id="gfr-method" onchange="updateGFRInputs()">
+                                <option value="2021-crea">2021 CKD-EPI Creatinine</option>
+                                <option value="2021-combo">2021 CKD-EPI Creatinine–Cystatin C</option>
+                                <option value="2009-crea">2009 CKD-EPI Creatinine</option>
+                                <option value="2012-cys">2012 CKD-EPI Cystatin C</option>
+                                <option value="2012-combo">2012 CKD-EPI Creatinine–Cystatin C</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group full-width">
+                            <label style="margin-bottom:10px;" data-key="lbl_gender">Cinsiyet</label>
+                            <div class="radio-vertical-group" style="flex-direction:row;">
+                                <div class="radio-option selected" style="flex:1; justify-content:center;" onclick="setCkdGender('female', this)" data-key="female">Kadın</div>
+                                <div class="radio-option" style="flex:1; justify-content:center;" onclick="setCkdGender('male', this)" data-key="male">Erkek</div>
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width" id="grp-race" style="display:none;">
+                            <label style="margin-bottom:10px;">Irk</label>
+                            <div class="radio-vertical-group" style="flex-direction:row;">
+                                <div class="radio-option selected" style="flex:1; justify-content:center;" onclick="setCkdRace('other', this)" data-key="other">Diğer</div>
+                                <div class="radio-option" style="flex:1; justify-content:center;" onclick="setCkdRace('black', this)" data-key="black">Siyahi (Black)</div>
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <div class="label-row"><label data-key="lbl_age">Yaş</label><span class="unit-badge" data-key="year">Yıl</span></div>
+                            <input type="number" id="gfr-age" oninput="calculateGFR_Selected()">
+                        </div>
+                        
+                        <div class="input-group" id="grp-crea">
+                            <div class="label-row"><label data-key="lbl_serum_crea">Serum Kreatinin</label><span class="unit-badge" onclick="toggleUnit(this, 'crea')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" step="0.01" id="gfr-crea" oninput="calculateGFR_Selected()">
+                        </div>
+                        <div class="input-group" id="grp-cys" style="display:none;">
+                            <div class="label-row"><label>Cystatin C</label><span class="unit-badge">mg/L</span></div>
+                            <input type="number" step="0.01" id="gfr-cys" oninput="calculateGFR_Selected()">
+                        </div>
+                        
+                        <div id="res-gfr-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-ldl" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_ldl">LDL Hesaplama</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_tot_chol">Total Kolesterol</label><span class="unit-badge" onclick="toggleUnit(this, 'chol')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="ldl-tot" oninput="calculateLDL()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>HDL</label><span class="unit-badge" onclick="toggleUnit(this, 'chol')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="ldl-hdl" oninput="calculateLDL()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_trig">Trigliserid</label><span class="unit-badge" onclick="toggleUnit(this, 'trig')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="ldl-trig" oninput="calculateLDL()">
+                        </div>
+                        <div id="res-ldl-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-homa" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">HOMA-IR</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_fasting_glu">Açlık Glukoz</label><span class="unit-badge" onclick="toggleUnit(this, 'glucose')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="homa-glu" oninput="calculateHoma()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_fasting_ins">Açlık İnsülin</label><span class="unit-badge">µIU/mL</span></div>
+                            <input type="number" id="homa-ins" oninput="calculateHoma()">
+                        </div>
+                        <div id="res-homa-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-schwartz" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Orijinal Schwartz Formülü</h3>
+                    <div class="radio-vertical-group">
+                        <div class="radio-option" onclick="setSchwartzK(0.33, this)">
+                            <div class="radio-circle"></div>
+                            <span data-key="sch_infant_lbw">Düşük Doğum Ağırlıklı (< 1 Yaş)</span>
+                        </div>
+                        <div class="radio-option" onclick="setSchwartzK(0.45, this)">
+                            <div class="radio-circle"></div>
+                            <span data-key="sch_infant_term">Term Bebek (< 1 Yaş)</span>
+                        </div>
+                        <div class="radio-option selected" onclick="setSchwartzK(0.55, this)">
+                            <div class="radio-circle"></div>
+                            <span data-key="sch_child_girl">Çocuk / Adolesan Kız</span>
+                        </div>
+                        <div class="radio-option" onclick="setSchwartzK(0.70, this)">
+                            <div class="radio-circle"></div>
+                            <span data-key="sch_boy">Adolesan Erkek</span>
+                        </div>
+                    </div>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_serum_crea">Serum Kreatinin</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="sch-crea" oninput="calculateSchwartz()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_height">Boy</label><span class="unit-badge">cm</span></div>
+                            <input type="number" id="sch-height" oninput="calculateSchwartz()">
+                        </div>
+                        <div id="res-schwartz-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-fib4" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">FIB-4 Score</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_age">Yaş</label></div>
+                            <input type="number" id="fib-age" oninput="calculateFIB4()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_plt">Trombosit</label><span class="unit-badge">10³/µL</span></div>
+                            <input type="number" id="fib-plt" oninput="calculateFIB4()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>AST</label><span class="unit-badge">U/L</span></div>
+                            <input type="number" id="fib-ast" oninput="calculateFIB4()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>ALT</label><span class="unit-badge">U/L</span></div>
+                            <input type="number" id="fib-alt" oninput="calculateFIB4()">
+                        </div>
+                        <div id="res-fib4-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-corr-na" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_corr_na">Düzeltilmiş Sodyum</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_meas_na">Ölçülen Sodyum</label><span class="unit-badge">mEq/L</span></div>
+                            <input type="number" id="na-meas" oninput="calculateCorrNa()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_glucose">Glukoz</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="na-glu" oninput="calculateCorrNa()">
+                        </div>
+                        <div id="res-na-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-calcium" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_corr_ca">Düzeltilmiş Kalsiyum</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_tot_ca">Total Kalsiyum</label><span class="unit-badge" onclick="toggleUnit(this, 'calcium')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="ca-tot" oninput="calculateCa()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_alb">Albumin</label><span class="unit-badge" onclick="toggleUnit(this, 'albumin')">g/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="ca-alb" oninput="calculateCa()">
+                        </div>
+                        <div id="res-ca-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-corr-mg" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_corr_mg">Düzeltilmiş Magnezyum</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_meas_mg">Ölçülen Mg</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="mg-meas" oninput="calculateCorrMg()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_alb">Albumin</label><span class="unit-badge">g/dL</span></div>
+                            <input type="number" id="mg-alb" oninput="calculateCorrMg()">
+                        </div>
+                        <div id="res-mg-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-anion" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_anion">Serum Anyon Açığı</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>Na (Sodyum)</label><span class="unit-badge">mEq/L</span></div>
+                            <input type="number" id="ag-na" oninput="calculateAnionGap()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Cl (Klor)</label><span class="unit-badge">mEq/L</span></div>
+                            <input type="number" id="ag-cl" oninput="calculateAnionGap()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>HCO3 (Bikarbonat)</label><span class="unit-badge">mEq/L</span></div>
+                            <input type="number" id="ag-hco3" oninput="calculateAnionGap()">
+                        </div>
+                        <div id="res-ag-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-osmo" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_osmo">Serum Osmolalite</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>Na (Sodyum)</label><span class="unit-badge">mEq/L</span></div>
+                            <input type="number" id="osmo-na" oninput="calculateOsmo()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_glucose">Glukoz</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="osmo-glu" oninput="calculateOsmo()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>BUN</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="osmo-bun" oninput="calculateOsmo()">
+                        </div>
+                        <div id="res-osmo-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-saag" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_saag">Serum Asit Albümin Gradyenti</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_serum_alb">Serum Albümin</label><span class="unit-badge" onclick="toggleUnit(this, 'albumin')">g/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="saag-serum" placeholder="..." oninput="calculateSAAG()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_ascites_alb">Asit Sıvısı Albümin</label><span class="unit-badge" onclick="toggleUnit(this, 'albumin')">g/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="saag-ascites" placeholder="..." oninput="calculateSAAG()">
+                        </div>
+                        <div id="res-saag-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-ph" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_ph">pH Tahmini (Henderson-Hasselbalch)</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>HCO3</label><span class="unit-badge">mmol/L</span></div>
+                            <input type="number" id="ph-hco3" oninput="calculatePH()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>pCO2</label><span class="unit-badge">mmHg</span></div>
+                            <input type="number" id="ph-pco2" oninput="calculatePH()">
+                        </div>
+                        <div id="res-ph-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-mentzer" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Mentzer İndeksi</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>MCV</label><span class="unit-badge">fL</span></div>
+                            <input type="number" id="men-mcv" oninput="calculateMentzer()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>RBC</label><span class="unit-badge">10⁶/µL</span></div>
+                            <input type="number" id="men-rbc" oninput="calculateMentzer()">
+                        </div>
+                        <div id="res-mentzer-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-albglob" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_albglob">Albumin/Globulin Oranı</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_alb">Albumin</label><span class="unit-badge">g/dL</span></div>
+                            <input type="number" id="ag-alb" oninput="calculateAlbGlob()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_tot_prot">Total Protein</label><span class="unit-badge">g/dL</span></div>
+                            <input type="number" id="ag-tp" oninput="calculateAlbGlob()">
+                        </div>
+                        <div id="res-albglob-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-rbc" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_rbc">RBC İndeksleri</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>Hgb (Hemoglobin)</label><span class="unit-badge">g/dL</span></div>
+                            <input type="number" id="rbc-hgb" oninput="calculateRBCIndices()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Hct (Hematokrit)</label><span class="unit-badge">%</span></div>
+                            <input type="number" id="rbc-hct" oninput="calculateRBCIndices()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>RBC</label><span class="unit-badge">10⁶/µL</span></div>
+                            <input type="number" id="rbc-count" oninput="calculateRBCIndices()">
+                        </div>
+                        <div id="res-rbc-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-retic" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_retic">Düzeltilmiş Retikülosit</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_retic_pct">Retikülosit %</label><span class="unit-badge">%</span></div>
+                            <input type="number" id="ret-pct" oninput="calculateRetic()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Hct (Hematokrit)</label><span class="unit-badge">% </span></div>
+                            <input type="number" id="ret-hct" oninput="calculateRetic()">
+                        </div>
+                        <div id="res-retic-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-inr" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">INR Hesaplama</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_pt_pat">PT (Hasta)</label><span class="unit-badge">sn</span></div>
+                            <input type="number" id="inr-pt" oninput="calculateINR()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_pt_con">PT (Kontrol/Normal)</label><span class="unit-badge">sn</span></div>
+                            <input type="number" id="inr-control" oninput="calculateINR()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>ISI</label><span class="unit-badge">-</span></div>
+                            <input type="number" id="inr-isi" value="1.0" oninput="calculateINR()">
+                        </div>
+                        <div id="res-inr-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-bun-crea" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_bun_crea">BUN/Kreatinin Oranı</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>BUN</label><span class="unit-badge" onclick="toggleUnit(this, 'bun')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="bc-bun" oninput="calculateBunCrea()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_serum_crea">Serum Kreatinin</label><span class="unit-badge" onclick="toggleUnit(this, 'crea')">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="bc-crea" oninput="calculateBunCrea()">
+                        </div>
+                        <div id="res-bun-crea-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-h-ion" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_h_ion">AKG Doğrulama ([H+])</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group full-width">
+                            <div class="label-row"><label>Ölçülen pH</label><span class="unit-badge">-</span></div>
+                            <input type="number" id="h-ph" oninput="calculateHIon()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>pCO2</label><span class="unit-badge">mmHg</span></div>
+                            <input type="number" id="h-pco2" oninput="calculateHIon()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>HCO3</label><span class="unit-badge">mmol/L</span></div>
+                            <input type="number" id="h-hco3" oninput="calculateHIon()">
+                        </div>
+                        <div id="res-h-ion-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-fai" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_fai">FAI (Serbest Androjen İndeksi)</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>Total Testosteron</label><span class="unit-badge" onclick="toggleUnit(this, 'testo')">ng/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="fai-tt" oninput="calculateFAI()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>SHBG</label><span class="unit-badge">nmol/L</span></div>
+                            <input type="number" id="fai-shbg" oninput="calculateFAI()">
+                        </div>
+                        <div id="res-fai-final" class="final-result-box"></div>
+                        <div class="warning-box">
+                            <span class="warning-title"><i class="fa-solid fa-info-circle"></i> BİLGİ:</span>
+                            <div id="fai-info-text"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="calc-fpsa" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_fpsa">Serbest PSA %</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>Serbest PSA</label><span class="unit-badge">ng/mL</span></div>
+                            <input type="number" id="fpsa-free" oninput="calculateFPSA()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>Total PSA</label><span class="unit-badge">ng/mL</span></div>
+                            <input type="number" id="fpsa-total" oninput="calculateFPSA()">
+                        </div>
+                        <div id="res-fpsa-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-ca-ion" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_ca_ion">Tahmini İyonize Kalsiyum</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_tot_ca">Total Kalsiyum</label><span class="unit-badge">mg/dL</span></div>
+                            <input type="number" id="cai-ca" oninput="calculateCaIon()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label data-key="lbl_tot_prot">Total Protein</label><span class="unit-badge">g/dL</span></div>
+                            <input type="number" id="cai-tp" oninput="calculateCaIon()">
+                        </div>
+                        <div id="res-ca-ion-final" class="final-result-box"></div>
+                        <div style="grid-column: span 2; font-size: 0.75rem; color: var(--text-light); margin-top: 5px; text-align: center;">Ref: 4.4–5.3 mg/dL (1.10–1.30 mmol/L)</div>
+                    </div>
+                </div>
+
+                <div id="calc-a1c" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);" data-key="calc_a1c">HbA1c Çevirici</h3>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>% (NGSP)</label><span class="unit-badge">%</span></div>
+                            <input type="number" id="a1c-ngsp" oninput="calculateA1c('ngsp')">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>mmol/mol (IFCC)</label><span class="unit-badge">mmol/mol</span></div>
+                            <input type="number" id="a1c-ifcc" oninput="calculateA1c('ifcc')">
+                        </div>
+                        <div style="grid-column: span 2; font-size: 0.8rem; color: var(--text-light); margin-top: 15px; text-align: center;">
+                            <span class="formula-display">Formül: NGSP = (0.09148 × IFCC) + 2.152</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="tab-info" class="section">
+            <h3 style="margin-bottom: 15px; color: var(--text-light); text-align: center;" data-key="lab_handbook">LABORATUVAR EL KİTABI</h3>
+            <div class="info-card" onclick="window.open('https://drive.google.com/drive/folders/1dayFfTfZdNzpzFO80tXyA1vU5qtAsBvP?usp=drive_link', '_blank')">
+                <div class="info-header" style="justify-content: center; background: var(--primary-light);">
+                    <span style="color:var(--primary-dark); font-size:1.1rem; text-align:center;">
+                        <i class="fa-brands fa-google-drive" style="margin-right:10px;"></i>
+                        Tıbbi Biyokimya Rehberi
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--primary-dark); margin-left:10px;"></i>
+                </div>
+                <div class="info-body" style="display:block; font-weight:normal; font-size:0.9rem; color:var(--text-light);">
+                    Tüp renk kodları, panik değerler, test prosedürleri ve diğer laboratuvar bilgileri için Google Drive klasörüne gidin.
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-notes" class="section">
+            <div class="notepad">
+                <h3 style="margin-bottom: 10px; color: var(--primary);" data-key="personal_notes">Kişisel Notlar</h3>
+                <textarea id="myNotes" class="note-area" placeholder="..." data-placeholder="notes_placeholder" oninput="saveNotes()"></textarea>
+                <div id="saveStatus" class="note-status"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p data-key="footer_desc">Tıbbi Biyokimya Laboratuvar Asistan Aracı</p>
+        <p data-key="footer_disclaimer">Bu sitede yer alan içerikler yalnızca genel bilgi sağlama amacıyla derlenmiştir...</p>
+        <p><span data-key="footer_contact">Görüş ve öneri için:</span> <a href="mailto:belginsaraa@gmail.com" style="color:var(--primary); text-decoration:none;">belginsaraa@gmail.com</a></p>
+        <p class="signature">Hazırlayan: Uzm. Dr. Belgin ŞARA</p>
+    </footer>
+
+    <script>
+        // --- 1. DİL & TEMA YÖNETİMİ ---
+        let ckdGender = 'female';
+        let ckdRace = 'other'; // default
+        let schwartzK = 0.55; 
+
+        const langData = {
+            tr: {
+                title: "TIBBİ BİYOKİMYA ASİSTANI", subtitle: "Profesyonel Laboratuvar Yönetim Aracı",
+                tab_calc: "Hesapla", tab_guide: "Rehber", tab_notes: "Notlar",
+                search_calc: "Hesaplama ara...",
+                back_btn: "Listeye Dön",
+                calc_urine: "24 Saatlik İdrar Hesaplama", calc_ldl: "LDL Hesaplama", calc_homa: "HOMA-IR", calc_corr_ca: "Düzeltilmiş Kalsiyum",
+                calc_saag: "Serum Asit Albümin Gradyenti (SAAG)", calc_gfr: "GFR Hesaplayıcı", calc_schwartz: "Schwartz Formülü (Orijinal)", calc_fib4: "FIB-4 Skoru",
+                calc_corr_na: "Düzeltilmiş Sodyum", calc_corr_mg: "Düzeltilmiş Magnezyum", calc_anion: "Anyon Açığı", calc_osmo: "Osmolalite",
+                calc_ph: "pH Tahmini", calc_mentzer: "Mentzer İndeksi", calc_albglob: "Alb/Glob Oranı", calc_rbc: "RBC İndeksleri", calc_retic: "Düzeltilmiş Retikülosit",
+                calc_bun_crea: "BUN/Kreatinin Oranı", calc_h_ion: "AKG Doğrulama [H+]", calc_fai: "Serbest Androjen İndeksi (FAI)", calc_fpsa: "Serbest PSA %", calc_ca_ion: "Tahmini İyonize Kalsiyum", calc_a1c: "HbA1c Çevirici",
+                calc_spot: "Spot İdrar Analizi",
+                lbl_vol: "İdrar Volümü", lbl_u_prot: "İdrar Protein", lbl_u_alb: "İdrar Albumin", lbl_u_crea: "İdrar Kreatinin", lbl_u_ca: "İdrar Kalsiyum", lbl_u_phos: "İdrar Fosfor",
+                lbl_tot_chol: "Total Cholesterol", lbl_trig: "Trigliserid",
+                lbl_fasting_glu: "Açlık Glukoz", lbl_fasting_ins: "Açlık İnsülin", lbl_tot_ca: "Total Kalsiyum", lbl_alb: "Albumin",
+                lbl_serum_alb: "Serum Albümin", lbl_ascites_alb: "Asit Sıvısı Albümin", lbl_gender: "Cinsiyet", female: "Kadın", male: "Erkek",
+                lbl_serum_crea: "Serum Kreatinin", lbl_age: "Yaş", lbl_height: "Boy", lbl_plt: "Trombosit", lbl_meas_na: "Ölçülen Sodyum", lbl_glucose: "Glukoz",
+                lbl_meas_mg: "Ölçülen Mg", lbl_tot_prot: "Total Protein", lbl_retic_pct: "Retikülosit %", lbl_pt_pat: "PT (Hasta)", lbl_pt_con: "PT (Kontrol)",
+                sch_infant_lbw: "Düşük Doğum Ağırlıklı (< 1 Yaş)", sch_infant_term: "Term Bebek (< 1 Yaş)", sch_child_girl: "Çocuk / Adolesan Kız", sch_boy: "Adolesan Erkek",
+                year: "Yıl", btn_calc: "HESAPLA", placeholder_val: "Cihaz çıktısı",
+                lab_handbook: "LABORATUVAR EL KİTABI", tube_codes: "TÜP RENK KODLARI", panic_vals: "KRİTİK/ PANİK DEĞERLER",
+                personal_notes: "Kişisel Notlar", notes_placeholder: "Kaydedilen notlar sadece sizin tarafınızca görüntülenir.",
+                footer_desc: "Tıbbi Biyokimya Laboratuvar Asistan Aracı",
+                footer_disclaimer: "Bu sitede yer alan içerikler yalnızca genel bilgi sağlama amacıyla derlenmiştir.",
+                footer_contact: "Görüş ve öneri için:",
+                res_ldl: "LDL Kolesterol", res_homa: "HOMA-IR", res_ca: "Düzeltilmiş Kalsiyum", res_saag: "SAAG Sonucu",
+                msg_portal: "Yüksek Gradyent (Portal Hipertansiyon ile uyumlu)", msg_non_portal: "Düşük Gradyent (Portal Hipertansiyon dışı)",
+                fai_desc: "Kandaki testosteron üç şekilde bulunabilir: SHBG'ye sıkıca bağlı, albümine zayıf bir şekilde bağlı ve sadece küçük bir yüzde (erkeklerde <%3 ve kadınlarda <%0.7) bağlanmamış. Bu üçüncü form, etkilerini uygulamak için doku reseptörlerine bağlanabilen tek form olan serbest testosterondur, bu nedenle androjen durumunun en iyi belirteci olmasını sağlar.<br><br>FAI, istatistiksel analizde biyolojik olarak kullanılabilir testosteronun zayıf bir tahmincisi olarak bulundu. FAI tek başına kullanılmamalıdır ve sıklıkla gonadotropin seviyeleri gibi ölçülen veya tahmin edilen diğer parametrelerle birlikte kullanılır. SHBG, kadınlarda (10-100:1) çok fazla miktarda bulunduğundan, serbest testosteron konsantrasyonları öncelikle SHBG bolluğu tarafından yönlendirilir. Ek olarak, kadınlarda testosteron fazlalığı, SHBG konsantrasyonlarını düşürür, bu da serbest testosteron konsantrasyonunu yükseltir ve 1/SHBG'nin serbest testosteron ile güçlü korelasyonuna katkıda bulunur.<br><br>Tipik FAI sağlıklı değerleri yetişkin erkeklerde 30 ila 150 ve yetişkin kadınlarda 7 ila 10 arasındadır. Erkeklerde, 30'un altındaki değerler endişe nedenidir ve erektil disfonksiyona katkıda bulunabilirken, kadınlarda daha yüksek değerler endişe nedenidir ve polikistik over sendromu ve hirsutizme katkıda bulunabilir."
+            },
+            en: {
+                title: "MEDICAL BIOCHEMISTRY ASSISTANT", subtitle: "Professional Lab Management Tool",
+                tab_calc: "Calc", tab_guide: "Guide", tab_notes: "Notes",
+                search_calc: "Search calculator...",
+                back_btn: "Back to List",
+                calc_urine: "24h Urine", calc_ldl: "LDL Calc", calc_homa: "HOMA-IR", calc_corr_ca: "Corrected Calcium",
+                calc_saag: "Serum Ascites Albumin Gradient (SAAG)", calc_gfr: "GFR Calculator", calc_schwartz: "Schwartz Formula (Original)", calc_fib4: "FIB-4 Score",
+                calc_corr_na: "Corrected Sodium", calc_corr_mg: "Corrected Magnesium", calc_anion: "Anion Gap", calc_osmo: "Osmolality",
+                calc_ph: "pH Estimation", calc_mentzer: "Mentzer Index", calc_albglob: "Alb/Glob Ratio", calc_rbc: "RBC Indices", calc_retic: "Corrected Reticulocyte",
+                calc_bun_crea: "BUN/Creatinine Ratio", calc_h_ion: "ABG Validation [H+]", calc_fai: "Free Androgen Index (FAI)", calc_fpsa: "Free PSA %", calc_ca_ion: "Estimated Ionized Calcium", calc_a1c: "HbA1c Converter",
+                calc_spot: "Spot Urine Analysis",
+                lbl_vol: "Urine Volume", lbl_u_prot: "Urine Protein", lbl_u_alb: "Urine Albumin", lbl_u_crea: "Urine Creatinine", lbl_u_ca: "Urine Calcium", lbl_u_phos: "Urine Phosphorus",
+                lbl_tot_chol: "Total Cholesterol", lbl_trig: "Triglycerides",
+                lbl_fasting_glu: "Fasting Glucose", lbl_fasting_ins: "Fasting Insulin", lbl_tot_ca: "Total Calcium", lbl_alb: "Albumin",
+                lbl_serum_alb: "Serum Albumin", lbl_ascites_alb: "Ascites Fluid Albumin", lbl_gender: "Gender", female: "Female", male: "Male",
+                lbl_serum_crea: "Serum Creatinine", lbl_age: "Age", lbl_height: "Height", lbl_plt: "Platelets", lbl_meas_na: "Measured Sodium", lbl_glucose: "Glucose",
+                lbl_meas_mg: "Measured Mg", lbl_tot_prot: "Total Protein", lbl_retic_pct: "Reticulocyte %", lbl_pt_pat: "PT (Patient)", lbl_pt_con: "PT (Control)",
+                sch_infant_lbw: "Infant (LBW < 1yr)", sch_infant_term: "Infant (Term < 1yr)", sch_child_girl: "Child / Adolescent Girl", sch_boy: "Adolescent Boy",
+                year: "Year", btn_calc: "CALCULATE", placeholder_val: "Device output",
+                lab_handbook: "LABORATORY HANDBOOK", tube_codes: "TUBE COLOR CODES", panic_vals: "CRITICAL/ PANIC VALUES",
+                personal_notes: "Personal Notes", notes_placeholder: "Notes are saved locally on your device.",
+                footer_desc: "Medical Biochemistry Laboratory Assistant Tool",
+                footer_disclaimer: "Content provided here is for general information purposes only.",
+                footer_contact: "Contact:",
+                res_ldl: "LDL Cholesterol", res_homa: "HOMA-IR", res_ca: "Corrected Calcium", res_saag: "SAAG Result",
+                msg_portal: "High Gradient (C/w Portal Hypertension)", msg_non_portal: "Low Gradient (Non-portal causes)",
+                fai_desc: "Testosterone in the blood can be found in three forms: firmly bound to SHBG, weakly bound to albumin, and only a small percentage (less than 3% in men and less than 0.7% in women) unbound. This third form is the only form that can bind to tissue receptors to exert its effects, making it the best marker of androgen status.<br><br>The FAI was found to be a poor predictor of bioavailable testosterone in statistical analysis. The FAI should not be used alone and is often used in combination with other parameters measured or predicted, such as gonadotropin levels. Because SHBG is present in such excess (10-100:1) in women, free testosterone concentrations are driven primarily by the abundance of SHBG. In addition, testosterone excess in women lowers SHBG concentrations, which raises the free testosterone concentration and contributes to the strong correlation of 1/SHBG with free testosterone.<br><br>Typical FAI healthy values are between 30 and 150 in adult men and between 7 and 10 in adult women. In men, values below 30 are cause for concern and may contribute to erectile dysfunction, while in women, higher values are cause for concern and may contribute to polycystic ovary syndrome and hirsutism."
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tr';
+        let siMode = JSON.parse(localStorage.getItem('siMode') || 'false');
+        
+        // --- HESAPLAMA LİSTESİ (ALFABETİK SIRALI) ---
+        const calculators = [
+            {id: 'urine24', key: 'calc_urine', icon: 'fa-flask'},
+            {id: 'h-ion', key: 'calc_h_ion', icon: 'fa-vial-circle-check'},
+            {id: 'albglob', key: 'calc_albglob', icon: 'fa-scale-balanced'},
+            {id: 'anion', key: 'calc_anion', icon: 'fa-battery-half'},
+            {id: 'bun-crea', key: 'calc_bun_crea', icon: 'fa-percentage'},
+            {id: 'calcium', key: 'calc_corr_ca', icon: 'fa-bone'},
+            {id: 'corr-mg', key: 'calc_corr_mg', icon: 'fa-capsules'},
+            {id: 'corr-na', key: 'calc_corr_na', icon: 'fa-vial'},
+            {id: 'retic', key: 'calc_retic', icon: 'fa-chart-line'},
+            {id: 'fai', key: 'calc_fai', icon: 'fa-venus-mars'},
+            {id: 'fib4', key: 'calc_fib4', icon: 'fa-file-medical'},
+            {id: 'gfr', key: 'calc_gfr', icon: 'fa-filter'},
+            {id: 'a1c', key: 'calc_a1c', icon: 'fa-cube'},
+            {id: 'homa', key: 'calc_homa', icon: 'fa-dna'},
+            {id: 'inr', key: 'inr', icon: 'fa-stopwatch'},
+            {id: 'ldl', key: 'calc_ldl', icon: 'fa-heart-pulse'},
+            {id: 'mentzer', key: 'calc_mentzer', icon: 'fa-syringe'},
+            {id: 'ph', key: 'calc_ph', icon: 'fa-wind'},
+            {id: 'rbc', key: 'calc_rbc', icon: 'fa-circle-dot'},
+            {id: 'schwartz', key: 'calc_schwartz', icon: 'fa-child'},
+            {id: 'fpsa', key: 'calc_fpsa', icon: 'fa-mars'},
+            {id: 'saag', key: 'calc_saag', icon: 'fa-vials'},
+            {id: 'spot-urine', key: 'calc_spot', icon: 'fa-vial'},
+            {id: 'osmo', key: 'calc_osmo', icon: 'fa-droplet'},
+            {id: 'ca-ion', key: 'calc_ca_ion', icon: 'fa-bone'}
+        ];
+
+        function toggleSI() {
+            siMode = !siMode;
+            localStorage.setItem('siMode', JSON.stringify(siMode));
+            applySI();
+        }
+        function loadSI() {
+            const saved = localStorage.getItem('siMode');
+            siMode = saved ? JSON.parse(saved) : false;
+            applySI();
+        }
+        function applySI() {
+            const siBtn = document.getElementById('siBtn');
+            if (siBtn) siBtn.textContent = siMode ? 'SI' : 'STD';
+        }
+
+        function showCalcSuggestions() {
+            const input = document.getElementById('calcSearchInput');
+            const query = input.value.toLocaleLowerCase();
+            const box = document.getElementById('calcSuggestions');
+            const t = langData[currentLang]; 
+
+            box.innerHTML = '';
+            if (query.length === 0) {
+                box.style.display = 'none';
+                return;
+            }
+            const matches = calculators.filter(calc => {
+                const name = (t[calc.key] || calc.id).toLocaleLowerCase();
+                return name.includes(query);
+            });
+            if (matches.length > 0) {
+                matches.forEach(calc => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.innerHTML = `<i class="fa-solid ${calc.icon}" style="color:var(--primary)"></i> ${t[calc.key] || calc.id}`;
+                    div.onclick = () => {
+                        openCalc(calc.id);
+                        box.style.display = 'none';
+                        input.value = ''; 
+                    };
+                    box.appendChild(div);
+                });
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btnIcon = document.querySelector('#themeBtn i');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                btnIcon.classList.remove('fa-sun');
+                btnIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btnIcon.classList.remove('fa-moon');
+                btnIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const btnIcon = document.querySelector('#themeBtn i');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                btnIcon.classList.remove('fa-moon');
+                btnIcon.classList.add('fa-sun');
+            }
+        }
+        function toggleLanguage() { currentLang = currentLang === 'tr' ? 'en' : 'tr'; localStorage.setItem('lang', currentLang); applyLanguage(); }
+        function applyLanguage() { 
+            const t = langData[currentLang]; 
+            document.getElementById('langBtn').textContent = currentLang.toUpperCase(); 
+            document.querySelectorAll('[data-key]').forEach(el => { 
+                if(t[el.getAttribute('data-key')]) el.innerHTML = t[el.getAttribute('data-key')]; 
+            }); 
+            document.querySelectorAll('[data-placeholder]').forEach(el => { el.placeholder = t[el.getAttribute('data-placeholder')]; }); 
+            renderCalcMenu(); 
+            document.getElementById('fai-info-text').innerHTML = t.fai_desc;
+            
+            document.querySelectorAll('.calculator-view').forEach(view => {
+                if(view.style.display === 'block') {
+                    const inputs = view.querySelectorAll('input');
+                    if(inputs.length > 0) inputs[0].dispatchEvent(new Event('input'));
+                }
+            });
+        }
+        
+        function switchTab(tabId, btnElement) { 
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); 
+            if(btnElement) btnElement.classList.add('active'); 
+            
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active')); 
+            document.getElementById(tabId).classList.add('active'); 
+            
+            document.getElementById('calcSuggestions').style.display = 'none';
+
+            if(tabId !== 'tab-calc') closeCalcDetail(); 
+        }
+
+        function renderCalcMenu() { 
+            const menu = document.getElementById('calc-menu'); 
+            menu.innerHTML = ''; 
+            const collator = new Intl.Collator('tr');
+            const sortedCalculators = [...calculators].sort((a, b) => {
+                const nameA = langData[currentLang][a.key] || a.id;
+                const nameB = langData[currentLang][b.key] || b.id;
+                return collator.compare(nameA, nameB);
+            });
+
+            sortedCalculators.forEach(item => { 
+                const div = document.createElement('div'); 
+                div.className = 'calc-card-mini'; 
+                div.onclick = function() { openCalc(item.id) }; 
+                div.innerHTML = `<span class="calc-icon"><i class="fa-solid ${item.icon}"></i></span><div class="calc-title">${langData[currentLang][item.key] || item.id}</div>`; 
+                menu.appendChild(div); 
+            }); 
+        }
+        
+        function openCalc(id) { 
+            document.getElementById('calc-list-view').style.display = 'none'; 
+            document.getElementById('calc-detail-view').style.display = 'block'; 
+            document.querySelectorAll('.calculator-view').forEach(v => v.style.display='none'); 
+            document.getElementById('calc-'+id).style.display = 'block'; 
+            document.querySelectorAll('.mini-result, .final-result-box').forEach(b => b.innerHTML=''); 
+        }
+        
+        function closeCalcDetail() { 
+            document.querySelectorAll('.calculator-view input').forEach(el => el.value = '');
+            document.querySelectorAll('.mini-result, .final-result-box').forEach(el => el.innerHTML = '');
+            document.getElementById('calc-detail-view').style.display = 'none'; 
+            document.getElementById('calc-list-view').style.display = 'block'; 
+        }
+        
+        function toggleUnit(badge, type) { 
+            const units = { 
+                'urine_conc': ['mg/dL', 'g/L'], 
+                'chol': ['mg/dL', 'mmol/L'], 
+                'trig': ['mg/dL', 'mmol/L'], 
+                'glucose': ['mg/dL', 'mmol/L'], 
+                'calcium': ['mg/dL', 'mmol/L'], 
+                'albumin': ['g/dL', 'g/L'],
+                'bun': ['mg/dL', 'mmol/L'],
+                'crea': ['mg/dL', 'µmol/L', 'µmol/dL'],
+                'testo': ['ng/dL', 'nmol/L']
+            }; 
+            if(!units[type]) return; 
+            let currentText = badge.innerText.trim().split(' ')[0]; 
+            let nextIndex = (units[type].indexOf(currentText) + 1) % units[type].length; 
+            let nextUnit = units[type][nextIndex]; 
+            badge.innerHTML = `${nextUnit} <i class="fa-solid fa-rotate"></i>`; 
+            badge.setAttribute('data-unit', nextUnit); 
+            
+            const activeView = document.querySelector('.calculator-view[style*="block"]');
+            if(activeView) {
+                 const inputs = activeView.querySelectorAll('input');
+                 if(inputs.length > 0) inputs[0].dispatchEvent(new Event('input'));
+            }
+        }
+        
+        function getUnit(id) { 
+            const input = document.getElementById(id); 
+            if(!input) return null; 
+            const badge = input.parentElement.querySelector('.unit-badge'); 
+            return badge ? (badge.getAttribute('data-unit') || badge.innerText.trim().split(' ')[0]) : null; 
+        }
+        
+        // --- HESAPLAMA FONKSİYONLARI ---
+
+        function calculateSpotUrine() {
+            const crea = parseFloat(document.getElementById('spot-crea').value);
+            if (isNaN(crea) || crea === 0) { 
+                ['spot-prot', 'spot-alb', 'spot-ca', 'spot-na', 'spot-k', 'spot-cl'].forEach(id => document.getElementById('res-'+id).innerHTML = ''); 
+                return; 
+            }
+
+            const formatRes = (id, val, factor, unit) => {
+                const inputVal = parseFloat(document.getElementById(id).value);
+                const resDiv = document.getElementById('res-' + id);
+                if(!isNaN(inputVal)) {
+                    const res = (inputVal / crea) * factor;
+                    resDiv.innerHTML = `
+                        <span>Oran:</span> <span>&nbsp;${res.toFixed(2)} ${unit}</span>
+                        <span class="formula-display">Formül: (${factor} * Analit) / Kreatinin</span>
+                    `;
+                } else {
+                    resDiv.innerHTML = '';
+                }
+            };
+
+            formatRes('spot-prot', null, 1000, 'mg/g');
+            formatRes('spot-alb', null, 1000, 'mg/g');
+            formatRes('spot-ca', null, 1000, 'mg/g');
+            formatRes('spot-na', null, 100, 'mmol/g');
+            formatRes('spot-k', null, 100, 'mmol/g');
+            formatRes('spot-cl', null, 100, 'mmol/g');
+        }
+
+        function calculateUrineMulti() { 
+            const vol = parseFloat(document.getElementById('uVol').value); 
+            if (isNaN(vol)) { ['uProt', 'uAlb', 'uCrea', 'uCa'].forEach(id => document.getElementById('res-'+id).innerHTML = ''); return; } 
+            const inputs = [ 
+                {id: 'uProt', label: {tr: '24 Saatlik İdrar Proteini', en: '24h Urine Protein'}}, 
+                {id: 'uAlb', label: {tr: '24 Saatlik İdrar Albümini', en: '24h Urine Albumin'}}, 
+                {id: 'uCrea', label: {tr: '24 Saatlik İdrar Kreatinini', en: '24h Urine Creatinine'}}, 
+                {id: 'uCa', label: {tr: '24 Saatlik İdrar Kalsiyumu', en: '24h Urine Calcium'}} 
+            ]; 
+            inputs.forEach(item => { 
+                const val = parseFloat(document.getElementById(item.id).value); 
+                const resDiv = document.getElementById('res-' + item.id); 
+                if (!isNaN(val)) { 
+                    const res = (vol * val) / 100; 
+                    const lbl = item.label[currentLang]; 
+                    const day = currentLang === 'tr' ? 'gün' : 'day'; 
+                    resDiv.innerHTML = `<span>${lbl}:</span> <span>&nbsp;${res.toFixed(2)} mg/${day}</span><span class="formula-display">Formül: (Volüm * Konsantrasyon) / 100</span>`; 
+                } else { 
+                    resDiv.innerHTML = ''; 
+                } 
+            }); 
+        }
+        
+        function calculateLDL() { 
+            let tot = parseFloat(document.getElementById('ldl-tot').value); 
+            let hdl = parseFloat(document.getElementById('ldl-hdl').value); 
+            let trig = parseFloat(document.getElementById('ldl-trig').value); 
+            const resDiv = document.getElementById('res-ldl-final'); 
+            if(isNaN(tot) || isNaN(hdl) || isNaN(trig)) { resDiv.innerHTML = ''; return; }
+            if(getUnit('ldl-tot') === 'mmol/L') tot *= 38.67; 
+            if(getUnit('ldl-hdl') === 'mmol/L') hdl *= 38.67; 
+            if(getUnit('ldl-trig') === 'mmol/L') trig *= 88.57; 
+            if(trig > 400) { resDiv.innerHTML=`<span style="color:var(--danger)">Trigliserid > 400! (Friedewald geçersiz)</span>`; return; } 
+            const ldl = tot - hdl - (trig/5); 
+            const label = langData[currentLang].res_ldl;
+            resDiv.innerHTML = `<span>${label}:</span> <span>&nbsp;${ldl.toFixed(0)} mg/dL</span><span class="formula-display">Formül: Total - HDL - (Trig / 5)</span>`; 
+        }
+
+        function calculateHoma() { 
+            let glu = parseFloat(document.getElementById('homa-glu').value); 
+            let ins = parseFloat(document.getElementById('homa-ins').value); 
+            const resDiv = document.getElementById('res-homa-final'); 
+            if(isNaN(glu) || isNaN(ins)) { resDiv.innerHTML = ''; return; }
+            if(getUnit('homa-glu') === 'mmol/L') glu *= 18.018; 
+            const homa = (glu * ins) / 405; 
+            const label = langData[currentLang].res_homa;
+            resDiv.innerHTML = `<span>${label}:</span> <span>&nbsp;${homa.toFixed(2)}</span><span class="formula-display">Formül: (Glukoz * İnsülin) / 405</span>`; 
+        }
+
+        function calculateCa() { 
+            let ca = parseFloat(document.getElementById('ca-tot').value); 
+            let alb = parseFloat(document.getElementById('ca-alb').value); 
+            const resDiv = document.getElementById('res-ca-final'); 
+            if(isNaN(ca) || isNaN(alb)) { resDiv.innerHTML = ''; return; }
+            if(getUnit('ca-tot') === 'mmol/L') ca *= 4.008; 
+            if(getUnit('ca-alb') === 'g/L') alb /= 10; 
+            const corr = ca + 0.8 * (4.0 - alb); 
+            const label = langData[currentLang].res_ca;
+            resDiv.innerHTML = `<span>${label}:</span> <span>&nbsp;${corr.toFixed(2)} mg/dL</span><span class="formula-display">Formül: Ca + 0.8 * (4 - Albumin)</span>`; 
+        }
+
+        function calculateSAAG() {
+            let serum = parseFloat(document.getElementById('saag-serum').value);
+            let ascites = parseFloat(document.getElementById('saag-ascites').value);
+            const resDiv = document.getElementById('res-saag-final');
+            if (isNaN(serum) || isNaN(ascites)) { resDiv.innerHTML = ''; return; }
+            if (getUnit('saag-serum') === 'g/L') serum /= 10;
+            if (getUnit('saag-ascites') === 'g/L') ascites /= 10;
+            const result = serum - ascites;
+            let interpretation = result >= 1.1 ? langData[currentLang].msg_portal : langData[currentLang].msg_non_portal;
+            let color = result >= 1.1 ? "var(--primary)" : "var(--text-light)";
+            const label = langData[currentLang].res_saag;
+            resDiv.innerHTML = `<div style="width:100%"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><span>${label}:</span> <span style="font-weight:800; font-size:1.2rem;">${result.toFixed(2)} g/dL</span></div><div style="font-size:0.85rem; color:${color}; text-align:right; font-weight:500;">${interpretation}</div><span class="formula-display">Formül: Serum Alb - Asit Alb</span></div>`;
+        }
+
+        // --- GFR (Multi-Method) ---
+        function setCkdGender(gender, btn) {
+            ckdGender = gender;
+            document.querySelectorAll('#calc-gfr .radio-option').forEach(b => {
+                if(b.onclick.toString().includes('setCkdGender')) b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+            calculateGFR_Selected();
+        }
+
+        function setCkdRace(race, btn) {
+            ckdRace = race;
+            document.querySelectorAll('#calc-gfr .radio-option').forEach(b => {
+                if(b.onclick.toString().includes('setCkdRace')) b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+            calculateGFR_Selected();
+        }
+
+        function updateGFRInputs() {
+            const method = document.getElementById('gfr-method').value;
+            const grpCrea = document.getElementById('grp-crea');
+            const grpCys = document.getElementById('grp-cys');
+            const grpRace = document.getElementById('grp-race');
+
+            // Hangi inputlar gösterilmeli?
+            if(method.includes('crea') && method.includes('cys') || method.includes('combo')) {
+                grpCrea.style.display = 'block';
+                grpCys.style.display = 'block';
+            } else if (method.includes('cys')) {
+                grpCrea.style.display = 'none';
+                grpCys.style.display = 'block';
+            } else {
+                grpCrea.style.display = 'block';
+                grpCys.style.display = 'none';
+            }
+
+            // Irk seçimi sadece 2021 olmayanlarda gösterilir
+            if(method.startsWith('2021')) {
+                grpRace.style.display = 'none';
+            } else {
+                grpRace.style.display = 'block'; // block or flex depending on CSS needs, block usually fine for div
+            }
+
+            calculateGFR_Selected();
+        }
+        function calculateGFR_Selected() {
+            const method = document.getElementById('gfr-method').value;
+            let scr = parseFloat(document.getElementById('gfr-crea').value);
+            const scys = parseFloat(document.getElementById('gfr-cys').value);
+            const age = parseFloat(document.getElementById('gfr-age').value);
+            const isFemale = ckdGender === 'female';
+            const resDiv = document.getElementById('res-gfr-final');
+
+            if (isNaN(age)) { resDiv.innerHTML = ''; return; }
+            
+            // Birim Dönüşümleri
+            const u = getUnit('gfr-crea');
+            if (u === 'µmol/L') scr /= 88.4;
+            if (u === 'µmol/dL') scr /= 8.84; // Nadir birim, katsayı mantıken bu olur
+
+            let gfr = 0;
+            let formulaName = "";
+
+            // Helper Power Function
+            const min = (val, limit) => Math.min(val, limit);
+            const max = (val, limit) => Math.max(val, limit);
+
+            if (method === '2021-crea') {
+                if(isNaN(scr)) return;
+                let kappa = isFemale ? 0.7 : 0.9;
+                let alpha = isFemale ? -0.241 : -0.302;
+                let sexFactor = isFemale ? 1.012 : 1;
+                gfr = 142 * Math.pow(min(scr/kappa, 1), alpha) * Math.pow(max(scr/kappa, 1), -1.200) * Math.pow(0.9938, age) * sexFactor;
+                formulaName = "2021 CKD-EPI Creatinine";
+            } 
+            else if (method === '2009-crea') {
+                if(isNaN(scr)) return;
+                let kappa = isFemale ? 0.7 : 0.9;
+                let alpha = isFemale ? -0.329 : -0.411;
+                let sexFactor = isFemale ? 1.018 : 1;
+                let raceFactor = ckdRace === 'black' ? 1.159 : 1;
+                
+                gfr = 141 * Math.pow(min(scr/kappa, 1), alpha) * Math.pow(max(scr/kappa, 1), -1.209) * Math.pow(0.993, age) * sexFactor * raceFactor;
+                formulaName = "2009 CKD-EPI Creatinine";
+            }
+            else if (method === '2012-cys') {
+                if(isNaN(scys)) return;
+                let sexFactor = isFemale ? 0.932 : 1;
+                // Formülde ırk faktörü belirtilmemiş ama kullanıcı isteği üzerine ekleniyor (standartta olmayabilir)
+                // Kullanıcı isteği: IF(E2="Black",1.06,1)
+                let raceFactor = ckdRace === 'black' ? 1.06 : 1; 
+
+                gfr = 133 * Math.pow(min(scys/0.8, 1), -0.499) * Math.pow(max(scys/0.8, 1), -1.328) * Math.pow(0.996, age) * sexFactor * raceFactor;
+                formulaName = "2012 CKD-EPI Cystatin C";
+            }
+            else if (method === '2021-combo') { 
+                if(isNaN(scr) || isNaN(scys)) return;
+                let kappa = isFemale ? 0.7 : 0.9;
+                let alpha = isFemale ? -0.219 : -0.144;
+                let sexFactor = isFemale ? 0.963 : 1;
+                gfr = 135 * Math.pow(min(scr/kappa, 1), alpha) * Math.pow(max(scr/kappa, 1), -0.544) * Math.pow(min(scys/0.8, 1), -0.323) * Math.pow(max(scys/0.8, 1), -0.778) * Math.pow(0.9961, age) * sexFactor;
+                formulaName = "2021 CKD-EPI Cr-CysC";
+            }
+            else if (method === '2012-combo') { 
+                if(isNaN(scr) || isNaN(scys)) return;
+                let kappa = isFemale ? 0.7 : 0.9;
+                let alpha = isFemale ? -0.248 : -0.207;
+                let sexFactor = isFemale ? 0.969 : 1;
+                let raceFactor = ckdRace === 'black' ? 1.08 : 1;
+
+                gfr = 135 * Math.pow(min(scr/kappa, 1), alpha) * Math.pow(max(scr/kappa, 1), -0.601) * Math.pow(min(scys/0.8, 1), -0.375) * Math.pow(max(scys/0.8, 1), -0.711) * Math.pow(0.995, age) * sexFactor * raceFactor;
+                formulaName = "2012 CKD-EPI Cr-CysC";
+            }
+
+            resDiv.innerHTML = `<span>eGFR:</span> <span>&nbsp;${gfr.toFixed(0)} mL/dk/1.73m²</span><span class="formula-display">Formül: ${formulaName}</span>`;
+        }
+
+        // --- SCHWARTZ (ORİJİNAL) ---
+        function setSchwartzK(k, btn) {
+            schwartzK = k;
+            document.querySelectorAll('#calc-schwartz .radio-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            calculateSchwartz();
+        }
+        function calculateSchwartz() {
+            const h = parseFloat(document.getElementById('sch-height').value);
+            const cr = parseFloat(document.getElementById('sch-crea').value);
+            const resDiv = document.getElementById('res-schwartz-final');
+            if (isNaN(h) || isNaN(cr) || cr === 0) { resDiv.innerHTML = ''; return; }
+            const gfr = (schwartzK * h) / cr;
+            resDiv.innerHTML = `<span>Orijinal Schwartz:</span> <span>&nbsp;${gfr.toFixed(1)} mL/dk/1.73m²</span><span class="formula-display">Formül: (k * Boy) / Kreatinin</span>`;
+        }
+
+        function calculateFIB4() {
+            const age = parseFloat(document.getElementById('fib-age').value);
+            const ast = parseFloat(document.getElementById('fib-ast').value);
+            const alt = parseFloat(document.getElementById('fib-alt').value);
+            const plt = parseFloat(document.getElementById('fib-plt').value);
+            const resDiv = document.getElementById('res-fib4-final');
+            if (isNaN(age) || isNaN(ast) || isNaN(alt) || isNaN(plt)) { resDiv.innerHTML = ''; return; }
+            const score = (age * ast) / (plt * Math.sqrt(alt));
+            resDiv.innerHTML = `<span>FIB-4 Score:</span> <span>&nbsp;${score.toFixed(2)}</span><span class="formula-display">Formül: (Yaş * AST) / (PLT * √ALT)</span>`;
+        }
+
+        function calculateCorrNa() {
+            const na = parseFloat(document.getElementById('na-meas').value);
+            const glu = parseFloat(document.getElementById('na-glu').value);
+            const resDiv = document.getElementById('res-na-final');
+            if(isNaN(na) || isNaN(glu)) { resDiv.innerHTML = ''; return; }
+            const corr = na + 1.6 * ((glu - 100) / 100);
+            resDiv.innerHTML = `<span>${currentLang==='tr'?'Düzeltilmiş Na':'Corrected Na'}:</span> <span>&nbsp;${corr.toFixed(1)} mEq/L</span><span class="formula-display">Formül: Na + 1.6 * ((Glu - 100)/100)</span>`;
+        }
+
+        function calculateCorrMg() {
+            const mg = parseFloat(document.getElementById('mg-meas').value);
+            const alb = parseFloat(document.getElementById('mg-alb').value);
+            const resDiv = document.getElementById('res-mg-final');
+            if(isNaN(mg) || isNaN(alb)) { resDiv.innerHTML = ''; return; }
+            let corr = mg;
+            let formStr = "Magnezyum (Normal Albumin)";
+            if (alb < 4.0) { 
+                corr = mg + 0.05 * (4.0 - alb); 
+                formStr = "Mg + 0.05 * (4.0 - Alb)";
+            }
+            resDiv.innerHTML = `<span>${currentLang==='tr'?'Düzeltilmiş Mg':'Corrected Mg'}:</span> <span>&nbsp;${corr.toFixed(2)} mg/dL</span><span class="formula-display">Formül: ${formStr}</span>`;
+        }
+
+        function calculateAnionGap() {
+            const na = parseFloat(document.getElementById('ag-na').value);
+            const cl = parseFloat(document.getElementById('ag-cl').value);
+            const hco3 = parseFloat(document.getElementById('ag-hco3').value);
+            const resDiv = document.getElementById('res-ag-final');
+            if(isNaN(na) || isNaN(cl) || isNaN(hco3)) { resDiv.innerHTML = ''; return; }
+            const ag = na - (cl + hco3);
+            resDiv.innerHTML = `<span>Anion Gap:</span> <span>&nbsp;${ag.toFixed(1)} mEq/L</span><span class="formula-display">Formül: Na - (Cl + HCO3)</span>`;
+        }
+
+        function calculateOsmo() {
+            const na = parseFloat(document.getElementById('osmo-na').value);
+            const glu = parseFloat(document.getElementById('osmo-glu').value);
+            const bun = parseFloat(document.getElementById('osmo-bun').value);
+            const resDiv = document.getElementById('res-osmo-final');
+            if(isNaN(na) || isNaN(glu) || isNaN(bun)) { resDiv.innerHTML = ''; return; }
+            const osmo = (2 * na) + (glu / 18) + (bun / 2.8);
+            resDiv.innerHTML = `<span>Osmolalite (Hesap):</span> <span>&nbsp;${osmo.toFixed(0)} mOsm/kg</span><span class="formula-display">Formül: 2*Na + Glu/18 + BUN/2.8</span>`;
+        }
+
+        function calculatePH() {
+            const hco3 = parseFloat(document.getElementById('ph-hco3').value);
+            const pco2 = parseFloat(document.getElementById('ph-pco2').value);
+            const resDiv = document.getElementById('res-ph-final');
+            if(isNaN(hco3) || isNaN(pco2)) { resDiv.innerHTML = ''; return; }
+            const ph = 6.1 + Math.log10(hco3 / (0.03 * pco2));
+            resDiv.innerHTML = `<span>pH (Teorik):</span> <span>&nbsp;${ph.toFixed(3)}</span><span class="formula-display">Formül: 6.1 + log(HCO3 / (0.03*pCO2))</span>`;
+        }
+
+        function calculateMentzer() {
+            const mcv = parseFloat(document.getElementById('men-mcv').value);
+            const rbc = parseFloat(document.getElementById('men-rbc').value);
+            const resDiv = document.getElementById('res-mentzer-final');
+            if(isNaN(mcv) || isNaN(rbc)) { resDiv.innerHTML = ''; return; }
+            const idx = mcv / rbc;
+            const msg = idx < 13 ? (currentLang==='tr'?'Talasemi Taşıyıcılığı Olası':'Thalassemia Trait Likely') : (currentLang==='tr'?'Demir Eksikliği Olası':'Iron Deficiency Likely');
+            resDiv.innerHTML = `<div style="text-align:center;"><strong>${idx.toFixed(1)}</strong><br><small style="color:var(--text-light)">${msg}</small></div><span class="formula-display">Formül: MCV / RBC</span>`;
+        }
+
+        function calculateAlbGlob() {
+            const alb = parseFloat(document.getElementById('ag-alb').value);
+            const tp = parseFloat(document.getElementById('ag-tp').value);
+            const resDiv = document.getElementById('res-albglob-final');
+            if(isNaN(alb) || isNaN(tp)) { resDiv.innerHTML = ''; return; }
+            const glob = tp - alb;
+            if(glob <= 0) { resDiv.innerHTML='<span style="color:var(--danger)">Hata: Globulin <= 0</span>'; return; }
+            const ratio = alb / glob;
+            resDiv.innerHTML = `<span>Alb/Glob:</span> <span>&nbsp;${ratio.toFixed(2)}</span><span class="formula-display">Formül: Alb / (TP - Alb)</span>`;
+        }
+
+        function calculateRBCIndices() {
+            const hb = parseFloat(document.getElementById('rbc-hgb').value);
+            const hct = parseFloat(document.getElementById('rbc-hct').value);
+            const rbc = parseFloat(document.getElementById('rbc-count').value);
+            const resDiv = document.getElementById('res-rbc-final');
+            if(isNaN(hb) || isNaN(hct) || isNaN(rbc)) { resDiv.innerHTML = ''; return; }
+            const mcv = (hct / rbc) * 10;
+            const mch = (hb / rbc) * 10;
+            const mchc = (hb / hct) * 100;
+            resDiv.innerHTML = `
+                <div class="mini-result"><span>MCV:</span> <span>${mcv.toFixed(1)} fL</span></div>
+                <div class="mini-result"><span>MCH:</span> <span>${mch.toFixed(1)} pg</span></div>
+                <div class="mini-result"><span>MCHC:</span> <span>${mchc.toFixed(1)} g/dL</span></div>`;
+        }
+        
+        function calculateRetic() {
+            const ret = parseFloat(document.getElementById('ret-pct').value);
+            const hct = parseFloat(document.getElementById('ret-hct').value);
+            const resDiv = document.getElementById('res-retic-final');
+            if(isNaN(ret) || isNaN(hct)) { resDiv.innerHTML = ''; return; }
+            const corr = ret * (hct / 45);
+            resDiv.innerHTML = `<span>Düzeltilmiş Retik:</span> <span>&nbsp;% ${corr.toFixed(1)}</span><span class="formula-display">Formül: Retik * (Hct / 45)</span>`;
+        }
+
+        function calculateINR() {
+            const ptPat = parseFloat(document.getElementById('inr-pt').value);
+            const ptCon = parseFloat(document.getElementById('inr-control').value);
+            const isi = parseFloat(document.getElementById('inr-isi').value);
+            const resDiv = document.getElementById('res-inr-final');
+            if(isNaN(ptPat) || isNaN(ptCon) || isNaN(isi)) { resDiv.innerHTML = ''; return; }
+            const inr = Math.pow((ptPat / ptCon), isi);
+            resDiv.innerHTML = `<span>INR:</span> <span>&nbsp;${inr.toFixed(2)}</span><span class="formula-display">Formül: (PT_h / PT_n) ^ ISI</span>`;
+        }
+
+        function calculateBunCrea() {
+            let bun = parseFloat(document.getElementById('bc-bun').value);
+            let crea = parseFloat(document.getElementById('bc-crea').value);
+            const resDiv = document.getElementById('res-bun-crea-final');
+            if(isNaN(bun) || isNaN(crea) || crea === 0) { resDiv.innerHTML = ''; return; }
+            if(getUnit('bc-bun') === 'mmol/L') bun *= 2.8;
+            if(getUnit('bc-crea') === 'µmol/L') crea /= 88.4;
+            const ratio = bun / crea;
+            resDiv.innerHTML = `<span>BUN/Kreatinin:</span> <span>&nbsp;${ratio.toFixed(1)}</span><span class="formula-display">Formül: BUN / Kreatinin</span>`;
+        }
+
+        function calculateHIon() {
+            const measuredPh = parseFloat(document.getElementById('h-ph').value);
+            const pco2 = parseFloat(document.getElementById('h-pco2').value);
+            const hco3 = parseFloat(document.getElementById('h-hco3').value);
+            const resDiv = document.getElementById('res-h-ion-final');
+            if(isNaN(pco2) || isNaN(hco3)) { resDiv.innerHTML = ''; return; }
+            const hIon = 24 * (pco2 / hco3);
+            const calculatedPh = 9 - Math.log10(hIon);
+            let msg = '';
+            if(!isNaN(measuredPh)) {
+                const diff = Math.abs(measuredPh - calculatedPh);
+                if(diff > 0.05) {
+                    msg = `<br><span style="color:var(--danger); font-size:0.8rem; font-weight:normal;">pH ve [H+] uyumsuz! AKG sonucu şüpheli. (Fark: ${diff.toFixed(2)})</span>`;
+                } else {
+                    msg = `<br><span style="color:var(--success); font-size:0.8rem; font-weight:normal;">pH ve [H+] tutarlı.</span>`;
+                }
+            }
+            resDiv.innerHTML = `<span>[H+]: ${hIon.toFixed(1)} nmol/L</span><br><span>Hesaplanan pH: ${calculatedPh.toFixed(2)}</span>${msg}<span class="formula-display">Formül: 24 * (pCO2 / HCO3)</span>`;
+        }
+
+        function calculateFAI() {
+            let tt = parseFloat(document.getElementById('fai-tt').value);
+            let shbg = parseFloat(document.getElementById('fai-shbg').value);
+            const resDiv = document.getElementById('res-fai-final');
+            if(isNaN(tt) || isNaN(shbg) || shbg === 0) { resDiv.innerHTML = ''; return; }
+            if(getUnit('fai-tt') === 'ng/dL') tt *= 0.0347;
+            const fai = (tt / shbg) * 100;
+            resDiv.innerHTML = `<span>FAI:</span> <span>&nbsp;${fai.toFixed(1)}</span><span class="formula-display">Formül: (T.Testo / SHBG) * 100</span>`;
+        }
+
+        function calculateFPSA() {
+            const free = parseFloat(document.getElementById('fpsa-free').value);
+            const total = parseFloat(document.getElementById('fpsa-total').value);
+            const resDiv = document.getElementById('res-fpsa-final');
+            if(isNaN(free) || isNaN(total) || total === 0) { resDiv.innerHTML = ''; return; }
+            const ratio = (free / total) * 100;
+            resDiv.innerHTML = `<span>Serbest PSA %:</span> <span>&nbsp;% ${ratio.toFixed(1)}</span><span class="formula-display">Formül: (Serbest / Total) * 100</span>`;
+        }
+
+        function calculateCaIon() {
+            const ca = parseFloat(document.getElementById('cai-ca').value);
+            const tp = parseFloat(document.getElementById('cai-tp').value);
+            const resDiv = document.getElementById('res-ca-ion-final');
+            if(isNaN(ca) || isNaN(tp)) { resDiv.innerHTML = ''; return; }
+            const caIon = ((ca * 6) - (tp / 3)) / (tp + 6);
+            const caIonMmol = caIon * 0.25; 
+            resDiv.innerHTML = `
+                <div class="mini-result"><span>Ca++ (mg/dL):</span> <span>${caIon.toFixed(2)}</span></div>
+                <div class="mini-result"><span>Ca++ (mmol/L):</span> <span>${caIonMmol.toFixed(2)}</span></div>
+                <span class="formula-display">Formül: (Ca * 6 - TP/3) / (TP + 6)</span>`;
+        }
+
+        function calculateA1c(source) {
+            const ngspInput = document.getElementById('a1c-ngsp');
+            const ifccInput = document.getElementById('a1c-ifcc');
+            if (source === 'ngsp') {
+                const val = parseFloat(ngspInput.value);
+                if(isNaN(val)) { ifccInput.value = ''; return; }
+                const ifcc = (val - 2.152) / 0.09148;
+                ifccInput.value = ifcc.toFixed(1);
+            } else {
+                const val = parseFloat(ifccInput.value);
+                if(isNaN(val)) { ngspInput.value = ''; return; }
+                const ngsp = (0.09148 * val) + 2.152;
+                ngspInput.value = ngsp.toFixed(1);
+            }
+        }
+
+        window.onload = function() {
+            loadTheme();
+            applyLanguage();    
+            loadSI();           
+            const saved = localStorage.getItem('labAssistantNotes');
+            if(saved) document.getElementById('myNotes').value = saved;
+        };
+    </script>
+</body>
+</html>
