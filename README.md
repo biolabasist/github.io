@@ -76,6 +76,3 @@ For feedback, suggestions, or error reporting:
 Developer: Uzm. Dr. Belgin ŞARA
 
 Email: belginsaraa@gmail.com
-FAI (Free Androgen Index): Includes unit conversion logic (ng/dL ↔ nmol/L).
-
-Free PSA Percentage.
