@@ -950,33 +950,111 @@
             <h3 style="color:var(--primary); margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
                 <i class="fa-solid fa-newspaper"></i> Journals
             </h3>
-            <div class="journal-list">
-                <a href="https://www.degruyterbrill.com/journal/key/almed/html#latestIssue" target="_blank" class="journal-link">Advances in Laboratory Medicine</a>
-                <a href="https://journals.sagepub.com/home/acb" target="_blank" class="journal-link">Annals of Clinical Biochemistry</a>
-                <a href="https://www.annlabmed.org/main.html" target="_blank" class="journal-link">Annals of Laboratory Medicine</a>
-                <a href="https://www.biochemia-medica.com/en" target="_blank" class="journal-link">Biochemia Medica</a>
-                <a href="https://www.bslonline.org/main.html" target="_blank" class="journal-link">Biomedical Science Letters</a>
-                <a href="https://www.sciencedirect.com/journal/clinica-chimica-acta" target="_blank" class="journal-link">Clinica Chimica Acta</a>
-                <a href="https://academic.oup.com/clinchem" target="_blank" class="journal-link">Clinical Chemistry</a>
-                <a href="https://www.degruyterbrill.com/journal/key/cclm/html" target="_blank" class="journal-link">Clinical Chemistry and Laboratory Medicine</a>
-                <a href="https://www.clin-lab-publications.com/" target="_blank" class="journal-link">Clinical Laboratory</a>
-                <a href="https://www.tandfonline.com/journals/ilab20" target="_blank" class="journal-link">Critical Reviews in Clinical Laboratory Sciences</a>
-                <a href="https://pmc.ncbi.nlm.nih.gov/journals/?term=%22EJIFCC%22" target="_blank" class="journal-link">eJIFCC</a>
-                <a href="https://onlinelibrary.wiley.com/journal/7072" target="_blank" class="journal-link">International Journal of Analytical Chemistry</a>
-                <a href="https://academic.oup.com/jat" target="_blank" class="journal-link">Journal of Analytical Toxicology</a>
-                <a href="https://onlinelibrary.wiley.com/journal/10982825" target="_blank" class="journal-link">Journal of Clinical Laboratory Analysis</a>
-                <a href="https://jlpm.amegroups.org/" target="_blank" class="journal-link">Journal of Laboratory and Precision Medicine</a>
-                <a href="https://www.degruyterbrill.com/journal/key/labm/html#issues" target="_blank" class="journal-link">Journal of Laboratory Medicine</a>
-                <a href="https://www.sciencedirect.com/journal/labmed-discovery" target="_blank" class="journal-link">LabMed Discovery</a>
-                <a href="https://academic.oup.com/labmed" target="_blank" class="journal-link">Laboratory Medicine</a>
-                <a href="https://njlm.net/" target="_blank" class="journal-link">National Journal Laboratory Medicine</a>
-                <a href="https://www.sciencedirect.com/journal/practical-laboratory-medicine" target="_blank" class="journal-link">Practical Laboratory Medicine</a>
-                <a href="https://www.tandfonline.com/journals/iclb20" target="_blank" class="journal-link">Scandinavian Journal of Clinical and Laboratory Investigation</a>
-                <a href="https://academic.oup.com/jalm" target="_blank" class="journal-link">The Journal of Applied Laboratory Medicine</a>
-                <a href="https://www.kjcls.org/main.html" target="_blank" class="journal-link">The Korean Journal of Clinical Laboratory Science</a>
-                <a href="https://journals.lww.com/drug-monitoring/pages/default.aspx" target="_blank" class="journal-link">Therapeutic Drug Monitoring</a>
-                <a href="https://tkb.dergisi.org/" target="_blank" class="journal-link">Türk Klinik Biyokimya Dergisi</a>
-                <a href="https://www.degruyterbrill.com/journal/key/tjb/html#issues" target="_blank" class="journal-link">Turkish Journal of Biochemistry</a>
+            <div id="pubmedJournalWidget" style="display:block; margin-bottom:15px;">
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:6px;">
+                    <span style="font-size:0.85rem; color:var(--text-light);">Please select the journals you wish to follow and the number of recent articles to display, then click Lab Digest to continue.</span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:nowrap; justify-content:flex-start;">
+                    <select id="pubmedCountSelect" class="input-group" style="width:160px; padding:10px; border-radius:8px; height:42px; margin:0;">
+                        <option value="5">Last 5</option>
+                        <option value="10">Last 10</option>
+                        <option value="15">Last 15</option>
+                        <option value="20">Last 20</option>
+                        <option value="30">Last 30</option>
+                    </select>
+                    <button class="btn-action" onclick="loadPubMedJournalsLatest()" style="width:auto; margin:0; padding:0 20px; height:42px; display:inline-flex; align-items:center; gap:12px;">
+                        <i class="fa-solid fa-flask"></i>
+                        <span>Lab Digest</span>
+                    </button>
+                </div>
+                <div id="pubmedJournalResults" style="border:1px solid var(--border-color); border-radius:10px; background:var(--bg-card); padding:10px; max-height:300px; overflow-y:auto;"></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <input id="journalSearchInput" class="input-group" type="text" placeholder="Search journals" style="flex:1; padding:10px; border-radius:8px;" oninput="filterJournalLists()">
+            </div>
+            <div class="journal-list" id="rssJournalList">
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Clinical Chemistry" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; vertical-align:middle;" onclick="toggleFav('Clinical Chemistry', this)"></button>
+                    <a href="https://academic.oup.com/clinchem" target="_blank" class="journal-link">Clinical Chemistry</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="American Journal of Clinical Pathology" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; vertical-align:middle;" onclick="toggleFav('American Journal of Clinical Pathology', this)"></button>
+                    <a href="https://academic.oup.com/ajcp" target="_blank" class="journal-link">American Journal of Clinical Pathology</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                    <button data-journal="Annals of Clinical Biochemistry" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Annals of Clinical Biochemistry', this)"></button>
+                    <a href="https://journals.sagepub.com/home/acb" target="_blank" class="journal-link">Annals of Clinical Biochemistry</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                    <button data-journal="Annals of Laboratory Medicine" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Annals of Laboratory Medicine', this)"></button>
+                    <a href="https://www.annlabmed.org/main.html" target="_blank" class="journal-link">Annals of Laboratory Medicine</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                    <button data-journal="Biochemia Medica" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Biochemia Medica', this)"></button>
+                    <a href="https://www.biochemia-medica.com/en" target="_blank" class="journal-link">Biochemia Medica</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Clinica Chimica Acta" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Clinica Chimica Acta', this)"></button>
+                    <a href="https://www.sciencedirect.com/journal/clinica-chimica-acta" target="_blank" class="journal-link">Clinica Chimica Acta</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Clinical Laboratory" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Clinical Laboratory', this)"></button>
+                    <a href="https://www.clin-lab-publications.com/" target="_blank" class="journal-link">Clinical Laboratory</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Clinical Chemistry and Laboratory Medicine" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Clinical Chemistry and Laboratory Medicine', this)"></button>
+                    <a href="https://www.degruyterbrill.com/journal/key/cclm/html" target="_blank" class="journal-link">Clinical Chemistry and Laboratory Medicine</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Critical Reviews in Clinical Laboratory Sciences" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Critical Reviews in Clinical Laboratory Sciences', this)"></button>
+                    <a href="https://www.tandfonline.com/journals/ilab20" target="_blank" class="journal-link">Critical Reviews in Clinical Laboratory Sciences</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="eJIFCC" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('eJIFCC', this)"></button>
+                    <a href="https://pmc.ncbi.nlm.nih.gov/journals/?term=%22EJIFCC%22" target="_blank" class="journal-link">eJIFCC</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="International Journal of Analytical Chemistry" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('International Journal of Analytical Chemistry', this)"></button>
+                    <a href="https://onlinelibrary.wiley.com/journal/7072" target="_blank" class="journal-link">International Journal of Analytical Chemistry</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Journal of Analytical Toxicology" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Journal of Analytical Toxicology', this)"></button>
+                    <a href="https://academic.oup.com/jat" target="_blank" class="journal-link">Journal of Analytical Toxicology</a>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; white-space:nowrap; line-height:1;">
+                    <button data-journal="Journal of Clinical Laboratory Analysis" class="btn-action btn-secondary" style="width:18px; height:18px; padding:0; font-size:0.8rem; line-height:1; min-width:unset; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;" onclick="toggleFav('Journal of Clinical Laboratory Analysis', this)"></button>
+                    <a href="https://onlinelibrary.wiley.com/journal/10982825" target="_blank" class="journal-link">Journal of Clinical Laboratory Analysis</a>
+                </div>
+            </div>
+            <h4 style="font-size:0.85rem; color:var(--text-light); margin:10px 0 6px 0;">Also visit journals</h4>
+            <div class="journal-list" id="visitJournalList">
+                <div style="white-space:nowrap;">
+                    <a href="https://www.bslonline.org/main.html" target="_blank" class="journal-link">Biomedical Science Letters</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://jlpm.amegroups.org/" target="_blank" class="journal-link">Journal of Laboratory and Precision Medicine</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://www.degruyterbrill.com/journal/key/labm/html#issues" target="_blank" class="journal-link">Journal of Laboratory Medicine</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://www.sciencedirect.com/journal/labmed-discovery" target="_blank" class="journal-link">LabMed Discovery</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://njlm.net/" target="_blank" class="journal-link">National Journal Laboratory Medicine</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://www.kjcls.org/main.html" target="_blank" class="journal-link">The Korean Journal of Clinical Laboratory Science</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://journals.lww.com/drug-monitoring/pages/default.aspx" target="_blank" class="journal-link">Therapeutic Drug Monitoring</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://tkb.dergisi.org/" target="_blank" class="journal-link">Türk Klinik Biyokimya Dergisi</a>
+                </div>
+                <div style="white-space:nowrap;">
+                    <a href="https://www.degruyterbrill.com/journal/key/tjb/html#issues" target="_blank" class="journal-link">Turkish Journal of Biochemistry</a>
+                </div>
             </div>
         </div>
     </div>
@@ -1082,6 +1160,8 @@
         loadTheme();
         renderCalcMenu();
         renderLJData();
+        initPubMedJournals();
+        initJournalListTicks();
         // Add onclick to all unit badges that don't have it
         document.querySelectorAll('.unit-badge:not([onclick])').forEach(badge => {
             const unitText = badge.textContent.trim().replace(/\s*\(SI\)/g, '').trim();
@@ -2294,6 +2374,261 @@ function getVal(id) {
             }
         };
         reader.readAsArrayBuffer(file);
+    }
+    
+    function formatXMLDate(node) {
+        if (!node) return '';
+        const y = node.querySelector('Year') ? node.querySelector('Year').textContent : '';
+        const m = node.querySelector('Month') ? node.querySelector('Month').textContent : '';
+        const d = node.querySelector('Day') ? node.querySelector('Day').textContent : '';
+        const medline = node.querySelector('MedlineDate') ? node.querySelector('MedlineDate').textContent : '';
+        if (medline) return medline;
+        let s = '';
+        if (y) s += y;
+        if (m) s += (s ? ' ' : '') + m;
+        if (d) s += ' ' + d;
+        return s;
+    }
+    function formatAuthorsFromArticle(article) {
+        const arr = Array.from(article.querySelectorAll('AuthorList > Author')).map(a => {
+            const collective = a.querySelector('CollectiveName') ? a.querySelector('CollectiveName').textContent : '';
+            if (collective) return collective.trim();
+            const fore = a.querySelector('ForeName') ? a.querySelector('ForeName').textContent : '';
+            const last = a.querySelector('LastName') ? a.querySelector('LastName').textContent : '';
+            return (fore + (fore && last ? ' ' : '') + last).trim();
+        }).filter(Boolean);
+        return arr.join(', ');
+    }
+    async function fetchTextWithProxy(url) {
+        try {
+            const r = await fetch(url);
+            if (!r.ok) throw new Error('direct');
+            return await r.text();
+        } catch {
+            const r2 = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+            if (!r2.ok) throw new Error('proxy');
+            return await r2.text();
+        }
+    }
+    function renderRSS(xmlText, res) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, 'application/xml');
+        const items = Array.from(xml.querySelectorAll('item'));
+        if (!items.length) { res.innerHTML = '<div style="padding:8px; font-size:0.85rem;">No items</div>'; return; }
+        const list = document.createElement('div');
+        items.forEach(it => {
+            const titleEl = it.querySelector('title');
+            const linkEl = it.querySelector('link');
+            const dateEl = it.querySelector('pubDate');
+            const title = titleEl ? titleEl.textContent : '';
+            const link = linkEl ? linkEl.textContent : '';
+            const date = dateEl ? dateEl.textContent : '';
+            const a = document.createElement('a');
+            a.href = link;
+            a.target = '_blank';
+            a.className = 'journal-link';
+            a.textContent = title + (date ? ' (' + date + ')' : '');
+            list.appendChild(a);
+        });
+        res.innerHTML = '';
+        res.appendChild(list);
+    }
+    function getFavJournals() {
+        return JSON.parse(localStorage.getItem('favJournals') || '[]');
+    }
+    function setFavJournals(arr) {
+        localStorage.setItem('favJournals', JSON.stringify(arr));
+    }
+    function toggleFav(name, el) {
+        const stored = getFavJournals();
+        const idx = stored.indexOf(name);
+        if (idx > -1) {
+            stored.splice(idx,1);
+            el.className = 'btn-action btn-secondary';
+            el.textContent = '';
+        } else {
+            stored.push(name);
+            el.className = 'btn-action';
+            el.textContent = '✓';
+        }
+        setFavJournals(stored);
+        initJournalListTicks();
+    }
+    function initJournalListTicks() {
+        const stored = getFavJournals();
+        document.querySelectorAll('button[data-journal]').forEach(btn => {
+            const name = btn.getAttribute('data-journal');
+            if (stored.includes(name)) {
+                btn.className = 'btn-action';
+                btn.textContent = '✓';
+            } else {
+                btn.className = 'btn-action btn-secondary';
+                btn.textContent = '';
+            }
+        });
+    }
+    function filterJournalLists() {
+        const q = (document.getElementById('journalSearchInput') ? document.getElementById('journalSearchInput').value : '').toLowerCase().trim();
+        ['rssJournalList','visitJournalList'].forEach(id => {
+            const container = document.getElementById(id);
+            if (!container) return;
+            container.querySelectorAll('div').forEach(row => {
+                const t = row.textContent.toLowerCase();
+                row.style.display = q ? (t.includes(q) ? '' : 'none') : '';
+            });
+        });
+    }
+    function initPubMedJournals() {
+        const sel = document.getElementById('favJournalSelect');
+        if (!sel) return;
+        const defaultFavJournals = ['Clinical Chemistry','The Journal of Applied Laboratory Medicine','Laboratory Medicine'];
+        const stored = JSON.parse(localStorage.getItem('favJournals') || '[]');
+        const journals = (stored.length ? stored : defaultFavJournals);
+        sel.innerHTML = '';
+        journals.forEach(j => {
+            const opt = document.createElement('option');
+            opt.value = j;
+            opt.textContent = j;
+            opt.selected = true;
+            sel.appendChild(opt);
+        });
+    }
+    async function loadPubMedJournalsLatest() {
+        const res = document.getElementById('pubmedJournalResults');
+        const countSel = document.getElementById('pubmedCountSelect');
+        if (!res || !countSel) return;
+        const defaultFavJournals = ['Clinical Chemistry','The Journal of Applied Laboratory Medicine','Laboratory Medicine'];
+        const storedFavs = JSON.parse(localStorage.getItem('favJournals') || '[]');
+        const journals = storedFavs.length ? storedFavs : defaultFavJournals;
+        const retmax = parseInt(countSel.value || '10', 10);
+        const cachePrefix = "pubmed_cache_";
+        const currentCacheKey = cachePrefix + journals.join('_') + "_" + retmax;
+        const now = new Date().getTime();
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith(cachePrefix) && key !== currentCacheKey) {
+                localStorage.removeItem(key);
+            }
+        });
+        const cachedData = JSON.parse(localStorage.getItem(currentCacheKey));
+        if (cachedData && (now - cachedData.timestamp < 1800000)) {
+            renderPubMedList(cachedData.articles, res);
+            return;
+        }
+        res.innerHTML = '<div style="padding:8px; font-size:0.85rem;">Fetching latest articles...</div>';
+        try {
+            const rssMap = {
+                'Advances in Laboratory Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/search/1z52wgQGrymR2X9hFvtFn2eMNt_ZPOBcHce7z9ZDAilDuOJkxd/?limit=15&utm_campaign=pubmed-2&fc=20260120051449',
+                'Annals of Clinical Biochemistry': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0324055/?limit=15&name=Ann%20Clin%20Biochem&utm_campaign=journals',
+                'Annals of Laboratory Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101571172/?limit=15&name=Ann%20Lab%20Med&utm_campaign=journals',
+                'Biochemia Medica': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9610305/?limit=15&name=Biochem%20Med%20%28Zagreb%29&utm_campaign=journals',
+                'Clinica Chimica Acta': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/1302422/?limit=15&name=Clin%20Chim%20Acta&utm_campaign=journals',
+                'Clinical Chemistry and Laboratory Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9806306/?limit=15&name=Clin%20Chem%20Lab%20Med&utm_campaign=journals',
+                'Clinical Chemistry': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9421549/?limit=15&name=Clin%20Chem&utm_campaign=journals',
+                'American Journal of Clinical Pathology': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0370470/?limit=15&name=Am%20J%20Clin%20Pathol&utm_campaign=journals',
+                'Critical Reviews in Clinical Laboratory Sciences': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8914816/?limit=15&name=Crit%20Rev%20Clin%20Lab%20Sci&utm_campaign=journals',
+                'eJIFCC': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101092742/?limit=15&name=EJIFCC&utm_campaign=journals',
+                'International Journal of Analytical Chemistry': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101519424/?limit=15&name=Int%20J%20Anal%20Chem&utm_campaign=journals',
+                'Journal of Analytical Toxicology': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7705085/?limit=15&name=J%20Anal%20Toxicol&utm_campaign=journals',
+                'Journal of Clinical Laboratory Analysis': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8801384/?limit=15&name=J%20Clin%20Lab%20Anal&utm_campaign=journals',
+                'Laboratory Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0250641/?limit=15&name=Lab%20Med&utm_campaign=journals',
+                'Clinical Laboratory': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9705611/?limit=15&name=Clin%20Lab&utm_campaign=journals',
+                'Applied Biochemistry and Biotechnology': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8208561/?limit=15&name=Appl%20Biochem%20Biotechnol&utm_campaign=journals',
+                'Indian Journal of Clinical Biochemistry': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8708303/?limit=15&name=Indian%20J%20Clin%20Biochem&utm_campaign=journals',
+                'Journal of Laboratory Automation': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101558509/?limit=15&name=J%20Lab%20Autom&utm_campaign=journals',
+                'Chemistry and Physics of Lipids': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0067206/?limit=15&name=Chem%20Phys%20Lipids&utm_campaign=journals',
+                'Biological Trace Element Research': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7911509/?limit=15&name=Biol%20Trace%20Elem%20Res&utm_campaign=journals',
+                'Clinical and Experimental Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/100973405/?limit=15&name=Clin%20Exp%20Med&utm_campaign=journals',
+                'Annals of Clinical & Laboratory Science': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0410247/?limit=15&name=Ann%20Clin%20Lab%20Sci&utm_campaign=journals',
+                'Practical Laboratory Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101690848/?limit=15&name=Pract%20Lab%20Med&utm_campaign=journals',
+                'Scandinavian Journal of Clinical and Laboratory Investigation': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/2984789R/?limit=15&name=Scand%20J%20Clin%20Lab%20Invest%20Suppl&utm_campaign=journals',
+                'The Journal of Applied Laboratory Medicine': 'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101693884/?limit=15&name=J%20Appl%20Lab%20Med&utm_campaign=journals'
+            };
+            const journalPromises = journals.map(async (j) => {
+                const items = [];
+                const rss = rssMap[j];
+                try {
+                    if (rss) {
+                        let url = rss.replace(/limit=\\d+/i, 'limit=' + retmax);
+                        if (!url.includes('limit=')) url += (url.includes('?') ? '&' : '?') + 'limit=' + retmax;
+                        const txt = await fetchTextWithProxy(url);
+                        const xml = new DOMParser().parseFromString(txt, 'application/xml');
+                        Array.from(xml.querySelectorAll('item')).slice(0, retmax).forEach(it => {
+                            const link = it.querySelector('link')?.textContent || '';
+                            const rawDate = it.querySelector('pubDate')?.textContent || '';
+                            const dateParts = rawDate.split(' ');
+                            const cleanDate = dateParts.length > 3 ? `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}` : rawDate;
+                            items.push({
+                                title: it.querySelector('title')?.textContent || '',
+                                link: link,
+                                journal: j,
+                                date: cleanDate,
+                                pmid: link.match(/pubmed\\.ncbi\\.nlm\\.nih\\.gov\\/(\\d+)/)?.[1] || it.querySelector('guid')?.textContent?.match(/(\\d+)/)?.[1]
+                            });
+                        });
+                    } else {
+                        const term = `\"${j}\"[jour]`;
+                        const s = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&sort=pub+date&retmax=${retmax}&term=${encodeURIComponent(term)}`);
+                        const sjson = await s.json();
+                        const ids = sjson.esearchresult?.idlist || [];
+                        if (ids.length) {
+                            const f = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=${ids.join(',')}`);
+                            const xmlText = await f.text();
+                            const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+                            Array.from(xml.querySelectorAll('PubmedArticle')).forEach(a => {
+                                const pmid = a.querySelector('PMID')?.textContent || '';
+                                const pubDateNode = a.querySelector('ArticleDate[DateType="Electronic"]') || a.querySelector('JournalIssue > PubDate');
+                                items.push({
+                                    title: a.querySelector('ArticleTitle')?.textContent || '',
+                                    link: pmid ? `https://pubmed.ncbi.nlm.nih.gov/${pmid}/` : '',
+                                    journal: j,
+                                    date: formatXMLDate(pubDateNode),
+                                    authors: formatAuthorsFromArticle(a),
+                                    pmid: pmid
+                                });
+                            });
+                        }
+                    }
+                } catch (e) {}
+                return items;
+            });
+            const resultsArray = await Promise.all(journalPromises);
+            let allItems = resultsArray.flat();
+            const pmidsToFetch = Array.from(new Set(allItems.filter(x => !x.authors && x.pmid).map(x => x.pmid)));
+            if (pmidsToFetch.length) {
+                const f2 = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=${pmidsToFetch.join(',')}`);
+                if (f2.ok) {
+                    const xml2 = new DOMParser().parseFromString(await f2.text(), 'application/xml');
+                    const authorMap = {};
+                    Array.from(xml2.querySelectorAll('PubmedArticle')).forEach(a => {
+                        const pmid = a.querySelector('PMID')?.textContent;
+                        if (pmid) authorMap[pmid] = formatAuthorsFromArticle(a);
+                    });
+                    allItems.forEach(it => { if (!it.authors && authorMap[it.pmid]) it.authors = authorMap[it.pmid]; });
+                }
+            }
+            localStorage.setItem(currentCacheKey, JSON.stringify({
+                timestamp: now,
+                articles: allItems
+            }));
+            renderPubMedList(allItems, res);
+        } catch (err) {
+            res.innerHTML = '<div style="padding:8px; font-size:0.85rem;">Failed to load.</div>';
+        }
+    }
+    function renderPubMedList(articles, container) {
+        if (!articles.length) { container.innerHTML = '<div style="padding:8px; font-size:0.85rem;">No items found.</div>'; return; }
+        container.innerHTML = '';
+        const listDiv = document.createElement('div');
+        articles.forEach(it => {
+            const a = document.createElement('a');
+            a.href = it.link;
+            a.target = '_blank';
+            a.className = 'journal-link';
+            const authorPart = it.authors ? ` — ${it.authors}` : '';
+            a.textContent = `${it.title}${authorPart} — ${it.date} — ${it.journal}`;
+            listDiv.appendChild(a);
+        });
+        container.appendChild(listDiv);
     }
     
 </script>
