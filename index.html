@@ -122,12 +122,13 @@
                 align-content: center;
                 margin-left: auto;
                 margin-right: auto;
+            }
+            .nav-btn { background: transparent; border: none; padding: 8px 12px; border-radius: 14px; color: var(--text-light); font-weight: 600; cursor: pointer; font-size: clamp(0.7rem, 1.5vw, 0.8rem); display: flex; align-items: center; gap: 5px; flex-direction: column; transition: all 0.2s; flex-shrink: 0; }
+            .nav-btn i { font-size: clamp(1rem, 2.5vw, 1.2rem); margin-bottom: 2px; }
+            .nav-btn.active { background-color: var(--primary-light); color: var(--primary-dark); }
+            .nav-btn:hover { background-color: var(--bg-input); }
+            .nav-btn.wide { padding: 8px 20px; }
         }
-        .nav-btn { background: transparent; border: none; padding: 8px 12px; border-radius: 14px; color: var(--text-light); font-weight: 600; cursor: pointer; font-size: clamp(0.7rem, 1.5vw, 0.8rem); display: flex; align-items: center; gap: 5px; flex-direction: column; transition: all 0.2s; flex-shrink: 0; }
-        .nav-btn i { font-size: clamp(1rem, 2.5vw, 1.2rem); margin-bottom: 2px; }
-        .nav-btn.active { background-color: var(--primary-light); color: var(--primary-dark); }
-        .nav-btn:hover { background-color: var(--bg-input); }
-        .nav-btn.wide { padding: 8px 20px; }
         
         /* QC ve Notes sekmeleri - ÇOK DAHA GENİŞ - Responsive */
         .nav-tabs .nav-btn:nth-child(2),
