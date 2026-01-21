@@ -44,7 +44,7 @@
     color: var(--primary);
 }
 .qc-body {
-    display: none; /* Başlangıçta kapalı */
+    display: none;
     padding: clamp(15px, 2.5vw, 20px);
     border-top: 1px solid var(--border-color);
     animation: fadeIn 0.3s;
@@ -124,7 +124,7 @@
         .nav-btn:hover { background-color: var(--bg-input); }
         .nav-btn.wide { padding: 8px 20px; }
         
-        /* QC ve Notes sekmeleri - ÇOK DAHA GENİŞ - Responsive */
+        /* QC ve Notes sekmeleri */
         .nav-tabs .nav-btn:nth-child(2),
         .nav-tabs .nav-btn:nth-child(4),
         button.nav-btn[onclick*="tab-qc"],
@@ -140,28 +140,26 @@
         }
         
         /* Tablet ve Desktop (768px+) */
-        /* Masaüstü ve Tablet için Menü Boyutlarını Artır */
 @media (min-width: 768px) {
     .nav-btn {
-        padding: 12px 20px !important; /* Düğme iç boşluğunu artır */
-        gap: 8px !important; /* İkon ve yazı arası mesafeyi aç */
+        padding: 12px 20px !important;
+        gap: 8px !important;
     }
 
     .nav-btn i {
-        font-size: 1.6rem !important; /* İkon boyutunu büyüt */
+        font-size: 1.6rem !important;
         margin-bottom: 4px !important;
     }
 
     .nav-btn span, 
     .nav-btn {
-        font-size: 1rem !important; /* Yazı boyutunu büyüt (yaklaşık 16px) */
-        font-weight: 700 !important; /* Yazıları daha kalın yap */
+        font-size: 1rem !important;
+        font-weight: 700 !important;
     }
 
-    /* QC ve Notes gibi geniş butonlar için özel ayar */
     .nav-tabs .nav-btn:nth-child(2),
     .nav-tabs .nav-btn:nth-child(4) {
-        min-width: 180px !important; /* Buton genişliğini koru/artır */
+        min-width: 180px !important;
     }
 }
         
@@ -202,49 +200,49 @@
     }
 
     .qc-header h3 {
-        font-size: 0.9rem !important; /* Başlık metnini küçültür */
+        font-size: 0.9rem !important;
         font-weight: 600 !important;
     }
 
     .qc-header {
-        padding: 12px 15px !important; /* Başlık alanını dikeyde daraltır */
+        padding: 12px 15px !important;
     }
 
     /* Taşmayı önleyen ve hizalayan yeni kısım */
     .calc-input-grid { 
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* Ekranı tam ikiye böler */
-        gap: 8px !important; /* Kutular arası boşluğu biraz daralttık */
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important; 
         width: 100% !important;
         box-sizing: border-box !important;
     }
 
     .input-group {
         width: 100% !important;
-        min-width: 0 !important; /* İçeriğin (yazıların) kutuyu dışarı itmesini engeller */
+        min-width: 0 !important; 
     }
 
     .input-group input {
         width: 100% !important;
-        box-sizing: border-box !important; /* Padding'i genişliğe dahil eder */
+        box-sizing: border-box !important; 
     }
 
     .unit-badge {
-        font-size: 0.65rem !important; /* Birim yazılarını küçülterek yer kazandık */
+        font-size: 0.65rem !important; 
         padding: 2px 4px !important;
     }
 
     .calculator-view {
         padding: 12px !important;
         width: 100% !important;
-        box-sizing: border-box !important; /* Kartın dışarı taşmasını engeller */
+        box-sizing: border-box !important;
     }
 }
 
-    /* --- HESAPLAMA KUTUCUKLARI İÇİN YENİ EKLEYECEĞİNİZ KISIM --- */
+
     .calc-input-grid { 
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* Ekranı tam olarak ikiye böler */
+        grid-template-columns: 1fr 1fr !important; 
         gap: 10px !important; 
     }
 
@@ -254,10 +252,10 @@
 
     .input-group input {
         width: 100% !important;
-        box-sizing: border-box !important; /* Padding'in genişliği bozmasını engeller */
+        box-sizing: border-box !important;
     }
     /* --------------------------------------------------------- */
-}
+
         /* CONTAINER */
         .container { 
             width: 100%;
@@ -301,13 +299,13 @@
     align-items: center;
     margin-bottom: 8px;
     width: 100%;
-    min-height: 1.5em; /* Yükseklik farklarını önlemek için */
+    min-height: 1.5em; 
 }
 
 .label-row label {
-    white-space: nowrap; /* Yazıların alt satıra geçip kutuyu şişirmesini önler */
+    white-space: nowrap; 
     overflow: hidden;
-    text-overflow: ellipsis; /* Çok uzun başlıkları "..." ile keser */
+    text-overflow: ellipsis; 
     font-size: clamp(0.7rem, 2vw, 0.85rem);
     margin-bottom: 0;
 }
@@ -387,14 +385,14 @@
         .journal-link:last-child { border-bottom: none; }
         .journal-list > div {
     display: flex;
-    align-items: center; /* Kutucuk ve metni dikeyde ortalar */
-    gap: 10px;           /* Aralarındaki boşluk */
-    padding: 8px 12px;   /* Satır içi boşluklar */
+    align-items: center; 
+    gap: 10px;           
+    padding: 8px 12px;   
     border-bottom: 1px solid var(--border-color);
 }
         .journal-list .journal-link {
     display: inline-block;
-    line-height: 1;      /* Metin yüksekliğini kutucuğa eşitler */
+    line-height: 1;      
     padding: 0;
     margin: 0;
     text-decoration: none;}
@@ -402,7 +400,7 @@
 .journal-list .btn-secondary {
     width: 20px;
     height: 20px;
-    flex-shrink: 0;      /* Kutucuğun daralmasını engeller */
+    flex-shrink: 0;      
     display: flex;
     align-items: center;
     justify-content: center;
@@ -463,14 +461,14 @@
         font-size: 14px !important;
     }
     header h1 {
-        font-size: 1.5rem !important; /* 21px civarı */
+        font-size: 1.5rem !important;
     }
 
     h3 {
-        font-size: 1.1rem !important; /* 15.4px civarı */
+        font-size: 1.1rem !important;
     }
            .nav-btn {
-        font-size: 12px !important; /* İkonların yanındaki yazılar çok büyük olmamalı */
+        font-size: 12px !important; 
     }
 
     /* Liste öğeleri (Journal links) */
@@ -539,7 +537,7 @@
         /* Dış Bağlantı Kartları Konteynırı */
 .external-links-grid {
     display: grid;
-    /* Kutucukları daha küçük (min 120px) yaparak yan yana daha fazla sığmasını sağlar */
+    
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
     gap: 10px;
     margin-top: 15px;
@@ -549,7 +547,7 @@
 .external-link-card {
     background: var(--bg-card);
     border-radius: var(--radius);
-    padding: 2px !important; /* İç boşluğu azalttık */
+    padding: 2px !important;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
@@ -558,7 +556,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 80px; /* Yüksekliği küçülttük */
+    min-height: 80px;
 }
 
 .external-link-card:hover {
@@ -568,23 +566,23 @@
 }
 
 .external-link-card i {
-    font-size: 1.4rem !important; /* İkonları küçülttük */
+    font-size: 1.4rem !important; 
     color: var(--primary);
     margin-bottom: 6px !important;
 }
 
 .external-link-card h4 {
-    font-size: 0.75rem !important; /* Başlık fontunu küçülttük */
+    font-size: 0.75rem !important;
     margin: 0;
     line-height: 1.1;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Uzun başlıkları 2 satırda keser */
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
 .external-link-card span {
-    font-size: 0.65rem !important; /* Alt metni küçülttük */
+    font-size: 0.65rem !important; 
     color: var(--text-light);
     margin-top: 3px;
 }
@@ -592,7 +590,7 @@
 /* Mobil için ekstra küçültme */
 @media (max-width: 480px) {
     .external-links-grid {
-        grid-template-columns: repeat(3, 1fr); /* Mobilde yan yana 3 tane sığdır */
+        grid-template-columns: repeat(3, 1fr); 
         gap: 3px;
     }
     .external-link-card {
@@ -609,7 +607,7 @@
 
 <header>
     <div class="header-content">
-        <h1>BIOCHEMISTRY ASSISTANT</h1>
+        <h1>MEDICAL BIOCHEMISTRY ASSISTANT</h1>
         <p>Professional Laboratory Tool</p>
     </div>
 </header>
@@ -1207,7 +1205,7 @@
     <div id="tab-info" class="section">
         <div class="calculator-view" style="display:block;">
             <h3>Laboratory Handbook</h3>
-            <p>Tube color codes, critical values, and procedures.</p>
+            <p>Turkish Ministry of Health, Medical Biochemistry Regulations, Letters, Legislation Documents</p>
             <button class="btn-action" onclick="window.open('https://drive.google.com/drive/folders/1dayFfTfZdNzpzFO80tXyA1vU5qtAsBvP?usp=drive_link')">Google Drive <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
         </div>
         
@@ -3696,3 +3694,4 @@ function renderPubMedList(articles, container) {
 </script>
 </body>
 </html>
+
