@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Medical Biochemistry Assistant PRO</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -179,16 +179,33 @@
         
         /* Çok küçük ekranlar (480px ve altı) */
         @media (max-width: 480px) {
-            .nav-tabs .nav-btn:nth-child(2),
-            .nav-tabs .nav-btn:nth-child(4),
-            button.nav-btn[onclick*="tab-qc"],
-            button.nav-btn[onclick*="tab-notes"] {
-                padding-left: 20px !important;
-                padding-right: 20px !important;
-                min-width: 90px !important;
-            }
-        }
+    /* Mevcut nav-btn kodlarınız burada kalsın */
+    .nav-tabs .nav-btn:nth-child(2),
+    .nav-tabs .nav-btn:nth-child(4),
+    button.nav-btn[onclick*="tab-qc"],
+    button.nav-btn[onclick*="tab-notes"] {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        min-width: 90px !important;
+    }
 
+    /* --- HESAPLAMA KUTUCUKLARI İÇİN YENİ EKLEYECEĞİNİZ KISIM --- */
+    .calc-input-grid { 
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* Ekranı tam olarak ikiye böler */
+        gap: 10px !important; 
+    }
+
+    .input-group {
+        width: 100% !important;
+    }
+
+    .input-group input {
+        width: 100% !important;
+        box-sizing: border-box !important; /* Padding'in genişliği bozmasını engeller */
+    }
+    /* --------------------------------------------------------- */
+}
         /* CONTAINER */
         .container { 
             width: 100%;
@@ -215,8 +232,7 @@
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-weight: 600; font-size: clamp(0.8rem, 1.5vw, 0.85rem); margin-bottom: 5px; }
         .input-group input, .input-group select { width: 100%; padding: clamp(8px, 2vw, 10px); border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-size: clamp(0.85rem, 1.5vw, 0.9rem); }
-        .calc-input-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 2vw, 15px); align-items: end; }
-        .calc-input-grid > * { min-width: 0; }
+        .calc-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 2vw, 15px); align-items: end; }
         .full-width { grid-column: span 2; }
         
         .btn-action { background: var(--primary); color: white; border: none; padding: clamp(10px, 2vw, 12px); border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.2s; font-size: clamp(0.85rem, 1.5vw, 0.9rem); }
@@ -227,7 +243,22 @@
         .warning-box { background: var(--warning-bg); color: var(--warning-text); padding: clamp(12px, 2vw, 15px); border-radius: 12px; font-size: clamp(0.8rem, 1.5vw, 0.85rem); margin-top: 15px; border: 1px solid var(--warning-border); }
         
         /* Specific Calc Styles */
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 5px; }
+        .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+    min-height: 1.5em; /* Yükseklik farklarını önlemek için */
+}
+
+.label-row label {
+    white-space: nowrap; /* Yazıların alt satıra geçip kutuyu şişirmesini önler */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Çok uzun başlıkları "..." ile keser */
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    margin-bottom: 0;
+}
         .unit-badge { font-size: clamp(0.65rem, 1.3vw, 0.7rem); background: var(--bg-body); color: var(--primary); padding: 2px 6px; border-radius: 6px; cursor: pointer; border: 1px solid var(--primary-light); margin-left: auto; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; }
         .unit-badge:hover { background: var(--primary-light); transform: scale(1.05); }
         .mini-result { font-size: clamp(0.85rem, 1.8vw, 0.9rem); font-weight: 600; color: var(--primary); margin-top: 5px; min-height: 1.2em; display: flex; justify-content: space-between; }
@@ -368,13 +399,41 @@
         .signature-link .signature { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; font-size: clamp(0.7rem, 1.5vw, 0.8rem); font-weight: 700; color: var(--primary); display: block; margin-top: 3px; text-align: center; }
 
         /* Responsive Design */
-        @media (max-width: 480px) { 
+       @media (max-width: 480px) { 
             .grid-menu { grid-template-columns: repeat(2, 1fr); gap: 8px; } 
             .calc-card-mini { height: 85px; padding: 10px; }
             .calc-icon { font-size: 1.3rem; }
             .calc-title { font-size: 0.65rem; }
-            .nav-tabs { margin: -15px 10px 15px 10px; padding: 4px 6px; gap: 3px; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
-            .nav-tabs::-webkit-scrollbar { display: none; }
+            .nav-tabs { margin: -15px auto 15px auto; padding: 4px 6px; gap: 3px; }
+            .info-links-grid { grid-template-columns: repeat(2, 1fr); }
+            html { font-size: 18px; }
+            body, p, span, div, label, input, select {
+        font-size: 14px !important;
+    }
+    header h1 {
+        font-size: 1.5rem !important; /* 21px civarı */
+    }
+
+    h3 {
+        font-size: 1.1rem !important; /* 15.4px civarı */
+    }
+           .nav-btn {
+        font-size: 12px !important; /* İkonların yanındaki yazılar çok büyük olmamalı */
+    }
+
+    /* Liste öğeleri (Journal links) */
+    .journal-link {
+        font-size: 14px !important;
+    }
+
+    /* Hesaplayıcı sonuç kutuları */
+    .mini-result, .final-result-box {
+        font-size: 14px !important;
+    }
+}
+            .input-group label { font-size: 0.9rem; }
+            .input-group input, .input-group select { font-size: 0.95rem; }
+            .btn-action { font-size: 0.95rem; }
             .nav-btn { padding: 5px 8px; font-size: 0.65rem; gap: 2px; }
             .nav-btn i { font-size: 0.9rem; }
             .nav-btn.wide { padding: 5px 12px; }
@@ -382,9 +441,6 @@
             .container { padding: 0 10px 25px 10px; }
             .calculator-view { padding: 12px; }
             .chart-container { height: 250px; }
-            .calc-input-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .suggestions-box { max-height: 50vh; }
         }
         
         @media (min-width: 481px) and (max-width: 768px) { 
@@ -424,7 +480,7 @@
         
         /* Tablet Landscape and Desktop */
         @media (min-width: 769px) {
-            .calc-input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .calc-input-grid { grid-template-columns: 1fr 1fr; }
             .full-width { grid-column: span 2; }
         }
 
@@ -437,8 +493,6 @@
     margin-top: 15px;
     width: 100%;
 }
-
-#manual-params { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
 .external-link-card {
     background: var(--bg-card);
@@ -486,7 +540,7 @@
 /* Mobil için ekstra küçültme */
 @media (max-width: 480px) {
     .external-links-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr); /* Mobilde yan yana 3 tane sığdır */
         gap: 3px;
     }
     .external-link-card {
