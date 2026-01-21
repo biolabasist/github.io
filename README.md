@@ -73,7 +73,7 @@ This software is developed as a Medical Biochemistry Assistant Tool for educatio
 🤝 Contact
 For feedback, suggestions, or error reporting:
 
-Developer: Uzm. Dr. Belgin ŞARA
+Developer: Belgin ŞARA, MD
 
 Github: https://github.com/belqin
 Email: belginsaraa@gmail.com
