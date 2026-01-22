@@ -289,9 +289,16 @@
         .btn-action:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
         .btn-secondary { background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); }
         
-        .chart-container { position: relative; height: clamp(300px, 40vh, 400px); width: 100%; margin-top: 20px; background: #fff; padding: 10px; border-radius: 12px; border: 1px solid #ddd; }
-        .warning-box { background: var(--warning-bg); color: var(--warning-text); padding: clamp(12px, 2vw, 15px); border-radius: 12px; font-size: clamp(0.8rem, 1.5vw, 0.85rem); margin-top: 15px; border: 1px solid var(--warning-border); }
-        
+        .chart-container { 
+    position: relative; 
+    height: clamp(500px, 70vh, 750px);
+    width: 100%; 
+    margin-top: 20px; 
+    background: #fff; 
+    padding: 10px; 
+    border-radius: 12px; 
+    border: 1px solid #ddd; 
+}
         /* Specific Calc Styles */
         .label-row {
     display: flex;
@@ -490,7 +497,7 @@
             header { padding: 1.5rem 1rem; }
             .container { padding: 0 10px 25px 10px; }
             .calculator-view { padding: 12px; }
-            .chart-container { height: 250px; }
+            .chart-container { height: 320px; }
         }
         
         @media (min-width: 481px) and (max-width: 768px) { 
@@ -506,7 +513,7 @@
             .nav-btn.wide { padding: 6px 15px; }
             header { padding: 2rem 1rem; }
             .container { padding: 0 15px 30px 15px; }
-            .chart-container { height: 300px; }
+            .chart-container { height: 380px; }
         }
         
         @media (max-width: 480px) {
@@ -2492,12 +2499,12 @@ function getVal(id) {
         
         ljData.forEach((val, index) => {
             let color = '#16a34a';
-            let radius = 4;
+            let radius = 3;
             let style = 'circle';
 
             const violation = violations.find(v => v.index === index);
             if (violation) {
-                radius = 7;
+                radius = 5;
                 style = 'rectRot';
                 color = violation.color || '#b91c1c';
             }
@@ -2605,6 +2612,9 @@ function getVal(id) {
 
         // ... (drawLJChart fonksiyonunun üst kısımları aynı kalacak) ...
 
+        const yMin = mean - 4 * sd;
+        const yMax = mean + 4 * sd;
+
         ljChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -2649,6 +2659,8 @@ function getVal(id) {
                             font: {weight:'bold'},
                             padding: 12
                         },
+                        min: yMin,
+                        max: yMax,
                         ticks: {
                             display: true,
                             autoSkip: true,
@@ -3993,4 +4005,3 @@ function calculateII() {
 </script>
 </body>
 </html>
-
