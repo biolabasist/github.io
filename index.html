@@ -1013,7 +1013,7 @@
                 <div class="calc-input-grid">
                     <div class="input-group"><div class="label-row"><label>% (NGSP)</label><span class="unit-badge">%</span></div><input type="number" id="a1c-ngsp" oninput="calculateA1c('ngsp')"></div>
                     <div class="input-group"><div class="label-row"><label>mmol/mol (IFCC)</label><span class="unit-badge">mmol/mol</span></div><input type="number" id="a1c-ifcc" oninput="calculateA1c('ifcc')"></div>
-                    <div style="grid-column: span 2; font-size: 0.8rem; color: var(--text-light); margin-top: 15px; text-align: center;"><span class="formula-display">Formula: NGSP = (0.09148 × IFCC) + 2.152</span></div>
+                    <div style="grid-column: span 2; font-size: 0.8rem; color: var(--text-light); margin-top: 15px; text-align: center;"></div>
                     <div id="res-a1c-eag" class="final-result-box" style="grid-column: span 2;"></div>
                 </div>
             </div>
@@ -1029,6 +1029,10 @@
             <i class="fa-solid fa-chevron-down"></i>
         </div>
         <div id="qc-lj" class="qc-body">
+            <div class="info-box" style="background: rgba(var(--primary-rgb), 0.08); padding: 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+    <i class="fa-solid fa-circle-info"></i> 
+    Enter your data manually or upload via Excel. When uploading, please ensure your file matches the template and uses dots (.) instead of commas (,) as decimal separators. You can either let the system calculate the Mean and SD automatically or enter your own values—be sure to select the appropriate option. You can edit or delete entries by clicking on the value or its sequence number. Select the Westgard rules you wish to apply from the checklist. Once everything is ready, click 'Calculate & Plot'.
+</div>
             <div class="calc-input-grid">
                 <div class="input-group">
                     <div class="label-row"><label>Mean</label></div>
@@ -1103,6 +1107,10 @@
             <i class="fa-solid fa-chevron-down"></i>
         </div>
         <div id="qc-pbrtqc" class="qc-body">
+            <div class="info-box" style="background: rgba(var(--primary-rgb), 0.08); padding: 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+    <i class="fa-solid fa-circle-info"></i> 
+                Enter your data manually or upload via Excel. When uploading, please ensure the file matches the template and uses dots (.) as decimal separators instead of commas (,). To use the methods and parameters established by Hacettepe University Hospitals Central Laboratory, select the 'Auto' option for calculations. Alternatively, you may manually select your preferred method and parameters. Additionally, you can enable the 'Truncation' option to apply biological variation-mediated truncation limits, and the 'Log Transformation' option to convert your data into a log-normal distribution. Once everything is ready, click 'Calculate & Plot'.
+</div>
             <div class="calc-input-grid">
                 <div class="input-group full-width">
                     <label>Analyte</label>
@@ -2200,174 +2208,967 @@
     }
 
     function calculateIgGIndex() {
-        const igg_csf = getNormalizedValue('igg-csf', 'mg/dL');
-        const alb_serum = getNormalizedValue('alb-serum', 'g/dL');
-        const igg_serum = getNormalizedValue('igg-serum', 'mg/dL');
-        const alb_csf = getNormalizedValue('alb-csf', 'mg/dL');
-        if (igg_csf && alb_serum && igg_serum && alb_csf) {
-            const alb_serum_mg = alb_serum * 1000;
-            const res = (igg_csf * alb_serum_mg) / (igg_serum * alb_csf);
-            document.getElementById('res-igg-index-final').innerHTML = `IgG Index: ${res.toFixed(2)}`;
-        } else {
-            document.getElementById('res-igg-index-final').innerHTML = '';
-        }
-    }
+    const igg_csf = getNormalizedValue('igg-csf', 'mg/dL');
+    const alb_serum = getNormalizedValue('alb-serum', 'g/dL');
+    const igg_serum = getNormalizedValue('igg-serum', 'mg/dL');
+    const alb_csf = getNormalizedValue('alb-csf', 'mg/dL');
+    const resBox = document.getElementById('res-igg-index-final');
 
-    function calculateLDL() {
-        const t = getNormalizedValue('ldl-tot','mg/dL');
-        const h = getNormalizedValue('ldl-hdl','mg/dL');
-        const tr = getNormalizedValue('ldl-trig','mg/dL');
-        const el = document.getElementById('res-ldl-final');
-        if(!isNaN(t) && !isNaN(h) && !isNaN(tr) && t>0 && h>0){
-            const l = t - h - (tr/5);
-            const lmmol = l * 0.0259;
-            const ratio = tr / h;
-            el.innerHTML = `LDL (Friedewald): ${l.toFixed(0)} mg/dL (${lmmol.toFixed(2)} mmol/L)<br>Triglyceride/HDL Ratio: ${ratio.toFixed(2)}`;
+    if (igg_csf && alb_serum && igg_serum && alb_csf) {
+        const alb_serum_mg = alb_serum * 1000;
+        const res = (igg_csf * alb_serum_mg) / (igg_serum * alb_csf);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (res > 0.7) {
+            interpretation = "Elevated IgG Index (>0.7): Suggests intrathecal IgG synthesis (e.g., Multiple Sclerosis, Neurosyphilis).";
+            color = "#dc2626"; // Kırmızı (Anormal)
+        } else if (res >= 0.3 && res <= 0.7) {
+            interpretation = "IgG Index is within the normal physiological range (0.3–0.7).";
+            color = "#16a34a"; // Yeşil (Normal)
         } else {
-            el.innerHTML = '';
+            interpretation = "Low IgG Index: Less common; usually indicates blood-brain barrier compromise or technical variation.";
+            color = "#d97706"; // Turuncu
         }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">IgG Index: ${res.toFixed(2)}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    Index = [IgG (CSF) / IgG (Serum)] / [Albumin (CSF) / Albumin (Serum)]<br>
+                    <span style="font-style: italic;">*Clinical Note: An elevated index indicates that IgG is being produced within the CNS rather than leaking from the blood. It is positive in ~90% of MS patients.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
     }
-    function calculateHoma() { const g=parseFloat(document.getElementById('homa-glu').value), i=parseFloat(document.getElementById('homa-ins').value); if(g&&i){ const v=((g*i)/405); document.getElementById('res-homa-final').innerHTML=`HOMA-IR: ${v.toFixed(2)}`; } else { document.getElementById('res-homa-final').innerHTML=''; } }
-    function setSchwartzK(k,b){ schwartzK=k; document.querySelectorAll('#calc-schwartz .radio-option').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); calculateSchwartz(); }
+}
+
+
+function calculateLDL() {
+    const t = getNormalizedValue('ldl-tot', 'mg/dL');
+    const h = getNormalizedValue('ldl-hdl', 'mg/dL');
+    const tr = getNormalizedValue('ldl-trig', 'mg/dL');
+    const el = document.getElementById('res-ldl-final');
+
+    if (!isNaN(t) && !isNaN(h) && !isNaN(tr) && t > 0 && h > 0 && tr >= 0) {
+        // Friedewald Formula: LDL = TC - HDL - (TG/5)
+        const l = t - h - (tr / 5);
+        const lmmol = l * 0.0259;
+        const ratio = tr / h;
+
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama (Genel popülasyon hedefleri)
+        if (tr > 400) {
+            interpretation = "Friedewald formula is inaccurate when Triglycerides > 400 mg/dL. Direct LDL measurement is recommended.";
+            color = "#d97706"; // Turuncu (Uyarı)
+        } else if (l >= 190) {
+            interpretation = "Very High LDL: Significant cardiovascular risk.";
+            color = "#dc2626"; // Kırmızı
+        } else if (l >= 130 && l < 190) {
+            interpretation = "Borderline/High LDL: Lifestyle or medical intervention may be needed.";
+            color = "#d97706";
+        } else {
+            interpretation = "LDL is within the optimal or near-optimal range for the general population.";
+            color = "#16a34a"; // Yeşil
+        }
+
+        el.style.display = 'block';
+        el.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.1rem; font-weight: bold; color: ${color};">LDL: ${l.toFixed(0)} mg/dL (${lmmol.toFixed(2)} mmol/L)</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">TG/HDL Ratio: ${ratio.toFixed(2)}</div>
+                <div style="font-size: 0.8rem; margin-top: 4px; color: #475569;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    LDL = Total Cholesterol - HDL - (Triglycerides / 5)<br>
+                    <span style="font-style: italic;">*Clinical Note: The TG/HDL ratio is a strong predictor of insulin resistance and cardiovascular risk (Optimal: <2.0).</span>
+                </div>
+            </div>
+        `;
+    } else {
+        el.innerHTML = '';
+        el.style.display = 'none';
+    }
+}
+
+function calculateHoma() {
+    const g = parseFloat(document.getElementById('homa-glu').value),
+          i = parseFloat(document.getElementById('homa-ins').value);
+    const resBox = document.getElementById('res-homa-final');
+
+    if (g && i) {
+        // Standart HOMA-IR Formülü (Glucose mg/dL bazında)
+        const v = ((g * i) / 405);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (v > 2.5) {
+            interpretation = "High HOMA-IR (>2.5): Significant insulin resistance. Increased risk for Type 2 Diabetes and Metabolic Syndrome.";
+            color = "#dc2626"; // Kırmızı
+        } else if (v >= 1.9 && v <= 2.5) {
+            interpretation = "Borderline: Early signs of insulin resistance. Lifestyle modifications recommended.";
+            color = "#d97706"; // Turuncu
+        } else {
+            interpretation = "Normal: Optimal insulin sensitivity.";
+            color = "#16a34a"; // Yeşil
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">HOMA-IR: ${v.toFixed(2)}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    HOMA-IR = [Glucose (mg/dL) × Insulin (µIU/mL)] / 405<br>
+                    <span style="font-style: italic;">*Clinical Note: For the most accurate result, the blood sample must be taken after at least 8 hours of fasting.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+function setSchwartzK(k,b){ schwartzK=k; document.querySelectorAll('#calc-schwartz .radio-option').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); calculateSchwartz(); }
     function calculateSchwartz(){ const h=parseFloat(document.getElementById('sch-height').value), c=parseFloat(document.getElementById('sch-crea').value); const el=document.getElementById('res-schwartz-final'); if(h&&c){ const gfr=((schwartzK*h)/c); el.innerHTML=`eGFR (Schwartz): ${gfr.toFixed(1)} mL/min/1.73m²`; } else { el.innerHTML=''; } }
-    function calculateFIB4(){ const a=parseFloat(document.getElementById('fib-age').value), ast=parseFloat(document.getElementById('fib-ast').value), alt=parseFloat(document.getElementById('fib-alt').value), p=parseFloat(document.getElementById('fib-plt').value); if(a&&ast&&alt&&p) document.getElementById('res-fib4-final').innerText=`FIB-4: ${((a*ast)/(p*Math.sqrt(alt))).toFixed(2)}`; }
-    function calculateCorrNa(){ const nEl=document.getElementById('na-meas'), gEl=document.getElementById('na-glu'); const n=parseFloat(nEl.value), g=parseFloat(gEl.value); if(n&&g){ const gUnit=gEl.parentNode.querySelector('.unit-badge').textContent.trim(); const corr = gUnit.includes('mmol/L') ? n + 1.6*((g-5.6)/5.6) : n + 1.6*((g-100)/100); document.getElementById('res-na-final').innerHTML=`Corrected Na: ${corr.toFixed(1)} mEq/L (${corr.toFixed(1)} mmol/L)`; } else { document.getElementById('res-na-final').innerHTML=''; } }
-    function calculateCa(){ const cEl=document.getElementById('ca-tot'), aEl=document.getElementById('ca-alb'); const c=parseFloat(cEl.value), a=parseFloat(aEl.value); if(c&&a){ const cUnit=cEl.parentNode.querySelector('.unit-badge').textContent.trim(); const aUnit=aEl.parentNode.querySelector('.unit-badge').textContent.trim(); const cMg = cUnit.includes('mmol/L') ? c*4 : c; const aGdL = aUnit.includes('g/L') ? a/10 : a; const corrMgdl = cMg + 0.8*(4.0 - aGdL); const corrMmol = corrMgdl*0.25; document.getElementById('res-ca-final').innerHTML=`Corrected Ca: ${corrMgdl.toFixed(2)} mg/dL (${corrMmol.toFixed(2)} mmol/L)`; } else { document.getElementById('res-ca-final').innerHTML=''; } }
-    function calculateCorrMg(){ const mEl=document.getElementById('mg-meas'), aEl=document.getElementById('mg-alb'); const m=parseFloat(mEl.value), a=parseFloat(aEl.value); if(m&&a){ const mUnit=mEl.parentNode.querySelector('.unit-badge').textContent.trim(); const aUnit=aEl.parentNode.querySelector('.unit-badge').textContent.trim(); const mMgdl = mUnit.includes('mmol/L') ? m/0.4114 : m; const aGdL = aUnit.includes('g/L') ? a/10 : a; const corrMgdl = mMgdl + 0.05*(4.0 - aGdL); const corrMmol = corrMgdl*0.4114; document.getElementById('res-mg-final').innerHTML=`Corrected Mg: ${corrMgdl.toFixed(2)} mg/dL (${corrMmol.toFixed(3)} mmol/L)`; } else { document.getElementById('res-mg-final').innerHTML=''; } }
-    function calculateAnionGap(){ const n=parseFloat(document.getElementById('ag-na').value), c=parseFloat(document.getElementById('ag-cl').value), h=parseFloat(document.getElementById('ag-hCO3')?document.getElementById('ag-hCO3').value:document.getElementById('ag-hco3').value), a=parseFloat(document.getElementById('ag-alb').value||'4.0'); if(n&&c&&h){ const ag=(n-(c+h)); const corrAg=ag + 2.5*(4.0 - a); document.getElementById('res-ag-final').innerHTML=`Anion Gap: ${ag.toFixed(1)} mEq/L (${ag.toFixed(1)} mmol/L)<br>Albumin-corrected AG: ${corrAg.toFixed(1)} mEq/L`; } else { document.getElementById('res-ag-final').innerHTML=''; } }
-    function calculateOsmo(){ const nEl=document.getElementById('osmo-na'), gEl=document.getElementById('osmo-glu'), bEl=document.getElementById('osmo-bun'); const n=parseFloat(nEl.value), g=parseFloat(gEl.value), b=parseFloat(bEl.value); if(n&&g&&b){ const gUnit=gEl.parentNode.querySelector('.unit-badge').textContent.trim(); const bUnit=bEl.parentNode.querySelector('.unit-badge').textContent.trim(); const osmo = (2*n) + (gUnit.includes('mmol/L') ? g : g/18) + (bUnit.includes('mmol/L') ? b : b/2.8); document.getElementById('res-osmo-final').innerHTML=`Serum Osmolality: ${osmo.toFixed(0)} mOsm/kg (${osmo.toFixed(0)} mmol/kg)`; } else { document.getElementById('res-osmo-final').innerHTML=''; } }
 
-    function calculateFENa(){ const sna=getNormalizedValue('fena-sna','mEq/L'); const screa=getNormalizedValue('fena-screa','mg/dL'); const una=getNormalizedValue('fena-una','mEq/L'); const ucrea=getNormalizedValue('fena-ucrea','mg/dL'); const res=document.getElementById('res-fena-final'); if(!isNaN(sna)&&!isNaN(screa)&&!isNaN(una)&&!isNaN(ucrea)&&sna>0&&screa>0&&ucrea>0){ const f=((una*screa)/(sna*ucrea))*100; res.innerHTML=`FENa: ${f.toFixed(2)}%`; } else { res.innerHTML=''; } }
-    function calculateSAAG(){ const s=getNormalizedValue('saag-serum','g/dL'), a=getNormalizedValue('saag-ascites','g/dL'); const el=document.getElementById('res-saag-final'); if(!isNaN(s)&&!isNaN(a)){ const d=s-a; const d_gL=d*10; el.innerHTML=`SAAG: ${d.toFixed(2)} g/dL (${d_gL.toFixed(2)} g/L)`; } else { el.innerHTML=''; } }
-    function calculatePH(){ const h=parseFloat(document.getElementById('ph-hco3').value), p=parseFloat(document.getElementById('ph-pco2').value); if(h&&p){ const badge=document.getElementById('ph-pco2').parentNode.querySelector('.unit-badge'); const txt=badge?badge.textContent.trim():''; const k=txt.includes('kPa')?0.226:0.03; const ph=(6.1+Math.log10(h/(k*p))); document.getElementById('res-ph-final').innerHTML=`pH: ${ph.toFixed(3)}`; } else { document.getElementById('res-ph-final').innerHTML=''; } }
-    function calculateMentzer(){ const m=parseFloat(document.getElementById('men-mcv').value), r=parseFloat(document.getElementById('men-rbc').value); if(m&&r){ const v=(m/r); document.getElementById('res-mentzer-final').innerHTML=`Mentzer Index: ${v.toFixed(1)}`; } else { document.getElementById('res-mentzer-final').innerHTML=''; } }
-    function calculateAlbGlob(){ const a=getNormalizedValue('albglob-alb','g/dL'), t=getNormalizedValue('albglob-tp','g/dL'); const el=document.getElementById('res-albglob-final'); if(!isNaN(a)&&!isNaN(t)&&a>=0&&t>=0){ const g=t-a; let out=''; if(g===0){ out='∞'; } else { out=(a/g).toFixed(2); } el.innerHTML=`A/G Ratio: ${out}`; } else { el.innerHTML=''; } }
+function calculateFIB4() {
+    const a = parseFloat(document.getElementById('fib-age').value),
+          ast = parseFloat(document.getElementById('fib-ast').value),
+          alt = parseFloat(document.getElementById('fib-alt').value),
+          p = parseFloat(document.getElementById('fib-plt').value);
+    const resBox = document.getElementById('res-fib4-final');
+
+    if (a && ast && alt && p && alt > 0) {
+        // FIB-4 Formula: (Age * AST) / (Platelet * sqrt(ALT))
+        const res = (a * ast) / (p * Math.sqrt(alt));
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama (NAFLD/MASLD için standart eşikler)
+        if (res < 1.30) {
+            interpretation = "Low Risk: High negative predictive value for advanced fibrosis.";
+            color = "#16a34a"; // Yeşil
+        } else if (res >= 1.30 && res <= 2.67) {
+            interpretation = "Indeterminate Risk: Intermediate zone. Consider additional testing (e.g., FibroScan).";
+            color = "#d97706"; // Turuncu
+        } else {
+            interpretation = "High Risk: Significant risk of advanced fibrosis or cirrhosis.";
+            color = "#dc2626"; // Kırmızı
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">FIB-4 Score: ${res.toFixed(2)}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    FIB-4 = (Age [years] × AST [U/L]) / (Platelet Count [10<sup>9</sup>/L] × √ALT [U/L])<br>
+                    <span style="font-style: italic;">*Clinical Note: In patients over age 65, the low-risk cutoff is often adjusted to 2.0 instead of 1.3.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+    function calculateCorrNa() {
+    const nEl = document.getElementById('na-meas'), gEl = document.getElementById('na-glu');
+    const n = parseFloat(nEl.value), g = parseFloat(gEl.value);
+    const resBox = document.getElementById('res-na-final');
+
+    if (n && g) {
+        const gUnit = gEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        const isMmol = gUnit.includes('mmol/L');
+        
+        // Eşik değer kontrolü (400 mg/dL veya 22.2 mmol/L)
+        const threshold = isMmol ? 22.2 : 400;
+        const baseline = isMmol ? 5.6 : 100;
+        
+        // Katsayı: 400 mg/dL altı için 1.6, üstü için 2.4
+        const coefficient = g > threshold ? 2.4 : 1.6;
+        
+        // Formül uygulaması
+        const corr = n + coefficient * ((g - baseline) / (isMmol ? 5.6 : 100));
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        if (corr < 135) {
+            interpretation = "True hyponatremia is present despite glucose correction.";
+            color = "#dc2626";
+        } else if (corr >= 135 && corr <= 145) {
+            interpretation = "Sodium is within normal limits after correction (Pseudohyponatremia).";
+            color = "#16a34a";
+        } else {
+            interpretation = "Corrected sodium is high, indicating significant water deficit.";
+            color = "#d97706";
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">Corrected Na: ${corr.toFixed(1)} mEq/L</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    Formula: Na + ${coefficient} × [(Glucose - ${baseline}) / ${baseline}]<br>
+                    <span style="font-style: italic;">A correction factor of 1.6 is applied for glucose levels up to 400 mg/dL (22.2 mmol/L), while a higher coefficient of 2.4 is used for values exceeding this threshold to ensure greater accuracy.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+function calculateCa() {
+    const cEl = document.getElementById('ca-tot'), aEl = document.getElementById('ca-alb');
+    const c = parseFloat(cEl.value), a = parseFloat(aEl.value);
+    const resBox = document.getElementById('res-ca-final');
+
+    if (c && a) {
+        const cUnit = cEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        const aUnit = aEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        
+        // Birim çevrimleri
+        const cMg = cUnit.includes('mmol/L') ? c * 4 : c;
+        const aGdL = aUnit.includes('g/L') ? a / 10 : a;
+        
+        // Formül: Total Ca + 0.8 * (4.0 - Albumin)
+        const corrMgdl = cMg + 0.8 * (4.0 - aGdL);
+        const corrMmol = corrMgdl * 0.25;
+
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (corrMgdl < 8.5) {
+            interpretation = "Corrected Calcium is low (Hypocalcemia). Check Vitamin D and Magnesium levels.";
+            color = "#dc2626"; // Kırmızı
+        } else if (corrMgdl >= 8.5 && corrMgdl <= 10.5) {
+            interpretation = "Corrected Calcium is within the normal range.";
+            color = "#16a34a"; // Yeşil
+        } else {
+            interpretation = "Corrected Calcium is high (Hypercalcemia). Consider PTH and malignancy screening.";
+            color = "#d97706"; // Turuncu
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.1rem; font-weight: bold; color: ${color};">Corrected Ca: ${corrMgdl.toFixed(2)} mg/dL (${corrMmol.toFixed(2)} mmol/L)</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method (Payne's Formula):</strong><br>
+                    Corrected Ca = Total Ca + [0.8 × (4.0 - Albumin)]<br>
+                    <span style="font-style: italic;">*In hypoalbuminemia, total calcium measurements may be falsely low because about 40-45% of serum calcium is bound to albumin.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+function calculateCorrMg() {
+    const mEl = document.getElementById('mg-meas'), aEl = document.getElementById('mg-alb');
+    const m = parseFloat(mEl.value), a = parseFloat(aEl.value);
+    const resBox = document.getElementById('res-mg-final');
+
+    if (m && a) {
+        const mUnit = mEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        const aUnit = aEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        
+        // Birim çevrimleri
+        const mMgdl = mUnit.includes('mmol/L') ? m / 0.4114 : m;
+        const aGdL = aUnit.includes('g/L') ? a / 10 : a;
+        
+        // Formül: Measured Mg + 0.05 * (4.0 - Albumin)
+        const corrMgdl = mMgdl + 0.05 * (4.0 - aGdL);
+        const corrMmol = corrMgdl * 0.4114;
+
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (corrMgdl < 1.7) {
+            interpretation = "Corrected Magnesium is low (Hypomagnesemia). Often associated with hypocalcemia and hypokalemia.";
+            color = "#dc2626"; // Kırmızı
+        } else if (corrMgdl >= 1.7 && corrMgdl <= 2.3) {
+            interpretation = "Corrected Magnesium is within the normal range.";
+            color = "#16a34a"; // Yeşil
+        } else {
+            interpretation = "Corrected Magnesium is high (Hypermagnesemia). Monitor for neurological and cardiac symptoms.";
+            color = "#d97706"; // Turuncu
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.1rem; font-weight: bold; color: ${color};">Corrected Mg: ${corrMgdl.toFixed(2)} mg/dL (${corrMmol.toFixed(3)} mmol/L)</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    Corrected Mg = Measured Mg + [0.05 × (4.0 - Albumin)]<br>
+                    <span style="font-style: italic;">*Similar to calcium, serum magnesium is bound to albumin; hypoalbuminemia can lead to falsely low total magnesium measurements.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+function calculateAnionGap(){ 
+    const n = parseFloat(document.getElementById('ag-na').value), 
+          c = parseFloat(document.getElementById('ag-cl').value), 
+          h = parseFloat(document.getElementById('ag-hCO3') ? document.getElementById('ag-hCO3').value : document.getElementById('ag-hco3').value), 
+          a = parseFloat(document.getElementById('ag-alb').value || '4.0'); 
+    const resBox = document.getElementById('res-ag-final');
+
+    if(n && c && h){ 
+        const ag = (n - (c + h)); 
+        const corrAg = ag + 2.5 * (4.0 - a); 
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama (Düzeltilmiş AG üzerinden)
+        if (corrAg > 12) {
+            interpretation = "High Anion Gap Metabolic Acidosis (HAGMA): Consider GOLD MARK causes (Glycols, Oxoproline, L-lactate, D-lactate, Methanol, Aspirin, Renal failure, Ketoacidosis).";
+            color = "#dc2626"; // Kırmızı
+        } else if (corrAg >= 8 && corrAg <= 12) {
+            interpretation = "Anion Gap is within the normal range (8–12 mEq/L).";
+            color = "#16a34a"; // Yeşil
+        } else {
+            interpretation = "Low Anion Gap: Consider hypoalbuminemia, multiple myeloma, or lithium toxicity.";
+            color = "#d97706"; // Turuncu
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.1rem; font-weight: bold; color: ${color};">AG: ${ag.toFixed(1)} | Corrected AG: ${corrAg.toFixed(1)} mEq/L</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    1. Observed AG = Na - (Cl + HCO₃)<br>
+                    2. Corrected AG = Observed AG + [2.5 × (4.0 - Albumin)]<br>
+                    <span style="font-style: italic;">*Albumin correction is critical because albumin is the primary unmeasured anion; for every 1 g/dL drop in albumin, the "normal" AG drops by approximately 2.5 mEq/L.</span>
+                </div>
+            </div>
+        `;
+    } else { 
+        resBox.innerHTML = ''; 
+        resBox.style.display = 'none';
+    } 
+}
+function calculateOsmo() {
+    const nEl = document.getElementById('osmo-na'),
+          gEl = document.getElementById('osmo-glu'),
+          bEl = document.getElementById('osmo-bun');
+    const n = parseFloat(nEl.value),
+          g = parseFloat(gEl.value),
+          b = parseFloat(bEl.value);
+    const resBox = document.getElementById('res-osmo-final');
+
+    if (n && g && b) {
+        const gUnit = gEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        const bUnit = bEl.parentNode.querySelector('.unit-badge').textContent.trim();
+        
+        // Osmolality Formülü
+        const osmo = (2 * n) + (gUnit.includes('mmol/L') ? g : g / 18) + (bUnit.includes('mmol/L') ? b : b / 2.8);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (osmo < 275) {
+            interpretation = "Hypo-osmolality: Often associated with hyponatremia and water excess.";
+            color = "#dc2626"; // Kırmızı
+        } else if (osmo >= 275 && osmo <= 295) {
+            interpretation = "Serum Osmolality is within the normal physiological range.";
+            color = "#16a34a"; // Yeşil
+        } else {
+            interpretation = "Hyper-osmolality: Consider dehydration, hyperglycemia, or presence of unmeasured osmolytes.";
+            color = "#d97706"; // Turuncu
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.1rem; font-weight: bold; color: ${color};">Calculated Osmolality: ${osmo.toFixed(0)} mOsm/kg</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    2×Na + [Glucose / ${gUnit.includes('mmol/L') ? '1' : '18'}] + [BUN / ${bUnit.includes('mmol/L') ? '1' : '2.8'}]<br>
+                    <span style="font-style: italic;">*Clinical Note: If the measured osmolality (from lab) is >10 mOsm/kg higher than this calculated value, an "Osmolar Gap" exists, suggesting toxic alcohol ingestion (e.g., methanol, ethylene glycol).</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+
+function calculateFENa() {
+    const sna = getNormalizedValue('fena-sna', 'mEq/L');
+    const screa = getNormalizedValue('fena-screa', 'mg/dL');
+    const una = getNormalizedValue('fena-una', 'mEq/L');
+    const ucrea = getNormalizedValue('fena-ucrea', 'mg/dL');
+    const res = document.getElementById('res-fena-final');
+
+    if (!isNaN(sna) && !isNaN(screa) && !isNaN(una) && !isNaN(ucrea) && sna > 0 && screa > 0 && ucrea > 0) {
+        const f = ((una * screa) / (sna * ucrea)) * 100;
+        
+        let interpretation = '';
+        let color = '';
+        let bgColor = '';
+
+        // Karar Mekanizması
+        if (f < 1) {
+            interpretation = "<strong>Prerenal Azotemia</strong><br><small>Please correlate with urine volume (↓), BUN/Creatinine ratio (>20:1), urine osmolality (>500 mOsm/kg), urine sodium (<20 mEq/L) and urine sediment (granular casts, hyaline casts) for a definitive diagnosis of prerenal etiology.</small>";
+            color = "#2563eb"; // Mavi
+            bgColor = "rgba(37, 99, 235, 0.1)";
+        } else if (f >= 1 && f <= 2) {
+            interpretation = "<strong>Intermediate Zone</strong><br><small>Please correlate with clinical status.</small>";
+            color = "#d97706"; // Turuncu
+            bgColor = "rgba(217, 119, 6, 0.1)";
+        } else {
+            interpretation = "<strong>Intrinsic Renal Failure (ATN)</strong><br><small>Please correlate with urine volume (usually ↓), BUN/Creatinine ratio (~10:1), urine osmolality (~300 mOsm/kg), urine sodium (>40 mEq/L) and urine sediment (brown casts, renal tubular cell casts) for a definitive diagnosis of intrinsic renal etiology.</small>";
+            color = "#dc2626"; // Kırmızı
+            bgColor = "rgba(220, 38, 38, 0.1)";
+        }
+
+        // Sonucu ve Notu Ekrana Basma
+        res.innerHTML = `
+            <div style="background: ${bgColor}; border-left: 4px solid ${color}; padding: 12px; border-radius: 6px; margin-top: 10px;">
+                <div style="font-size: 1.2rem; font-weight: bold; color: ${color};">FENa: ${f.toFixed(2)}%</div>
+                <div style="margin-top: 5px; color: #333;">${interpretation}</div>
+            </div>
+        `;
+    } else {
+        res.innerHTML = '';
+    }
+}    
+
+function calculateSAAG() {
+    const s = getNormalizedValue('saag-serum', 'g/dL'),
+          a = getNormalizedValue('saag-ascites', 'g/dL');
+    const el = document.getElementById('res-saag-final');
+
+    if (!isNaN(s) && !isNaN(a)) {
+        const d = s - a;
+        const d_gL = d * 10;
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (d >= 1.1) {
+            interpretation = "SAAG ≥ 1.1 g/dL: High gradient. Suggests Portal Hypertension (e.g., Cirrhosis, CHF, Budd-Chiari).";
+            color = "#16a34a"; // Yeşil
+        } else if (d >= 0 && d < 1.1) {
+            interpretation = "SAAG < 1.1 g/dL: Low gradient. Suggests non-portal hypertensive causes (e.g., Malignancy, TB, Pancreatitis).";
+            color = "#d97706"; // Turuncu
+        } else {
+            // Negatif sonuç durumu
+            interpretation = "Negative SAAG: Usually indicates an input error (Ascites albumin cannot physiologically exceed Serum albumin).";
+            color = "#dc2626"; // Kırmızı
+        }
+
+        el.style.display = 'block';
+        el.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">SAAG: ${d.toFixed(2)} g/dL (${d_gL.toFixed(1)} g/L)</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    SAAG = [Serum Albumin] - [Ascites Albumin]<br>
+                    <span style="font-style: italic;">*Note: A high gradient (≥1.1) is 97% predictive of portal hypertension. If the result is negative, please verify your input values.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        el.innerHTML = '';
+        el.style.display = 'none';
+    }
+}
+function calculatePH(){ const h=parseFloat(document.getElementById('ph-hco3').value), p=parseFloat(document.getElementById('ph-pco2').value); if(h&&p){ const badge=document.getElementById('ph-pco2').parentNode.querySelector('.unit-badge'); const txt=badge?badge.textContent.trim():''; const k=txt.includes('kPa')?0.226:0.03; const ph=(6.1+Math.log10(h/(k*p))); document.getElementById('res-ph-final').innerHTML=`pH: ${ph.toFixed(3)}`; } else { document.getElementById('res-ph-final').innerHTML=''; } }
+function calculateMentzer() {
+    const m = parseFloat(document.getElementById('men-mcv').value),
+          r = parseFloat(document.getElementById('men-rbc').value);
+    const resBox = document.getElementById('res-mentzer-final');
+
+    if (m && r && r > 0) {
+        const v = (m / r);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (v < 13) {
+            interpretation = "Mentzer Index < 13: Suggests Beta-Thalassemia Trait.";
+            color = "#d97706"; // Turuncu
+        } else {
+            interpretation = "Mentzer Index ≥ 13: Suggests Iron Deficiency Anemia.";
+            color = "#dc2626"; // Kırmızı (Demir eksikliği daha yaygın tedavi gerektirir)
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">Mentzer Index: ${v.toFixed(1)}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    Mentzer Index = MCV / RBC<br>
+                    <span style="font-style: italic;">*This index is most reliable when the patient has microcytic anemia (MCV < 80 fL).</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+function calculateAlbGlob() {
+    const a = getNormalizedValue('albglob-alb', 'g/dL'), 
+          t = getNormalizedValue('albglob-tp', 'g/dL');
+    const el = document.getElementById('res-albglob-final');
+
+    if (!isNaN(a) && !isNaN(t) && a >= 0 && t >= 0 && t >= a) {
+        const g = t - a;
+        let ratioVal = g === 0 ? "∞" : (a / g).toFixed(2);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama (A/G Oranı)
+        if (g > 0) {
+            const r = a / g;
+            if (r < 1.1) {
+                interpretation = "Low A/G ratio: Consider chronic inflammation, liver disease, or plasma cell dyscrasias.";
+                color = "#dc2626"; // Kırmızı
+            } else if (r >= 1.1 && r <= 2.5) {
+                interpretation = "A/G ratio is within the expected clinical range.";
+                color = "#16a34a"; // Yeşil
+            } else {
+                interpretation = "High A/G ratio: Often seen in hypogammaglobulinemia or certain leukemias.";
+                color = "#d97706"; // Turuncu
+            }
+        }
+
+        el.style.display = 'block';
+        el.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">A/G Ratio: ${ratioVal}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    1. Globulin = Total Protein - Albumin<br>
+                    2. A/G Ratio = Albumin / Globulin<br>
+                    <span style="font-style: italic;">*A low A/G ratio may indicate overproduction of globulins (e.g., Multiple Myeloma) or underproduction of albumin (e.g., Cirrhosis).</span>
+                </div>
+            </div>
+        `;
+    } else {
+        el.innerHTML = '';
+        el.style.display = 'none';
+    }
+}
     function calculateRBCIndices(){ const h=parseFloat(document.getElementById('rbc-hgb').value), hc=parseFloat(document.getElementById('rbc-hct').value), r=parseFloat(document.getElementById('rbc-count').value); if(h&&hc&&r){ const mcv=(hc/r*10); const mch=(h/r*10); const mchc=(h/hc*100); document.getElementById('res-rbc-final').innerHTML=`MCV: ${mcv.toFixed(1)} fL<br>MCH: ${mch.toFixed(1)} pg<br>MCHC: ${mchc.toFixed(1)} g/dL`; } else { document.getElementById('res-rbc-final').innerHTML=''; } }
-    function calculateRetic(){ const r=parseFloat(document.getElementById('ret-pct').value), h=parseFloat(document.getElementById('ret-hct').value), n=parseFloat(document.getElementById('ret-hct-normal').value||'45'); if(r&&h){ let m=1.0; if(h<=15) m=2.5; else if(h>=16&&h<=25) m=2.0; else if(h>=26&&h<=35) m=1.5; else if(h>=36&&h<=45) m=1.0; const crc=(h/n)*(r/m); document.getElementById('res-retic-final').innerHTML=`CRC: ${crc.toFixed(2)}%`; } else { document.getElementById('res-retic-final').innerHTML=''; } }
-    function calculateINR(){ const p=parseFloat(document.getElementById('inr-pt').value), c=parseFloat(document.getElementById('inr-control').value), i=parseFloat(document.getElementById('inr-isi').value); if(p&&c&&i){ const v=Math.pow((p/c),i); document.getElementById('res-inr-final').innerHTML=`INR: ${v.toFixed(2)}`; } else { document.getElementById('res-inr-final').innerHTML=''; } }
-    function calculateBunCrea(){ const b=getNormalizedValue('bc-bun','mg/dL'), c=getNormalizedValue('bc-crea','mg/dL'); const el=document.getElementById('res-bun-crea-final'); if(!isNaN(b)&&!isNaN(c)&&b&&c){ const v=(b/c); el.innerHTML=`BUN/Creatinine Ratio: ${v.toFixed(1)}`; } else { el.innerHTML=''; } }
+function calculateRetic(){ 
+    const r = parseFloat(document.getElementById('ret-pct').value), 
+          h = parseFloat(document.getElementById('ret-hct').value), 
+          n = parseFloat(document.getElementById('ret-hct-normal').value || '45'); 
+    const resBox = document.getElementById('res-retic-final');
+
+    if(r && h){ 
+        let m = 1.0; 
+        if(h <= 15) m = 2.5; 
+        else if(h >= 16 && h <= 25) m = 2.0; 
+        else if(h >= 26 && h <= 35) m = 1.5; 
+        else m = 1.0; 
+
+        // RPI (Reticulocyte Production Index) / CRC Calculation
+        const crc = (r * (h / n)) / m; 
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (crc < 2) {
+            interpretation = "CRC < 2%: Inadequate bone marrow response (Hypoproliferative anemia).";
+            color = "#dc2626"; // Kırmızı
+        } else {
+            interpretation = "CRC ≥ 2%: Adequate bone marrow response (Hyperproliferative anemia).";
+            color = "#16a34a"; // Yeşil
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">Reticulocyte Index (RPI): ${crc.toFixed(2)}%</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    RPI = (% Reticulocytes × [Measured Hct / Normal Hct]) / Maturation Factor<br>
+                    <span style="font-style: italic;">*The maturation factor (${m}) adjusts for "shift reticulocytes" that leave the marrow early during severe anemia.</span>
+                </div>
+            </div>
+        `;
+    } else { 
+        resBox.innerHTML = ''; 
+        resBox.style.display = 'none';
+    } 
+}
+
+function calculateINR(){ 
+    const p = parseFloat(document.getElementById('inr-pt').value), 
+          c = parseFloat(document.getElementById('inr-control').value), 
+          i = parseFloat(document.getElementById('inr-isi').value); 
+    const resBox = document.getElementById('res-inr-final');
+
+    if(p && c && i){ 
+        const v = Math.pow((p / c), i); 
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (v > 4.5) {
+            interpretation = "Critical High: High risk of spontaneous bleeding. Monitor patient closely.";
+            color = "#dc2626"; // Kırmızı
+        } else if (v >= 2.0 && v <= 3.0) {
+            interpretation = "Therapeutic Range: Typical target for DVT, PE, or Atrial Fibrillation.";
+            color = "#16a34a"; // Yeşil
+        } else if (v < 0.8) {
+            interpretation = "Lower than normal: Increased risk of clotting.";
+            color = "#d97706"; // Turuncu
+        } else if (v > 1.1 && v < 2.0) {
+            interpretation = "Elevated but sub-therapeutic (for most indications).";
+            color = "#1e293b"; 
+        } else {
+            interpretation = "INR is within the normal range for healthy individuals.";
+            color = "#16a34a";
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">INR: ${v.toFixed(2)}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    INR = [Patient PT / Control PT]<sup>ISI</sup><br>
+                    <span style="font-style: italic;">*ISI (International Sensitivity Index) is specific to the thromboplastin reagent used in the lab.</span>
+                </div>
+            </div>
+        `;
+    } else { 
+        resBox.innerHTML = ''; 
+        resBox.style.display = 'none';
+    } 
+}
+function calculateBunCrea() {
+    const b = getNormalizedValue('bc-bun', 'mg/dL'),
+          c = getNormalizedValue('bc-crea', 'mg/dL');
+    const el = document.getElementById('res-bun-crea-final');
+
+    if (!isNaN(b) && !isNaN(c) && b > 0 && c > 0) {
+        const v = (b / c);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (v > 20) {
+            interpretation = "Ratio > 20:1: Suggests Prerenal Azotemia (e.g., dehydration, heart failure, or GI bleed).";
+            color = "#d97706"; // Turuncu
+        } else if (v >= 10 && v <= 20) {
+            interpretation = "Ratio 10-20:1: Normal range or Postrenal causes.";
+            color = "#16a34a"; // Yeşil
+        } else {
+            interpretation = "Ratio < 10:1: Suggests Intrinsic Renal Injury (e.g., Acute Tubular Necrosis).";
+            color = "#dc2626"; // Kırmızı
+        }
+
+        el.style.display = 'block';
+        el.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">BUN/Cr Ratio: ${v.toFixed(1)}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Clinical Pearls:</strong><br>
+                    • <strong>High Ratio (>20):</strong> Increased urea reabsorption due to low flow state (Dehydration).<br>
+                    • <strong>Low Ratio (<10):</strong> Reduced urea reabsorption due to tubular damage (ATN).<br>
+                    <span style="font-style: italic;">*Note: High protein intake or GI bleeding can also elevate this ratio.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        el.innerHTML = '';
+        el.style.display = 'none';
+    }
+}
     function calculateHIon(){ const p=parseFloat(document.getElementById('h-pco2').value), h=parseFloat(document.getElementById('h-hco3').value); if(p&&h){ const val=(24*(p/h)); document.getElementById('res-h-ion-final').innerHTML=`[H+]: ${val.toFixed(1)} nmol/L`; } else { document.getElementById('res-h-ion-final').innerHTML=''; } }
 function calculateFAI() {
     const ttEl = document.getElementById('fai-tt');
     const shbgEl = document.getElementById('fai-shbg');
     const albEl = document.getElementById('fai-alb');
-    
+    const resBox = document.getElementById('res-fai-final');
+
     const tt = parseFloat(ttEl.value);
     const shbg = parseFloat(shbgEl.value);
     const alb = parseFloat(albEl.value);
-    
-    const el = document.getElementById('res-fai-final');
-    
+
     if (!tt || !shbg || !alb) {
-        el.innerHTML = '';
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
         return;
     }
-    
-    // Get units
-    const ttBadge = ttEl.parentNode.querySelector('.unit-badge');
-    const ttUnit = ttBadge ? ttBadge.textContent.trim() : '';
-    const albBadge = albEl.parentNode.querySelector('.unit-badge');
-    const albUnit = albBadge ? albBadge.textContent.trim() : '';
-    
-    // Convert Total Testosterone to nmol/L
-    let ttNmol;
-    if (ttUnit.includes('ng/dL')) {
-        ttNmol = tt * 0.0347; // ng/dL to nmol/L
-    } else {
-        ttNmol = tt; // already in nmol/L
-    }
-    
-    // Convert Albumin to g/L
-    let albGL;
-    if (albUnit.includes('g/dL')) {
-        albGL = alb * 10; // g/dL to g/L
-    } else {
-        albGL = alb; // already in g/L
-    }
-    
-    // Vermeulen's method constants
-    const Ka = 3.6e4; // Association constant for SHBG (L/mol)
-    const Kb = 4.06e4; // Association constant for Albumin (L/mol)
-    
-    // Convert albumin from g/L to mol/L (MW of albumin ≈ 66500 g/mol)
-    const albMol = albGL / 66.5;
-    
-    // Convert SHBG from nmol/L to mol/L
+
+    const ttUnit = ttEl.parentNode.querySelector('.unit-badge')?.textContent.trim() || '';
+    const albUnit = albEl.parentNode.querySelector('.unit-badge')?.textContent.trim() || '';
+
+    // Birim Çevrimleri (Standartlaştırma)
+    let ttNmol = ttUnit.includes('ng/dL') ? tt * 0.0347 : tt;
+    let albGL = albUnit.includes('g/dL') ? alb * 10 : alb;
+
+    // Vermeulen Sabitleri
+    const Ka = 10e8; 
+    const Kb = 3.6e4; 
+    const albMol = albGL / 66500;
     const shbgMol = shbg / 1e9;
-    
-    // Convert Total T from nmol/L to mol/L
     const ttMol = ttNmol / 1e9;
+
+    const b_coef = Ka * shbgMol + Kb * albMol + 1 - Ka * ttMol;
+    const freeTMol = (-b_coef + Math.sqrt(Math.pow(b_coef, 2) - 4 * Ka * (-ttMol))) / (2 * Ka);
     
-    // Solve quadratic equation for free testosterone
-    // Based on: Tt = Tf + (Ka*SHBG*Tf)/(1+Ka*Tf) + (Kb*Alb*Tf)/(1+Kb*Tf)
-    // Simplified approximation (Vermeulen et al.)
-    const c = Ka * shbgMol;
-    const d = Kb * albMol;
-    
-    // Quadratic formula components
-    const a_coef = Ka * Kb;
-    const b_coef = 1 + c + d - Ka * Kb * ttMol;
-    const c_coef = -ttMol;
-    
-    // Free Testosterone (mol/L)
-    const freeTMol = (-b_coef + Math.sqrt(b_coef * b_coef - 4 * a_coef * c_coef)) / (2 * a_coef);
-    
-    // Convert Free T back to nmol/L
+    // Sonuçların Hazırlanması (Her iki birim için)
     const freeTNmol = freeTMol * 1e9;
+    const freeTNgdl = freeTNmol / 0.0347;
     
-    // Bioavailable T = Free T + Albumin-bound T
-    const albBoundMol = (Kb * albMol * freeTMol) / (1 + Kb * freeTMol);
-    const bioavailTMol = freeTMol + albBoundMol;
-    const bioavailTNmol = bioavailTMol * 1e9;
+    const bioavailTNmol = (freeTMol + (Kb * albMol * freeTMol)) * 1e9;
+    const bioavailTNgdl = bioavailTNmol / 0.0347;
     
-    // Calculate percentages
-    const freeTPercent = (freeTNmol / ttNmol) * 100;
-    const bioavailTPercent = (bioavailTNmol / ttNmol) * 100;
-    
-    // FAI (traditional)
     const fai = (ttNmol / shbg) * 100;
-    
-    // Convert results to original unit if needed
-    let freeTDisplay, bioavailTDisplay;
-    if (ttUnit.includes('ng/dL')) {
-        freeTDisplay = freeTNmol / 0.0347; // back to ng/dL
-        bioavailTDisplay = bioavailTNmol / 0.0347;
-        el.innerHTML = `
-            <strong>FAI (Traditional):</strong> ${fai.toFixed(1)}<br>
-            <strong>Free Testosterone:</strong> ${freeTDisplay.toFixed(2)} ng/dL (${freeTNmol.toFixed(2)} nmol/L) — ${freeTPercent.toFixed(2)}%<br>
-            <strong>Bioavailable Testosterone:</strong> ${bioavailTDisplay.toFixed(2)} ng/dL (${bioavailTNmol.toFixed(2)} nmol/L) — ${bioavailTPercent.toFixed(2)}%
+    const freeTPercent = (freeTNmol / ttNmol) * 100;
+
+    let interpretation = "";
+    let color = "#1e293b";
+
+    if (fai > 5) {
+        interpretation = "Elevated FAI: Possible hyperandrogenism (e.g., PCOS).";
+        color = "#dc2626";
+    } else {
+        interpretation = "FAI and Free T values are within clinical expectations.";
+        color = "#16a34a";
+    }
+
+    resBox.style.display = 'block';
+    resBox.innerHTML = `
+        <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 15px; border-radius: 10px; margin-top: 10px;">
+            <div style="font-size: 1.2rem; font-weight: bold; color: ${color}; margin-bottom: 8px;">FAI: ${fai.toFixed(1)}%</div>
+            <div style="font-size: 0.85rem; margin-bottom: 12px; color: #334155; font-weight: 600;">${interpretation}</div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                <div style="background: #fff; padding: 10px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 0.75rem; color: #64748b; font-weight: bold; text-transform: uppercase;">Free Testosterone</div>
+                    <div style="font-size: 1rem; color: #1e293b; font-weight: 700;">${freeTNgdl.toFixed(2)} <span style="font-size: 0.7rem;">ng/dL</span></div>
+                    <div style="font-size: 0.9rem; color: #475569;">${freeTNmol.toFixed(3)} <span style="font-size: 0.7rem;">nmol/L</span></div>
+                    <div style="font-size: 0.8rem; color: var(--primary); margin-top: 4px;">Ratio: ${freeTPercent.toFixed(2)}%</div>
+                </div>
+                <div style="background: #fff; padding: 10px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 0.75rem; color: #64748b; font-weight: bold; text-transform: uppercase;">Bioavailable Testosterone</div>
+                    <div style="font-size: 1rem; color: #1e293b; font-weight: 700;">${bioavailTNgdl.toFixed(2)} <span style="font-size: 0.7rem;">ng/dL</span></div>
+                    <div style="font-size: 0.9rem; color: #475569;">${bioavailTNmol.toFixed(2)} <span style="font-size: 0.7rem;">nmol/L</span></div>
+                </div>
+            </div>
+
+            <div style="padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                <strong>Calculation Method:</strong><br>
+                Calculated using Vermeulen's equation. SHBG and Albumin binding constants (Ka: 10<sup>9</sup> L/mol, Kb: 3.6×10<sup>4</sup> L/mol) are applied.<br>
+            </div>
+        </div>
+    `;
+}
+
+function calculateFPSA() {
+    const f = parseFloat(document.getElementById('fpsa-free').value),
+          t = parseFloat(document.getElementById('fpsa-total').value);
+    const resBox = document.getElementById('res-fpsa-final');
+
+    if (f && t && t > 0) {
+        const pct = ((f / t) * 100);
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama (Total PSA 4-10 ng/mL aralığı için standart yorumlar)
+        if (pct <= 10) {
+            interpretation = "High risk of prostate cancer (~50%). Biopsy is strongly recommended.";
+            color = "#dc2626"; // Kırmızı
+        } else if (pct > 10 && pct <= 25) {
+            interpretation = "Intermediate risk. Clinical correlation and other parameters (age, volume) are needed.";
+            color = "#d97706"; // Turuncu
+        } else {
+            interpretation = "Lower risk of cancer. More likely associated with BPH or prostatitis.";
+            color = "#16a34a"; // Yeşil
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">% Free PSA: ${pct.toFixed(1)}%</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    % Free PSA = (Free PSA / Total PSA) × 100<br>
+                    <span style="font-style: italic;">*Clinical Note: This ratio is most diagnostic when Total PSA is between 4–10 ng/mL. Lower percentages (<10-15%) are more suspicious for malignancy.</span>
+                </div>
+            </div>
         `;
     } else {
-        el.innerHTML = `
-            <strong>FAI (Traditional):</strong> ${fai.toFixed(1)}<br>
-            <strong>Free Testosterone:</strong> ${freeTNmol.toFixed(2)} nmol/L — ${freeTPercent.toFixed(2)}%<br>
-            <strong>Bioavailable Testosterone:</strong> ${bioavailTNmol.toFixed(2)} nmol/L — ${bioavailTPercent.toFixed(2)}%
-        `;
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
     }
-}    function calculateFPSA(){ const f=parseFloat(document.getElementById('fpsa-free').value), t=parseFloat(document.getElementById('fpsa-total').value); const el=document.getElementById('res-fpsa-final'); if(f&&t){ const pct=((f/t)*100); el.innerHTML=`% Free PSA: ${pct.toFixed(1)}%`; } else { el.innerHTML=''; } }
-    function calculateCaIon(){ const c=parseFloat(document.getElementById('cai-ca').value), t=parseFloat(document.getElementById('cai-tp').value); const el=document.getElementById('res-ca-ion-final'); if(c&&t){ const est=(((c*6)-(t/3))/(t+6)); el.innerHTML=`Estimated Ionized Ca: ${est.toFixed(2)}`; } else { el.innerHTML=''; } }
-    function calculateTransferrin() { const fe = getNormalizedValue('trans-fe', 'µg/dL'); const tibc = getNormalizedValue('trans-tibc', 'µg/dL'); if(fe && tibc) { const sat = (fe / tibc) * 100; document.getElementById('res-transferrin-final').innerHTML = `Saturation: ${sat.toFixed(1)}%`; } else { document.getElementById('res-transferrin-final').innerHTML = ''; } }
-    
+}
+function calculateCaIon(){ const c=parseFloat(document.getElementById('cai-ca').value), t=parseFloat(document.getElementById('cai-tp').value); const el=document.getElementById('res-ca-ion-final'); if(c&&t){ const est=(((c*6)-(t/3))/(t+6)); el.innerHTML=`Estimated Ionized Ca: ${est.toFixed(2)}`; } else { el.innerHTML=''; } }
+
+function calculateTransferrin() {
+    const fe = getNormalizedValue('trans-fe', 'µg/dL');
+    const tibc = getNormalizedValue('trans-tibc', 'µg/dL');
+    const resBox = document.getElementById('res-transferrin-final');
+
+    if (fe && tibc && tibc > 0) {
+        const sat = (fe / tibc) * 100;
+        
+        let interpretation = "";
+        let color = "#1e293b";
+
+        // Klinik Yorumlama
+        if (sat < 15) {
+            interpretation = "Low Saturation: Suggests Iron Deficiency Anemia.";
+            color = "#dc2626"; // Kırmızı
+        } else if (sat > 45) {
+            interpretation = "High Saturation: Consider Iron Overload (e.g., Hemochromatosis) or recent transfusion.";
+            color = "#d97706"; // Turuncu
+        } else {
+            interpretation = "Saturation is within the normal physiological range (20–45%).";
+            color = "#16a34a"; // Yeşil
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.15rem; font-weight: bold; color: ${color};">Transferrin Saturation: ${sat.toFixed(1)}%</div>
+                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                    <strong>Calculation Method:</strong><br>
+                    Saturation % = (Serum Iron / TIBC) × 100<br>
+                    <span style="font-style: italic;">*Clinical Note: In iron deficiency, serum iron decreases while TIBC increases, leading to very low saturation. In chronic inflammation, both may be low.</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
 
 
     function calculateA1c(s){
-        if(s==='ngsp'){
-            const v=parseFloat(document.getElementById('a1c-ngsp').value);
-            if(!isNaN(v)) document.getElementById('a1c-ifcc').value=((v-2.152)/0.09148).toFixed(1);
-        } else {
-            const v=parseFloat(document.getElementById('a1c-ifcc').value);
-            if(!isNaN(v)) document.getElementById('a1c-ngsp').value=((0.09148*v)+2.152).toFixed(1);
-        }
-        const ngsp=parseFloat(document.getElementById('a1c-ngsp').value);
-        const res=document.getElementById('res-a1c-eag');
-        if(isNaN(ngsp)){
-            res.innerHTML='';
-            return;
-        }
-        const eag_mg=(28.7*ngsp)-46.7;
-        const eag_mmol=eag_mg/18;
-        res.innerHTML=`Estimated Average Glucose: ${eag_mg.toFixed(1)} mg/dL | ${eag_mmol.toFixed(1)} mmol/L`;
+    const ngspInput = document.getElementById('a1c-ngsp');
+    const ifccInput = document.getElementById('a1c-ifcc');
+    const resBox = document.getElementById('res-a1c-eag');
+
+    if(s === 'ngsp'){
+        const v = parseFloat(ngspInput.value);
+        if(!isNaN(v)) ifccInput.value = ((v - 2.152) / 0.09148).toFixed(1);
+    } else {
+        const v = parseFloat(ifccInput.value);
+        if(!isNaN(v)) ngspInput.value = ((0.09148 * v) + 2.152).toFixed(1);
     }
+
+    const ngsp = parseFloat(ngspInput.value);
+    
+    if(isNaN(ngsp)){
+        resBox.innerHTML = '';
+        resBox.style.display = 'none';
+        return;
+    }
+
+    // eAG (Estimated Average Glucose) Calculation
+    const eag_mg = (28.7 * ngsp) - 46.7;
+    const eag_mmol = eag_mg / 18;
+
+    let interpretation = "";
+    let color = "#1e293b";
+
+    // Klinik Yorumlama (ADA Standartları)
+    if (ngsp < 5.7) {
+        interpretation = "Normal range.";
+        color = "#16a34a"; // Yeşil
+    } else if (ngsp >= 5.7 && ngsp <= 6.4) {
+        interpretation = "Prediabetes range. Increased risk of developing type 2 diabetes.";
+        color = "#d97706"; // Turuncu
+    } else {
+        interpretation = "Diabetes range. Consistent with a diagnosis of diabetes.";
+        color = "#dc2626"; // Kırmızı
+    }
+
+    resBox.style.display = 'block';
+    resBox.innerHTML = `
+        <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
+            <div style="font-size: 1rem; font-weight: bold; color: ${color}; mb-2">eAG: ${eag_mg.toFixed(0)} mg/dL (${eag_mmol.toFixed(1)} mmol/L)</div>
+            <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
+            
+            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
+                <strong>Calculation Method:</strong><br>
+                1. <strong>IFCC/NGSP:</strong> Master Equation (NGSP = [0.09148 × IFCC] + 2.152)<br>
+                2. <strong>eAG:</strong> (28.7 × HbA1c) - 46.7<br>
+                <span style="font-style: italic;">*Clinical Note: HbA1c reflects the average blood glucose levels over the past 2-3 months.</span>
+            </div>
+        </div>
+    `;
+}
 
    // --- GFR FUNCTIONS (UPDATED) ---
     
