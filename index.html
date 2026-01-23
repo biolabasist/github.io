@@ -508,7 +508,7 @@
             .container { padding: 0 10px 25px 10px; }
             .calculator-view { padding: 12px; }
             .chart-container { height: 400px; }
-        }
+        
         
         @media (min-width: 481px) and (max-width: 768px) { 
             .grid-menu { grid-template-columns: repeat(2, 1fr); } 
@@ -672,6 +672,53 @@
                 </div>
             </div>
 
+            <div id="calc-dilution" class="calculator-view">
+    <h3 style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
+        <i class="fas fa-vial" style="margin-right:10px;"></i>Manual Dilution Planner
+    </h3>
+    
+    <div class="calc-input-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: start;">
+        <div class="input-group full-width" style="grid-column: span 2; background: rgba(var(--primary-rgb), 0.05); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border-color);">
+            <div class="label-row">
+                <label style="font-weight: 700;">Minimum Sample Volume to Use</label>
+                <span class="unit-badge">µL</span>
+            </div>
+            <input type="number" id="dil-min-sample" value="50" oninput="calculateDilution()" placeholder="e.g. 100">
+            <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 5px;">Recipe adjusts to ensure at least this amount of sample is used.</p>
+        </div>
+
+        <div class="input-group full-width" style="grid-column: span 2;">
+            <label>Select Dilution Ratio <span style="font-weight: normal; font-size: 0.8rem; color: var(--text-light);">(Choose the ratio you want to perform)</span></label>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px;">
+                <button class="btn-outline" onclick="setDilution(5)">1/5</button>
+                <button class="btn-outline" onclick="setDilution(10)">1/10</button>
+                <button class="btn-outline" onclick="setDilution(20)">1/20</button>
+                <button class="btn-outline" onclick="setDilution(25)">1/25</button>
+                <button class="btn-outline" onclick="setDilution(50)">1/50</button>
+                <button class="btn-outline" onclick="setDilution(100)">1/100</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="label-row">
+                <label style="height: 34px; display: flex; align-items: center;">Custom Ratio (1/X)</label>
+            </div>
+            <input type="number" id="dil-custom-ratio" placeholder="Enter X value" oninput="calculateDilution()">
+            <span style="font-size: 0.7rem; color: var(--text-light); display: block; margin-top: 4px;">(If not listed above)</span>
+        </div>
+
+        <div class="input-group">
+            <div class="label-row">
+                <label style="height: 34px; display: flex; align-items: center;">Instrument Reading</label>
+            </div>
+            <input type="number" id="dil-raw-value" placeholder="Result from device" oninput="calculateDilution()">
+            <span style="font-size: 0.7rem; color: var(--text-light); display: block; margin-top: 4px;">(Enter to see final result)</span>
+        </div>
+        
+        <div id="res-dilution-final" class="final-result-box" style="display: none; grid-column: span 2;"></div>
+    </div>
+</div>
+
             <div id="calc-urine24" class="calculator-view">
                 <h3 style="margin-bottom: 20px; color: var(--primary);">24h Urine Calculation</h3>
                 <div class="calc-input-grid">
@@ -791,7 +838,61 @@
                 </div>
             </div>
 
-            
+           <div id="calc-serial-planner" class="calculator-view">
+    <h3 style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
+        <i class="fas fa-magic" style="margin-right:10px;"></i>Smart Dilution Planner
+    </h3>
+    
+    <div class="calc-input-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="input-group">
+            <div class="label-row"><label>Stock Concentration (C1)</label></div>
+            <input type="number" id="plan-stock-c" placeholder="e.g. 1000" oninput="planSerialDilution()">
+            <div style="font-style: italic; font-size: 0.75rem; color: #64748b; mt-4px;">Enter the starting concentration of your source solution.</div>
+        </div>
+
+        <div class="input-group">
+            <div class="label-row">
+                <label>Target Concentration (C2)</label>
+                <small style="color:#94a3b8; font-weight:normal; margin-left:5px;">(Optional)</small>
+            </div>
+            <input type="number" id="plan-target-c" placeholder="e.g. 0.5" oninput="planSerialDilution()">
+            <div style="font-style: italic; font-size: 0.75rem; color: #64748b; mt-4px;">The system will find the best path to reach this value.</div>
+        </div>
+
+        <div class="input-group full-width" style="grid-column: span 2;">
+            <label id="factor-label" style="font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; display: block;">Select Dilution Factor (1:X)</label>
+            <div id="factor-button-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                <button class="factor-btn" onclick="selectFactor(2)">1:2</button>
+                <button class="factor-btn" onclick="selectFactor(5)">1:5</button>
+                <button class="factor-btn active" onclick="selectFactor(10)">1:10</button>
+                <button class="factor-btn" onclick="selectFactor(15)">1:15</button>
+                <button class="factor-btn" onclick="selectFactor(20)">1:20</button>
+                <button class="factor-btn" onclick="selectFactor(25)">1:25</button>
+                <button class="factor-btn" onclick="selectFactor(30)">1:30</button>
+                <button class="factor-btn" onclick="selectFactor(50)">1:50</button>
+                <button class="factor-btn" onclick="selectFactor(100)">1:100</button>
+                <button class="factor-btn" onclick="enableCustomX()">1:X</button>
+            </div>
+
+            <div id="custom-x-wrapper" style="display: none; margin-top: 10px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <label style="font-size: 0.75rem; font-weight: bold;">Custom X Value:</label>
+                <input type="number" id="plan-custom-x" placeholder="e.g. 12" oninput="planSerialDilution()">
+            </div>
+        </div>
+
+        <div class="input-group full-width" style="grid-column: span 2;">
+            <div class="label-row"><label>Transfer Volume (Sample Amount)</label><span class="unit-badge">µL</span></div>
+            <input type="number" id="plan-transfer-v" placeholder="Default: 100 µL" oninput="planSerialDilution()">
+            <div style="font-style: italic; font-size: 0.75rem; color: #64748b; mt-4px;">Volume to be pipetted from the previous tube in each step.</div>
+            <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 5px;">*If blank, 100 µL is used automatically.</p>
+        </div>
+
+        <input type="hidden" id="selected-factor" value="10">
+        <input type="hidden" id="proj-steps" value="5">
+        
+        <div id="res-plan-final" class="final-result-box" style="display: none; grid-column: span 2;"></div>
+    </div>
+</div>
 
             <div id="calc-corr-na" class="calculator-view">
                 <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Sodium</h3>
@@ -1029,8 +1130,7 @@
         </div>
         
         <div id="res-light-final" class="final-result-box" style="display: none; grid-column: span 2;"></div>
-        
-        <span class="formula-display">Criteria: Prot ratio >0.5 | LDH ratio >0.6 | P-LDH > 2/3 Serum ULN</span>
+    
     </div>
 </div>
 
@@ -1744,10 +1844,22 @@
     // --- 2. CALCULATOR LIST ---
     const calculators = [
         {id: 'spot-urine', title: 'Spot Urine Analysis', icon: 'fa-vial'},
+        { 
+    id: 'calc-dilution', 
+    title: "Manual Dilution Planner", 
+    icon: 'fa-vial', 
+    category: 'lab-ops' 
+},
+{ 
+    id: 'calc-serial-planner', 
+    title: "Serial Dilution Planner", 
+    icon: 'fa-project-diagram', 
+    category: 'lab-ops' 
+},
         {id: 'urine24', title: '24h Urine', icon: 'fa-flask'},
         {id: 'gfr', title: 'GFR Calculator', icon: 'fa-filter'},
         {id: 'ldl', title: 'LDL Calc', icon: 'fa-heart-pulse'},
-        {id: 'homa', title: 'HOMA-IR', icon: 'fa-dna'},
+        {id: 'homa', title: 'HOMA-IR', icon: 'fa-syringe'},
         {id: 'schwartz', title: 'Schwartz Formula', icon: 'fa-child'},
         {id: 'fib4', title: 'FIB-4 Score', icon: 'fa-file-medical'},
         {id: 'calc-corr-na', title: 'Corrected Sodium', icon: 'fa-vial'},
@@ -1761,7 +1873,7 @@
         {id: 'calc-mentzer', title: 'Mentzer Index', icon: 'fa-syringe'},
         {id: 'calc-albglob', title: 'Alb/Glob Ratio', icon: 'fa-scale-balanced'},
         {id: 'calc-rbc', title: 'RBC Indices', icon: 'fa-circle-dot'},
-        {id: 'calc-retic', title: 'Corrected Reticulocyte', icon: 'fa-chart-line'},
+        {id: 'calc-retic', title: 'Corrected Reticulocyte', icon: 'fa-circle-dot'},
         {id: 'calc-inr', title: 'INR Calc', icon: 'fa-stopwatch'},
         {id: 'calc-bun-crea', title: 'BUN/Creatinine Ratio', icon: 'fa-percentage'},
         {id: 'calc-h-ion', title: 'ABG Validation [H+]', icon: 'fa-vial-circle-check'},
@@ -1769,7 +1881,7 @@
         {id: 'calc-fpsa', title: 'Free PSA %', icon: 'fa-mars'},
         {id: 'calc-ca-ion', title: 'Est. Ionized Calcium', icon: 'fa-bone'},
         {id: 'calc-igg-index', title: 'IgG Index', icon: 'fa-brain'},
-        {id: 'calc-transferrin', title: 'Transferrin Saturation', icon: 'fa-droplet'},
+        {id: 'calc-transferrin', title: 'Transferrin Saturation', icon: 'fa-dumbbell'},
 {id: 'calc-lights', 
     title: "Light's Criteria", 
     icon: 'fa-lungs', 
@@ -2236,6 +2348,117 @@
         }); 
     }
 
+    function selectFactor(f) {
+    document.getElementById('selected-factor').value = f;
+    document.getElementById('custom-x-wrapper').style.display = 'none';
+    document.getElementById('proj-steps').value = 5;
+    planSerialDilution();
+}
+
+function enableCustomX() {
+    document.getElementById('selected-factor').value = 'custom';
+    document.getElementById('custom-x-wrapper').style.display = 'block';
+    planSerialDilution();
+}
+
+function planSerialDilution() {
+    const stockC = parseFloat(document.getElementById('plan-stock-c').value) || 0;
+    const targetC = parseFloat(document.getElementById('plan-target-c').value) || 0;
+    // Eğer boşsa 100 kullan, girilirse girileni kullan
+    const transferV = parseFloat(document.getElementById('plan-transfer-v').value) || 100;
+    const factorInput = document.getElementById('selected-factor').value;
+    const resBox = document.getElementById('res-plan-final');
+    
+    let factorX = factorInput === 'custom' 
+        ? parseFloat(document.getElementById('plan-custom-x').value) 
+        : parseFloat(factorInput);
+
+    // 1. Butonların üzerindeki adım sayılarını güncelle (Hedef varsa)
+    updateFactorButtons(stockC, targetC);
+
+    if (stockC > 0 && factorX > 1) {
+        let steps;
+        let isProjection = false;
+
+        // Mod Belirleme: Target varsa hedefe göre, yoksa manuel projeksiyon
+        if (targetC > 0 && stockC > targetC) {
+            steps = Math.ceil(Math.log(stockC / targetC) / Math.log(factorX));
+            document.getElementById('factor-label').innerText = `Targeting Strategy (1:${factorX})`;
+        } else {
+            steps = parseInt(document.getElementById('proj-steps').value);
+            isProjection = true;
+            document.getElementById('factor-label').innerText = "Manual Factor / Projection Mode";
+        }
+
+        const diluentV = transferV * (factorX - 1);
+        resBox.style.display = 'block';
+
+        let html = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); padding: 15px; border-radius: 10px; border-left: 5px solid var(--primary);">
+                <div style="margin-bottom: 15px; font-size: 0.85rem; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Step Dilution: <strong>1:${factorX}</strong></span>
+                        <span>Diluent Vol: <strong style="color: var(--primary);">${diluentV.toFixed(1)} µL</strong></span>
+                    </div>
+                    <div style="font-style: italic; font-size: 0.75rem; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 8px; margin-top: 5px;">
+                        Instructions: Each tube should already contain ${diluentV.toFixed(1)} µL of diluent.
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+        `;
+
+        for (let i = 1; i <= steps; i++) {
+            const currentC = stockC / Math.pow(factorX, i);
+            html += `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="background: var(--primary); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">${i}</span>
+                        <div>
+                            <div style="font-size: 0.85rem; font-weight: 700;">Tube ${i}</div>
+                            <div style="font-size: 0.8rem; color: var(--primary); font-family: monospace;">${currentC < 0.001 ? currentC.toExponential(2) : currentC.toFixed(4)}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.7rem; color: #64748b;">
+                        Transfer ${transferV}µL <br> from ${i === 1 ? 'Stock' : 'Tube ' + (i-1)}
+                    </div>
+                </div>
+            `;
+        }
+
+        if (isProjection) {
+            html += `<button onclick="document.getElementById('proj-steps').value = ${steps + 5}; planSerialDilution();" style="width:100%; margin-top:10px; background:none; border:1px dashed var(--primary); color:var(--primary); padding:10px; border-radius:8px; cursor:pointer; font-size:0.75rem;">+ Add 5 More Tubes</button>`;
+        }
+
+        html += `</div></div>`;
+        resBox.innerHTML = html;
+    } else {
+        resBox.style.display = 'none';
+    }
+}
+
+function updateFactorButtons(stockC, targetC) {
+    const factorInput = document.getElementById('selected-factor').value;
+    
+    document.querySelectorAll('.factor-btn').forEach(btn => {
+        btn.classList.remove('active');
+        const factorText = btn.innerText.split('\n')[0]; // Sadece "1:10" kısmını al
+        const factorVal = parseInt(factorText.split(':')[1]);
+
+        // Aktif butonu işaretle
+        if (factorText === `1:${factorInput}` || (factorInput === 'custom' && factorText === '1:X')) {
+            btn.classList.add('active');
+        }
+
+        // Eğer hedef varsa butonun altına kaç tüp gerektiğini yaz
+        if (stockC > 0 && targetC > 0 && stockC > targetC && !isNaN(factorVal)) {
+            const steps = Math.ceil(Math.log(stockC / targetC) / Math.log(factorVal));
+            btn.innerHTML = `${factorText}<br><span class="step-count-badge">${steps} steps</span>`;
+        } else if (!isNaN(factorVal)) {
+            btn.innerHTML = factorText;
+        }
+    });
+}
+
     function calculateIgGIndex() {
     const igg_csf = getNormalizedValue('igg-csf', 'mg/dL');
     const alb_serum = getNormalizedValue('alb-serum', 'g/dL');
@@ -2277,6 +2500,68 @@
         `;
     } else {
         resBox.innerHTML = '';
+        resBox.style.display = 'none';
+    }
+}
+
+function setDilution(ratio) {
+    document.getElementById('dil-custom-ratio').value = ratio;
+    calculateDilution();
+}
+
+function calculateDilution() {
+    const rawValStr = document.getElementById('dil-raw-value').value;
+    const rawVal = parseFloat(rawValStr);
+    const ratioX = parseFloat(document.getElementById('dil-custom-ratio').value);
+    const minSample = parseFloat(document.getElementById('dil-min-sample').value) || 0;
+    const resBox = document.getElementById('res-dilution-final');
+
+    if (ratioX && ratioX > 1) {
+        let sampleVol = 1000 / ratioX;
+        let totalVol = 1000;
+
+        if (sampleVol < minSample) {
+            sampleVol = minSample;
+            totalVol = sampleVol * ratioX;
+        }
+
+        const diluentVol = totalVol - sampleVol;
+        const color = "var(--primary)";
+
+        resBox.style.display = 'block';
+        
+        // Cihaz sonucu girilmiş mi kontrolü
+        const hasResult = rawValStr !== "" && !isNaN(rawVal);
+        const finalResult = hasResult ? (rawVal * ratioX) : null;
+
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 5px solid ${color}; padding: 15px; border-radius: 10px;">
+                <div style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 800; text-transform: uppercase;">Preparation Recipe (1:${ratioX})</div>
+                    <div style="font-size: 1.1rem; color: var(--text-main); margin-top: 8px;">
+                        <span style="display:inline-block; width: 110px;">💧 Sample:</span> <strong style="color:#2563eb;">${sampleVol.toFixed(1)} µL</strong><br>
+                        <span style="display:inline-block; width: 110px;">🧪 Diluent:</span> <strong style="color:var(--text-light);">${diluentVol.toFixed(1)} µL</strong>
+                        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 5px;">(Total Mix: ${totalVol.toFixed(0)} µL)</div>
+                    </div>
+                </div>
+
+                ${hasResult ? `
+                    <div style="text-align: center; padding: 10px 0;">
+                        <div style="font-size: 0.75rem; color: var(--text-light); font-weight: bold; text-transform: uppercase;">Corrected Final Result</div>
+                        <div style="font-size: 2.2rem; font-weight: 900; color: ${color}; letter-spacing: -1px;">
+                            ${finalResult.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4})}
+                        </div>
+                    </div>
+                ` : `
+                    <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 2px dashed #dc2626; font-size: 0.95rem; color: var(--text-main); text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="color: #dc2626; margin-right: 5px;"></i>
+                        Once measured, multiply the reading by <br>
+                        <span style="font-size: 1.4rem; color: #dc2626; font-weight: 900;">${ratioX}</span>
+                    </div>
+                `}
+            </div>
+        `;
+    } else {
         resBox.style.display = 'none';
     }
 }
