@@ -1148,6 +1148,23 @@
     </div>
 
     <div id="tab-qc" class="section">
+
+        <div class="info-box" style="background: #eff6ff; border: 1px solid #dbeafe; border-left: 5px solid #3b82f6; color: #1e40af; margin-bottom: 25px; padding: 20px; border-radius: 6px;">
+    <div style="display:flex; gap: 15px; align-items:flex-start;">
+        <i class="fa-solid fa-info" style="margin-top: 3px; font-size: 1.2rem; color: #3b82f6;"></i>
+        
+        <div>
+            <strong style="font-size: 0.95rem; color: #1e3a8a; display:block; margin-bottom: 5px;">Excel Decimal Format Tip</strong>
+            <div style="font-size: 0.9rem; line-height: 1.5; color: #334155;">
+                Please ensure that uploaded Excel files use a <strong>dot (.)</strong> as the decimal separator. Values containing commas (e.g., <em>5,5</em>) may be skipped.
+            </div>
+            
+            <div style="margin-top: 10px; font-size: 0.85rem; background: #ffffff; padding: 10px 12px; border-radius: 6px; border: 1px dashed #93c5fd; color: #475569;">
+                <strong><i class="fa-solid fa-gear"></i> Excel Setting:</strong> Go to <em>File > Options > Advanced</em>. Uncheck <strong>"Use system separators"</strong> and set <strong>Decimal separator</strong> to <strong>"."</strong> (dot).
+            </div>
+        </div>
+    </div>
+</div>
     
     <div class="qc-card">
         <div class="qc-header" onclick="toggleQC('qc-lj', this)">
@@ -1221,8 +1238,10 @@
             <div style="text-align:right;"><button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="clearLJData()">Clear</button></div>
             
             <button class="btn-action" onclick="runLeveyJennings()" style="margin-top:15px; margin-bottom:15px;">CALCULATE & PLOT</button>
-            
+
+            <div id="lj-stats-display" style="display:none; margin-bottom:10px;"></div>
             <div class="chart-container"><canvas id="ljChart"></canvas></div>
+
             <button class="btn-action btn-secondary" onclick="downloadHighResChart('ljChart')" style="margin-top:10px;"><i class="fa-solid fa-download"></i> Download Chart (HD)</button>
         </div>
     </div>
@@ -1475,6 +1494,158 @@
 </div>
 
 <div class="qc-card">
+    <div class="qc-header" onclick="toggleQC('qc-gluco', this)">
+        <h3><i class="fa-solid fa-mobile-screen-button"></i> Glucometer QC Check</h3>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div id="qc-gluco" class="qc-body">
+        <div class="calc-input-grid">
+            <div class="input-group">
+                <div class="label-row">
+                    <label>Glucometer Glucose</label>
+                    <span class="unit-badge" onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span>
+                </div>
+                <input type="number" id="qc-gluco-meter" placeholder="Device Result" oninput="calculateGlucoQC()">
+            </div>
+            <div class="input-group">
+                <div class="label-row">
+                    <label>Reference Lab Glucose</label>
+                    <span class="unit-badge" onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span>
+                </div>
+                <input type="number" id="qc-gluco-lab" placeholder="Reference Result" oninput="calculateGlucoQC()">
+            </div>
+            <div id="res-gluco-final" class="final-result-box" style="grid-column: span 2;"></div>
+        </div>
+        
+        <div style="margin-top: 15px; padding: 12px; background: rgba(var(--primary-rgb), 0.05); border-radius: 8px; border: 1px dashed var(--border-color);">
+            <div style="font-size: 0.8rem; color: var(--text-main); font-weight: 600; margin-bottom: 5px;">
+                <i class="fa-solid fa-scale-balanced"></i> ISO 15197:2013 Criteria:
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-light); line-height: 1.5;">
+                <strong>For mg/dL:</strong><br>
+                • Ref < 100 mg/dL: <strong>±15 mg/dL</strong> acceptable.<br>
+                • Ref ≥ 100 mg/dL: <strong>±15%</strong> acceptable.<br>
+                <div style="margin-top:4px; border-top:1px solid rgba(0,0,0,0.1); padding-top:4px;">
+                <strong>For mmol/L:</strong><br>
+                • Ref < 5.55 mmol/L: <strong>±0.83 mmol/L</strong> acceptable.<br>
+                • Ref ≥ 5.55 mmol/L: <strong>±15%</strong> acceptable.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="qc-card">
+    <div class="qc-header" onclick="toggleQC('qc-mu', this)">
+        <h3><i class="fa-solid fa-ruler-combined"></i> Measurement Uncertainty</h3>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    <div id="qc-mu" class="qc-body">
+        
+        <div class="info-box" style="background: rgba(var(--primary-rgb), 0.08); padding: 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+            <i class="fa-solid fa-circle-info"></i> Enter your data manually or upload via Excel. When uploading, please ensure the file matches the template and uses dots (.) as decimal separators instead of commas (,). This tool uses the Top-Down (Nordtest) approach optimized for clinical labs. Unlike the GUM (Bottom-Up) method, it does not calculate uncertainty for individual components (e.g., pipettes, balances); instead, it relies on cumulative QC data.
+        </div>
+
+<details style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden;">
+
+            <summary style="padding: 12px 15px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 8px;">
+
+                <i class="fa-solid fa-circle-question"></i> Data Collection Guide & Tips
+
+            </summary>
+
+            <div style="padding: 15px; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-main); line-height: 1.5;">
+
+                <div style="margin-bottom: 10px;">
+
+                    <strong style="color:var(--primary)">1. Data Timeframe (Crucial):</strong><br>
+
+                    Values must represent long-term performance. To capture variations (reagent lots, maintenance), use cumulative data from <strong>at least 6 months</strong>.
+
+                </div>
+
+                <div style="margin-bottom: 10px;">
+
+                    <strong style="color:var(--primary)">2. Where to find CV% (Precision):</strong><br>
+
+                    Check LIS or Instrument QC Statistics. Select a 6-month range, ensure <strong>"All Lots"</strong> is checked, and use the <strong>Cumulative CV</strong>.
+
+                </div>
+
+                <div>
+
+                    <strong style="color:var(--primary)">3. Where to find Bias%:</strong><br>
+
+                    Refer to EQA/PT Reports (e.g., Bio-Rad, RIQAS). Use the <strong>"RMS Bias"</strong> or "Average Bias" from the last 12 months.
+
+                </div>
+
+            </div>
+            </details>
+
+        <div style="background: #fff; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 25px; transition: all 0.3s;" id="mu-upload-area">
+            <div style="margin-bottom: 15px;">
+                <i class="fa-solid fa-file-excel" style="font-size: 2rem; color: #10b981;"></i>
+            </div>
+            <h4 style="margin: 0 0 5px 0; color: var(--text-main);">Auto-Calculate from QC Data</h4>
+            <p style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 15px;">
+                Upload Excel file with 'Level 1' and 'Level 2' columns.
+            </p>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="downloadMUTemplate()" style="padding: 8px 15px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; color: #475569; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-download"></i> Get Template
+                </button>
+                
+                <input type="file" id="mu_file_input" accept=".xlsx, .xls" style="display: none;" onchange="handleMUUpload(this)">
+                <button onclick="document.getElementById('mu_file_input').click()" style="padding: 8px 15px; background: var(--primary); border: none; border-radius: 6px; color: white; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-upload"></i> Upload Data
+                </button>
+            </div>
+
+            <div id="mu-upload-stats" style="display: none; margin-top: 20px; text-align: left; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                </div>
+        </div>
+        <div class="calc-input-grid">
+            <div class="input-group">
+                <div class="label-row"><label>Level 1 CV%</label><span class="unit-badge">%</span></div>
+                <input type="number" id="mu_cv1" placeholder="Manual or Auto" step="0.01" oninput="calculateMU()">
+            </div>
+            <div class="input-group">
+                <div class="label-row"><label>Level 2 CV%</label><span class="unit-badge">%</span></div>
+                <input type="number" id="mu_cv2" placeholder="Manual or Auto" step="0.01" oninput="calculateMU()">
+            </div>
+            
+            <div class="input-group full-width">
+                <div class="label-row"><label>Bias % (From EQA Data)</label><span class="unit-badge">%</span></div>
+                <input type="number" id="mu_bias" placeholder="EQA RMS Bias" step="0.01" oninput="calculateMU()">
+            </div>
+
+            <div class="input-group full-width">
+                <div class="label-row">
+                    <label>Total Allowable Error (TEa)</label>
+                    <span class="unit-badge">
+                        <a href="https://westgard.com/clia-a-quality/quality-requirements/2024-clia-requirements.html" target="_blank" style="text-decoration:none; color:inherit;" title="View CLIA 2024 Limits">
+                            CLIA List <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7em;"></i>
+                        </a>
+                    </span>
+                </div>
+                <input type="number" id="mu_tea" placeholder="Optional (e.g. CLIA Limit)" step="0.1" oninput="calculateMU()">
+            </div>
+
+            <div style="grid-column: span 2; margin-top: 5px; display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <input type="checkbox" id="mu_expanded" onchange="calculateMU()" checked style="width: 18px; height: 18px; cursor: pointer;">
+                <label for="mu_expanded" style="font-size: 0.9rem; cursor: pointer; color: var(--text-main); font-weight: 500;">
+                    Calculate Expanded Uncertainty (k=2)
+                </label>
+            </div>
+            
+            <div id="res-mu-final" class="final-result-box" style="grid-column: span 2;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="qc-card">
     <div class="qc-header" onclick="toggleQC('qc-ii', this)">
         <h3><i class="fa-solid fa-user-check"></i> Individuality Index (II)</h3>
         <i class="fa-solid fa-chevron-down"></i>
@@ -1518,7 +1689,7 @@
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:15px;">
     
     <div class="calculator-view external-link-card" style="display:block; margin:0; padding:15px; text-align:center;" onclick="window.open('https://www.mayocliniclabs.com', '_blank')">
-        <i class="fa-solid fa-microscope" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+        <i class="fa-solid fa-sticky-note" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
         <h4 style="font-size:0.85rem;">Mayo Clinic Labs</h4>
         <span style="font-size:0.7rem; color:var(--text-light);">Test Catalog</span>
     </div>
@@ -1541,22 +1712,28 @@
         <span style="font-size:0.7rem; color:var(--text-light);">Test Explanations</span>
     </div>
 
+    <div class="calculator-view external-link-card" style="display:block; margin:0; padding:15px; text-align:center;" onclick="window.open('https://harmonization.net/measurands/', '_blank')">
+            <i class="fa-solid fa-layer-group" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+            <h4 style="font-size:0.85rem;">Harmonization Database</h4>
+            <span style="font-size:0.7rem; color:var(--text-light);">International Measurands</span>
+        </div>
+
     <div class="calculator-view external-link-card" style="display:block; margin:0; padding:15px; text-align:center;" onclick="window.open('https://www.turkbiyokimyadernegi.org.tr/', '_blank')">
-        <i class="fa-solid fa-dna" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+        <i class="fa-solid fa-flask" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
         <h4 style="font-size:0.85rem;">TBD</h4>
         <span style="font-size:0.7rem; color:var(--text-light);">Türk Biyokimya Derneği</span>
     </div>
 
     <div class="calculator-view external-link-card" style="display:block; margin:0; padding:15px; text-align:center;" onclick="window.open('https://tkbd.org/', '_blank')">
-        <i class="fa-solid fa-hospital-user" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+        <i class="fa-solid fa-user-doctor" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
         <h4 style="font-size:0.85rem;">TKBD</h4>
-        <span style="font-size:0.7rem; color:var(--text-light);">Klinik Biyokimya Derneği</span>
+        <span style="font-size:0.7rem; color:var(--text-light);">Türk Klinik Biyokimya Uzmanları Derneği</span>
     </div>
 
     <div class="calculator-view external-link-card" style="display:block; margin:0; padding:15px; text-align:center;" onclick="window.open('https://kbud.org.tr/', '_blank')">
-        <i class="fa-solid fa-user-doctor" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+        <i class="fa-solid fa-hospital-user" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
         <h4 style="font-size:0.85rem;">KBUD</h4>
-        <span style="font-size:0.7rem; color:var(--text-light);">Biyokimya Uzmanları Derneği</span>
+        <span style="font-size:0.7rem; color:var(--text-light);">Klinik Biyokimya Uzmanları Derneği</span>
     </div>
 
     <div class="calculator-view external-link-card" style="display:block; margin:0; padding:15px; text-align:center;" onclick="window.open('https://www.reddit.com/r/medlabprofessionals/', '_blank')">
@@ -1757,10 +1934,10 @@
 <footer>
     <div class="footer-info">
         <p style="font-weight:600; margin-bottom:5px;">Medical Biochemistry Lab Assistant</p>
-        <p style="opacity:0.7; font-size:0.65rem; margin-bottom:5px;">Content provided here is for general information purposes only.</p>
-        <p style="font-size:0.75rem; margin-bottom:8px;">Contact: belginsaraa@gmail.com</p>
+        <p style="opacity:0.7; font-size:0.65rem; margin-bottom:5px;">This platform was compiled with caffeine, code, and a passion for biochemistry. Every line of code here is an attempt to decrease entropy. However, remember that the map is not the territory. Let your clinical intuition always be your True North.</p>
+        <p style="font-size:0.75rem; margin-bottom:8px;">Ping me for feedback and contributions: belginsaraa@gmail.com</p>
         <a href="https://github.com/belqin" target="_blank" class="signature-link">
-            <p class="signature">Prepared by: Belgin ŞARA, MD</p>
+            <p class="signature">Belgin ŞARA, MD</p>
         </a>
     </div>
     <div class="footer-controls">
@@ -3895,331 +4072,252 @@ function getVal(id) {
         if(document.querySelector('input[name="lj-calc-mode"][value="auto"]').checked) { recalcLJAuto(); }
         renderLJData();
     }
+    
     function drawLJChart(mean, sd) {
-        const ctx = document.getElementById('ljChart').getContext('2d');
-        if(ljChart) ljChart.destroy();
-        const labels = ljData.map((_, i) => i + 1);
-        
-        // Fixed limitSD to 2 (User requested removal of option)
-        const limitSD = 2;
-        
-        // Calculate all limits
-        const upperLimit = mean + limitSD * sd;
-        const lowerLimit = mean - limitSD * sd;
-        const upper3SD = mean + 3 * sd;
-        const lower3SD = mean - 3 * sd;
-        const upper2SD = mean + 2 * sd;
-        const lower2SD = mean - 2 * sd;
-        const upper1SD = mean + sd;
-        const lower1SD = mean - sd;
-        
-        // Check Westgard Rules
-        const activeRules = Array.from(document.querySelectorAll('.iqc-rule:checked')).map(cb => cb.value);
-        const violations = checkWestgardRules(ljData, mean, sd, activeRules);
-        
-        // Determine point colors and styles based on values and violations
-        const pointColors = [];
-        const pointRadiuses = [];
-        const pointStyles = [];
-        
-        ljData.forEach((val, index) => {
-            let color = '#16a34a';
-            let radius = 4;
-            let style = 'circle';
+    // --- YENİ EKLENEN KISIM: İSTATİSTİK HESAPLAMA ---
+    const statsBox = document.getElementById('lj-stats-display');
+    
+    if (ljData.length > 1) {
+        // Veri setinin kendi istatistiklerini hesapla
+        const sum = ljData.reduce((a, b) => a + b, 0);
+        const dataMean = sum / ljData.length;
+        // Sample SD formülü (n-1)
+        const variance = ljData.reduce((a, b) => a + Math.pow(b - dataMean, 2), 0) / (ljData.length - 1);
+        const dataSD = Math.sqrt(variance);
+        const dataCV = (dataSD / dataMean) * 100;
 
-            const violation = violations.find(v => v.index === index);
-            if (violation) {
-                radius = 7;
-                style = 'rectRot';
-                color = violation.color || '#b91c1c';
-            }
-            
-            pointColors.push(color);
-            pointRadiuses.push(radius);
-            pointStyles.push(style);
-        });
+        if (statsBox) {
+            statsBox.style.display = 'block';
+            statsBox.innerHTML = `
+                <div style="display:flex; justify-content:space-between; gap:10px; background:rgba(var(--primary-rgb), 0.08); padding:10px 15px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+                    <div style="text-align:center;">
+                        <div style="color:var(--text-light); font-size:0.75rem;">Data Mean</div>
+                        <div style="font-weight:bold; color:var(--primary);">${dataMean.toFixed(2)}</div>
+                    </div>
+                    <div style="width:1px; background:var(--border-color);"></div>
+                    <div style="text-align:center;">
+                        <div style="color:var(--text-light); font-size:0.75rem;">Data SD</div>
+                        <div style="font-weight:bold; color:var(--primary);">${dataSD.toFixed(2)}</div>
+                    </div>
+                    <div style="width:1px; background:var(--border-color);"></div>
+                    <div style="text-align:center;">
+                        <div style="color:var(--text-light); font-size:0.75rem;">CV%</div>
+                        <div style="font-weight:bold; color:#d97706;">${dataCV.toFixed(2)}%</div>
+                    </div>
+                </div>
+            `;
+        }
+    } else {
+        if (statsBox) statsBox.style.display = 'none';
+    }
+    // --------------------------------------------------
+
+    const ctx = document.getElementById('ljChart').getContext('2d');
+    if(ljChart) ljChart.destroy();
+    const labels = ljData.map((_, i) => i + 1);
+    
+    // Fixed limitSD to 2
+    const limitSD = 2;
+    
+    // ... (Kodun geri kalanı aynı şekilde devam eder) ...
+    // Calculate all limits
+    const upperLimit = mean + limitSD * sd;
+    const lowerLimit = mean - limitSD * sd;
+    const upper3SD = mean + 3 * sd;
+    const lower3SD = mean - 3 * sd;
+    const upper2SD = mean + 2 * sd;
+    const lower2SD = mean - 2 * sd;
+    const upper1SD = mean + sd;
+    const lower1SD = mean - sd;
+    
+    // Check Westgard Rules
+    const activeRules = Array.from(document.querySelectorAll('.iqc-rule:checked')).map(cb => cb.value);
+    const violations = checkWestgardRules(ljData, mean, sd, activeRules);
+    
+    // Determine point colors and styles
+    const pointColors = [];
+    const pointRadiuses = [];
+    const pointStyles = [];
+    
+    ljData.forEach((val, index) => {
+        let color = '#16a34a';
+        let radius = 4;
+        let style = 'circle';
+
+        const violation = violations.find(v => v.index === index);
+        if (violation) {
+            radius = 7;
+            style = 'rectRot';
+            color = violation.color || '#b91c1c';
+        }
         
-        const datasets = [
-            // Background Zones (Stacked Logic for Fills)
-            // Order: Top -> Bottom. We fill 'to' the next dataset index.
-            
-            // 1. Top Zone (> +2SD) -> Red
-            { label: 'BgTop', data: Array(labels.length).fill(mean + 6 * sd), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'transparent', fill: 8, order: 10 },
-            // 2. Upper Yellow Zone (+1SD to +2SD)
-            { 
-                label: 'BgUpperYellow', 
-                data: Array(labels.length).fill(upper2SD), 
-                borderColor: 'transparent', pointRadius: 0, borderWidth: 0, 
-                backgroundColor: 'rgba(255, 255, 224)',
-                fill: 2, // Fill to dataset index 2 (+1SD)
-                order: 10 
-            },
-            // 3. Upper Green Zone (Mean to +1SD)
-            { 
-                label: 'BgUpperGreen', 
-                data: Array(labels.length).fill(upper1SD), 
-                borderColor: 'transparent', pointRadius: 0, borderWidth: 0, 
-                backgroundColor: 'rgba(220, 252, 231, 0.15)',
-                fill: 3, // Fill to dataset index 3 (Mean)
-                order: 10 
-            },
-            // 4. Lower Green Zone (-1SD to Mean)
-            { 
-                label: 'BgLowerGreen', 
-                data: Array(labels.length).fill(mean), 
-                borderColor: 'rgba(22, 163, 74, 0.5)', pointRadius: 0, borderWidth: 1, borderDash: [5, 5], // Mean Line style
-                backgroundColor: 'rgba(220, 252, 231, 0.15)',
-                fill: 4, // Fill to dataset index 4 (-1SD)
-                order: 10 
-            },
-            // 5. Lower Yellow Zone (-2SD to -1SD)
-            { 
-                label: 'BgLowerYellow', 
-                data: Array(labels.length).fill(lower1SD), 
-                borderColor: 'transparent', pointRadius: 0, borderWidth: 0, 
-                backgroundColor: 'rgba(255, 255, 224)',
-                fill: 5, // Fill to dataset index 5 (-2SD)
-                order: 10 
-            },
-            // 6. Lower Red Zone (< -2SD)
-            { label: 'BgLowerRed', data: Array(labels.length).fill(lower2SD), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'transparent', fill: 9, order: 10 },
-            // 7. Bottom Limit
-            { 
-                label: 'BgBottom', 
-                data: Array(labels.length).fill(mean - 6 * sd), // Bottom extreme (e.g. -6SD)
-                borderColor: 'transparent', pointRadius: 0, borderWidth: 0, 
-                fill: false, 
-                order: 10 
-            },
+        pointColors.push(color);
+        pointRadiuses.push(radius);
+        pointStyles.push(style);
+    });
+    
+    const datasets = [
+        // ... (Dataset tanımları aynı kalacak) ...
+        { label: 'BgTop', data: Array(labels.length).fill(mean + 6 * sd), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'transparent', fill: 8, order: 10 },
+        { label: 'BgUpperYellow', data: Array(labels.length).fill(upper2SD), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'rgba(255, 255, 224)', fill: 2, order: 10 },
+        { label: 'BgUpperGreen', data: Array(labels.length).fill(upper1SD), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'rgba(220, 252, 231, 0.15)', fill: 3, order: 10 },
+        { label: 'BgLowerGreen', data: Array(labels.length).fill(mean), borderColor: 'rgba(22, 163, 74, 0.5)', pointRadius: 0, borderWidth: 1, borderDash: [5, 5], backgroundColor: 'rgba(220, 252, 231, 0.15)', fill: 4, order: 10 },
+        { label: 'BgLowerYellow', data: Array(labels.length).fill(lower1SD), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'rgba(255, 255, 224)', fill: 5, order: 10 },
+        { label: 'BgLowerRed', data: Array(labels.length).fill(lower2SD), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, backgroundColor: 'transparent', fill: 9, order: 10 },
+        { label: 'BgBottom', data: Array(labels.length).fill(mean - 6 * sd), borderColor: 'transparent', pointRadius: 0, borderWidth: 0, fill: false, order: 10 },
 
-            // Control Value and SD Lines (drawn on top)
-            { 
-                label: 'Control Value', 
-                data: ljData, 
-                borderColor: '#0d9488', 
-                backgroundColor: pointColors,
-                pointBackgroundColor: pointColors,
-                pointBorderColor: pointColors,
-                pointBorderWidth: 2,
-                borderWidth: 1,
-                tension: 0.1, 
-                pointRadius: pointRadiuses, 
-                pointHoverRadius: 6,
-                order: 1
-            },
-            // SD Lines for visual reference (without fills, just lines)
-            { label: '+3SD', data: Array(labels.length).fill(upper3SD), borderColor:'rgba(220, 38, 38, 0.3)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
-            { label: '-3SD', data: Array(labels.length).fill(lower3SD), borderColor:'rgba(220, 38, 38, 0.3)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
-            { label: '+2SD', data: Array(labels.length).fill(upper2SD), borderColor:'rgba(220, 38, 38, 0.4)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
-            { label: '-2SD', data: Array(labels.length).fill(lower2SD), borderColor:'rgba(220, 38, 38, 0.4)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
-            { label: '+1SD', data: Array(labels.length).fill(upper1SD), borderColor:'rgba(245, 158, 11, 0.4)', borderDash:[3,3], pointRadius:0, borderWidth:1, order: 2, fill: false },
-            { label: '-1SD', data: Array(labels.length).fill(lower1SD), borderColor:'rgba(245, 158, 11, 0.4)', borderDash:[3,3], pointRadius:0, borderWidth:1, order: 2, fill: false },
-            // Mean is already drawn as Dataset 3 (BgLowerGreen border), but we can add a specific Mean line if needed, or rely on Dataset 3's border.
-            // Dataset 3 has borderDash [5,5]. Let's make it solid if we want standard mean line.
-            // Or just add a dedicated Mean line on top.
-            { label: 'Mean', data: Array(labels.length).fill(mean), borderColor:'rgba(22, 163, 74, 0.8)', pointRadius:0, borderWidth:1.5, order: 2, fill: false }
-        ];
-        
-        // ... (drawLJChart fonksiyonunun üst kısımları aynı kalacak) ...
+        { 
+            label: 'Control Value', 
+            data: ljData, 
+            borderColor: '#0d9488', 
+            backgroundColor: pointColors,
+            pointBackgroundColor: pointColors,
+            pointBorderColor: pointColors,
+            pointBorderWidth: 2,
+            borderWidth: 1,
+            tension: 0.1, 
+            pointRadius: pointRadiuses, 
+            pointHoverRadius: 6,
+            order: 1
+        },
+        { label: '+3SD', data: Array(labels.length).fill(upper3SD), borderColor:'rgba(220, 38, 38, 0.3)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
+        { label: '-3SD', data: Array(labels.length).fill(lower3SD), borderColor:'rgba(220, 38, 38, 0.3)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
+        { label: '+2SD', data: Array(labels.length).fill(upper2SD), borderColor:'rgba(220, 38, 38, 0.4)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
+        { label: '-2SD', data: Array(labels.length).fill(lower2SD), borderColor:'rgba(220, 38, 38, 0.4)', borderDash:[5,5], pointRadius:0, borderWidth:1, order: 2, fill: false },
+        { label: '+1SD', data: Array(labels.length).fill(upper1SD), borderColor:'rgba(245, 158, 11, 0.4)', borderDash:[3,3], pointRadius:0, borderWidth:1, order: 2, fill: false },
+        { label: '-1SD', data: Array(labels.length).fill(lower1SD), borderColor:'rgba(245, 158, 11, 0.4)', borderDash:[3,3], pointRadius:0, borderWidth:1, order: 2, fill: false },
+        { label: 'Mean', data: Array(labels.length).fill(mean), borderColor:'rgba(22, 163, 74, 0.8)', pointRadius:0, borderWidth:1.5, order: 2, fill: false }
+    ];
 
-        // ... (drawLJChart fonksiyonunun üst kısımları aynı kalacak) ...
-
-        ljChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                devicePixelRatio: (window.devicePixelRatio || 1),
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 25,
-                        top: 25,
-                        bottom: 10
-                    }
+    ljChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            devicePixelRatio: (window.devicePixelRatio || 1),
+            layout: { padding: { left: 10, right: 25, top: 25, bottom: 10 } },
+            interaction: { intersect: false, mode: 'nearest' },
+            scales: {
+                x: { 
+                    title: { display: true, text: 'Observation Number', font: {weight:'bold'}, padding: { top: 10 } },
+                    ticks: { display: true, padding: 5 },
+                    grid: { display: false }
                 },
-                interaction: {
-                    intersect: false,
-                    mode: 'nearest'
+                y: { 
+                    title: { display: true, text: 'Control Value', font: {weight:'bold'}, padding: 12 },
+                    min: lower3SD - (0.5 * sd),
+                    max: upper3SD + (0.5 * sd),
+                    ticks: { display: true, autoSkip: true, maxTicksLimit: 6, padding: 8, callback: (val) => Math.round(val) },
+                    grid: { drawOnChartArea: true, drawBorder: true, drawTicks: false }
+                }
+            },
+            plugins: {
+                zoom: {
+                    pan: { enabled: true, mode: 'x' },
+                    zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' }
                 },
-                scales: {
-                    x: { 
-                        title: { 
-                            display: true, 
-                            text: 'Observation Number', 
-                            font: {weight:'bold'},
-                            padding: { top: 10 } // Eksen başlığı ile değerler arasına boşluk
-                        },
-                        ticks: {
-                            display: true,
-                            padding: 5
-                        },
-                        grid: {
-                            display: false
-                        }
+                ljBgPlugin: { mean, upper1SD, upper2SD, upper3SD, lower1SD, lower2SD, lower3SD },
+                datalabels: { display: false },
+                tooltip: {
+                    enabled: true,
+                    filter: function(tooltipItem) {
+                        const ds = tooltipItem.chart.data.datasets[tooltipItem.datasetIndex];
+                        return ds && ds.label === 'Control Value';
                     },
-                    y: { 
-                        title: { 
-                            display: true, 
-                            text: 'Control Value', 
-                            font: {weight:'bold'},
-                            padding: 12
-                        },
-                        min: lower3SD - (0.5 * sd),
-                        max: upper3SD + (0.5 * sd),
-                        ticks: {
-                            display: true,
-                            autoSkip: true,
-                            maxTicksLimit: 6,
-                            padding: 8,
-                            callback: (val) => Math.round(val)
-                        },
-                        grid: {
-                            drawOnChartArea: true,
-                            drawBorder: true,
-                            drawTicks: false
+                    callbacks: {
+                        label: function(context) {
+                            if (context.dataset && context.dataset.label === 'Control Value') {
+                                const val = context.raw;
+                                const sdDiff = (val - mean) / sd;
+                                let sdText = '';
+                                if (Math.abs(sdDiff) < 0.01) { sdText = 'Mean (0 SD)'; } 
+                                else { const absSD = Math.abs(sdDiff); const sign = sdDiff > 0 ? '+' : '-'; sdText = `${sign}${absSD.toFixed(2)} SD`; }
+                                return `Control Value: ${val.toFixed(2)} (${sdText})`;
+                            }
+                            return '';
                         }
                     }
                 },
-                plugins: {
-                    zoom: {
-                        pan: { enabled: true, mode: 'x' },
-                        zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' }
-                    },
-                    ljBgPlugin: { mean, upper1SD, upper2SD, upper3SD, lower1SD, lower2SD, lower3SD },
-                    // ChartDataLabels eklentisini bu grafik için kapatıyoruz
-                    // Böylece değerler çizgi üzerinde tekrar yazmaz, sadece eksende görünür
-                    datalabels: { 
-                        display: false 
-                    },
-                    tooltip: {
-                        enabled: true,
-                        filter: function(tooltipItem) {
-                            const ds = tooltipItem.chart.data.datasets[tooltipItem.datasetIndex];
-                            return ds && ds.label === 'Control Value';
-                        },
-                        callbacks: {
-                            label: function(context) {
-                                if (context.dataset && context.dataset.label === 'Control Value') {
-                                    const val = context.raw;
-                                    const sdDiff = (val - mean) / sd;
-                                    let sdText = '';
-                                    
-                                    if (Math.abs(sdDiff) < 0.01) {
-                                        sdText = 'Mean (0 SD)';
-                                    } else {
-                                        const absSD = Math.abs(sdDiff);
-                                        const sign = sdDiff > 0 ? '+' : '-';
-                                        sdText = `${sign}${absSD.toFixed(2)} SD`;
+                legend: {
+                    display: true,
+                    labels: {
+                        generateLabels: function(chart) {
+                            const defaultLabels = Chart.defaults.plugins.legend.labels.generateLabels.call(this, chart);
+                            const groupedLabels = [];
+                            const processed = new Set();
+                            defaultLabels.forEach((label, idx) => {
+                                if (processed.has(idx)) return;
+                                const text = label.text;
+                                if (text.startsWith('Bg')) return;
+                                if (text === '+3SD' || text === '-3SD') {
+                                    const plusLabel = defaultLabels.find(l => l.text === '+3SD');
+                                    const minusLabel = defaultLabels.find(l => l.text === '-3SD');
+                                    if (plusLabel && minusLabel) {
+                                        groupedLabels.push({ ...plusLabel, text: '±3SD', datasetIndex: plusLabel.datasetIndex, hidden: plusLabel.hidden || minusLabel.hidden });
+                                        processed.add(defaultLabels.indexOf(plusLabel));
+                                        processed.add(defaultLabels.indexOf(minusLabel));
                                     }
-                                    
-                                    return `Control Value: ${val.toFixed(2)} (${sdText})`;
+                                } else if (text === '+2SD' || text === '-2SD') {
+                                    const plusLabel = defaultLabels.find(l => l.text === '+2SD');
+                                    const minusLabel = defaultLabels.find(l => l.text === '-2SD');
+                                    if (plusLabel && minusLabel) {
+                                        groupedLabels.push({ ...plusLabel, text: '±2SD', datasetIndex: plusLabel.datasetIndex, hidden: plusLabel.hidden || minusLabel.hidden });
+                                        processed.add(defaultLabels.indexOf(plusLabel));
+                                        processed.add(defaultLabels.indexOf(minusLabel));
+                                    }
+                                } else if (text === '+1SD' || text === '-1SD') {
+                                    const plusLabel = defaultLabels.find(l => l.text === '+1SD');
+                                    const minusLabel = defaultLabels.find(l => l.text === '-1SD');
+                                    if (plusLabel && minusLabel) {
+                                        groupedLabels.push({ ...plusLabel, text: '±1SD', datasetIndex: plusLabel.datasetIndex, hidden: plusLabel.hidden || minusLabel.hidden });
+                                        processed.add(defaultLabels.indexOf(plusLabel));
+                                        processed.add(defaultLabels.indexOf(minusLabel));
+                                    }
+                                } else if (!processed.has(idx)) {
+                                    groupedLabels.push(label);
+                                    processed.add(idx);
                                 }
-                                return '';
-                            }
+                            });
+                            return groupedLabels;
                         }
                     },
-                    legend: {
-                        display: true,
-                        // ... (legend ayarları aynı kalacak) ...
-                        labels: {
-                            generateLabels: function(chart) {
-                                const defaultLabels = Chart.defaults.plugins.legend.labels.generateLabels.call(this, chart);
-                                const groupedLabels = [];
-                                const processed = new Set();
-                                
-                                defaultLabels.forEach((label, idx) => {
-                                    if (processed.has(idx)) return;
-                                    const text = label.text;
-                                    
-                                    // Filter out background zones from legend
-                                    if (text.startsWith('Bg')) return;
-                                    
-                                    if (text === '+3SD' || text === '-3SD') {
-                                        const plusLabel = defaultLabels.find(l => l.text === '+3SD');
-                                        const minusLabel = defaultLabels.find(l => l.text === '-3SD');
-                                        if (plusLabel && minusLabel) {
-                                            groupedLabels.push({ ...plusLabel, text: '±3SD', datasetIndex: plusLabel.datasetIndex, hidden: plusLabel.hidden || minusLabel.hidden });
-                                            processed.add(defaultLabels.indexOf(plusLabel));
-                                            processed.add(defaultLabels.indexOf(minusLabel));
-                                        }
-                                    }
-                                    else if (text === '+2SD' || text === '-2SD') {
-                                        const plusLabel = defaultLabels.find(l => l.text === '+2SD');
-                                        const minusLabel = defaultLabels.find(l => l.text === '-2SD');
-                                        if (plusLabel && minusLabel) {
-                                            groupedLabels.push({ ...plusLabel, text: '±2SD', datasetIndex: plusLabel.datasetIndex, hidden: plusLabel.hidden || minusLabel.hidden });
-                                            processed.add(defaultLabels.indexOf(plusLabel));
-                                            processed.add(defaultLabels.indexOf(minusLabel));
-                                        }
-                                    }
-                                    else if (text === '+1SD' || text === '-1SD') {
-                                        const plusLabel = defaultLabels.find(l => l.text === '+1SD');
-                                        const minusLabel = defaultLabels.find(l => l.text === '-1SD');
-                                        if (plusLabel && minusLabel) {
-                                            groupedLabels.push({ ...plusLabel, text: '±1SD', datasetIndex: plusLabel.datasetIndex, hidden: plusLabel.hidden || minusLabel.hidden });
-                                            processed.add(defaultLabels.indexOf(plusLabel));
-                                            processed.add(defaultLabels.indexOf(minusLabel));
-                                        }
-                                    }
-                                    else if (!processed.has(idx)) {
-                                        groupedLabels.push(label);
-                                        processed.add(idx);
-                                    }
-                                });
-                                return groupedLabels;
-                            }
-                        },
-                        // ... (onClick fonksiyonu aynı kalacak) ...
-                        onClick: function(e, legendItem, legend) {
-                            const chart = legend.chart;
-                            const text = legendItem.text;
-                            if (text === '±3SD') {
-                                const plusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '+3SD'));
-                                const minusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '-3SD'));
-                                const newState = !plusMeta.hidden;
-                                plusMeta.hidden = newState; minusMeta.hidden = newState;
-                            } else if (text === '±2SD') {
-                                const plusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '+2SD'));
-                                const minusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '-2SD'));
-                                const newState = !plusMeta.hidden;
-                                plusMeta.hidden = newState; minusMeta.hidden = newState;
-                            } else if (text === '±1SD') {
-                                const plusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '+1SD'));
-                                const minusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '-1SD'));
-                                const newState = !plusMeta.hidden;
-                                plusMeta.hidden = newState; minusMeta.hidden = newState;
-                            } else {
-                                const index = legendItem.datasetIndex;
-                                const meta = chart.getDatasetMeta(index);
-                                meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
-                            }
-                            chart.update();
+                    onClick: function(e, legendItem, legend) {
+                        const chart = legend.chart;
+                        const text = legendItem.text;
+                        if (text === '±3SD') {
+                            const plusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '+3SD'));
+                            const minusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '-3SD'));
+                            const newState = !plusMeta.hidden;
+                            plusMeta.hidden = newState; minusMeta.hidden = newState;
+                        } else if (text === '±2SD') {
+                            const plusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '+2SD'));
+                            const minusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '-2SD'));
+                            const newState = !plusMeta.hidden;
+                            plusMeta.hidden = newState; minusMeta.hidden = newState;
+                        } else if (text === '±1SD') {
+                            const plusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '+1SD'));
+                            const minusMeta = chart.getDatasetMeta(chart.data.datasets.findIndex(d => d.label === '-1SD'));
+                            const newState = !plusMeta.hidden;
+                            plusMeta.hidden = newState; minusMeta.hidden = newState;
+                        } else {
+                            const index = legendItem.datasetIndex;
+                            const meta = chart.getDatasetMeta(index);
+                            meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
                         }
+                        chart.update();
                     }
                 }
             }
-        });
-
-// ... (Kalan kodlar aynı) ...
-    }
-    
-    function updateLJLimits() {
-        // If chart exists, redraw it with new limits
-        if (ljChart && ljData.length > 0) {
-            const mean = parseFloat(document.getElementById('lj-mean').value);
-            const sd = parseFloat(document.getElementById('lj-sd').value);
-            if (!isNaN(mean) && !isNaN(sd)) {
-                drawLJChart(mean, sd);
-            }
         }
-    }
-
-    // --- 9. PBRTQC LOGIC ---
+    });
+}
+    
+    
+    //* PBRTQC
     function populateAnalyteSelect() {
         const sel = document.getElementById('pbrtqc-analyte');
         sel.innerHTML = "";
@@ -5460,6 +5558,260 @@ function runCarryover() {
     }
     resBox.style.display = 'block';
 }
+
+function calculateGlucoQC() {
+    const mVal = parseFloat(document.getElementById('qc-gluco-meter').value);
+    const lVal = parseFloat(document.getElementById('qc-gluco-lab').value);
+    const resBox = document.getElementById('res-gluco-final');
+
+    // Birim kontrolü: Referans inputunun yanındaki badge'i kontrol ediyoruz
+    const unitBadge = document.getElementById('qc-gluco-lab').parentNode.querySelector('.unit-badge');
+    const isMmol = unitBadge && unitBadge.textContent.includes('mmol');
+    
+    // Eşik değerler (ISO 15197)
+    // mg/dL için sınır 100, mmol/L için 5.55
+    const cutoff = isMmol ? 5.55 : 100;
+    // Düşük değerler için mutlak fark limiti (15 mg/dL veya 0.83 mmol/L)
+    const absLimit = isMmol ? 0.83 : 15;
+    const unitText = isMmol ? "mmol/L" : "mg/dL";
+
+    if (!isNaN(mVal) && !isNaN(lVal)) {
+        // Mutlak fark
+        const diff = Math.abs(mVal - lVal);
+        let isPass = false;
+        let limitText = "";
+        let calcDetail = "";
+
+        if (lVal < cutoff) {
+            // Düşük glukoz seviyeleri için mutlak farka bakılır
+            isPass = diff <= absLimit;
+            limitText = `Limit: ±${absLimit} ${unitText}`;
+            calcDetail = `Diff: ${diff.toFixed(isMmol ? 2 : 1)} ${unitText}`;
+        } else {
+            // Yüksek glukoz seviyeleri için %15 farka bakılır
+            const allowedDiff = lVal * 0.15;
+            isPass = diff <= allowedDiff;
+            
+            const diffPercent = (diff / lVal) * 100;
+            limitText = "Limit: ±15%";
+            calcDetail = `Diff: ${diffPercent.toFixed(1)}%`;
+        }
+
+        const color = isPass ? "#16a34a" : "#dc2626";
+        const icon = isPass ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+        const status = isPass ? "COMPATIBLE" : "INCOMPATIBLE";
+        const bgColor = isPass ? "rgba(22, 163, 74, 0.1)" : "rgba(220, 38, 38, 0.1)";
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: ${bgColor}; border-left: 4px solid ${color}; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.1rem; font-weight: 800; color: ${color}; display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+                    ${icon} ${status}
+                </div>
+                <div style="font-size: 0.9rem; color: var(--text-main); font-weight: 500;">
+                    ${calcDetail} <span style="font-size:0.8rem; color:var(--text-light); font-weight:normal;">(${limitText})</span>
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.style.display = 'none';
+        resBox.innerHTML = '';
+    }
+}
+
+// --- 1. Template İndirme Fonksiyonu ---
+function downloadMUTemplate() {
+    // Basit bir şablon verisi oluştur
+    const ws_data = [
+        ["Level 1 Results", "Level 2 Results"], // Başlıklar
+        [85, 210],  // Örnek veri 1
+        [86, 212],  // Örnek veri 2
+        [84, 209],  // Örnek veri 3
+        [85, 211],  // Örnek veri ...
+        [87, 208]
+    ];
+    
+    // Workbook oluştur
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    
+    // Sütun genişliklerini ayarla
+    ws['!cols'] = [{wch: 15}, {wch: 15}];
+    
+    XLSX.utils.book_append_sheet(wb, ws, "QC_Data");
+    
+    // Dosyayı indir
+    XLSX.writeFile(wb, "QC_Data_Template.xlsx");
+}
+
+// --- 2. Excel Yükleme ve Hesaplama Fonksiyonu ---
+function handleMUUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        
+        // İlk sayfayı al
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        // JSON'a çevir (Header satırı 1. satır kabul edilir)
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+        
+        // Verileri ayıkla (İlk satır başlık olduğu için atlıyoruz)
+        const level1Data = [];
+        const level2Data = [];
+        
+        // Satır satır gez (i=1'den başla çünkü i=0 başlıktır)
+        for (let i = 1; i < jsonData.length; i++) {
+            const row = jsonData[i];
+            // 0. indeks Level 1, 1. indeks Level 2 (Template yapısına göre)
+            if (row[0] !== undefined && !isNaN(row[0])) level1Data.push(parseFloat(row[0]));
+            if (row[1] !== undefined && !isNaN(row[1])) level2Data.push(parseFloat(row[1]));
+        }
+
+        if (level1Data.length < 2 || level2Data.length < 2) {
+            alert("Insufficient data. Please define at least 2 numeric values for both levels.");
+            return;
+        }
+
+        // --- 3. İstatistikleri Hesapla ---
+        const stats1 = calculateArrayStats(level1Data);
+        const stats2 = calculateArrayStats(level2Data);
+
+        // --- 4. UI Güncelleme ---
+        
+        // CV Değerlerini inputlara yaz
+        document.getElementById('mu_cv1').value = stats1.cv.toFixed(2);
+        document.getElementById('mu_cv2').value = stats2.cv.toFixed(2);
+
+        // İstatistikleri Göster (Görsel Bölüm)
+        const statsDiv = document.getElementById('mu-upload-stats');
+        statsDiv.style.display = 'grid';
+        statsDiv.style.gridTemplateColumns = '1fr 1fr';
+        statsDiv.style.gap = '10px';
+        
+        statsDiv.innerHTML = `
+            <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary);">
+                <div style="font-size: 0.75rem; color: #64748b; font-weight: bold;">LEVEL 1 (n=${level1Data.length})</div>
+                <div style="font-size: 0.8rem; margin-top: 4px;">Mean: <strong>${stats1.mean.toFixed(2)}</strong></div>
+                <div style="font-size: 0.8rem;">SD: <strong>${stats1.sd.toFixed(2)}</strong></div>
+                <div style="font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-top: 2px;">CV: ${stats1.cv.toFixed(2)}%</div>
+            </div>
+            <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary);">
+                <div style="font-size: 0.75rem; color: #64748b; font-weight: bold;">LEVEL 2 (n=${level2Data.length})</div>
+                <div style="font-size: 0.8rem; margin-top: 4px;">Mean: <strong>${stats2.mean.toFixed(2)}</strong></div>
+                <div style="font-size: 0.8rem;">SD: <strong>${stats2.sd.toFixed(2)}</strong></div>
+                <div style="font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-top: 2px;">CV: ${stats2.cv.toFixed(2)}%</div>
+            </div>
+            <div style="grid-column: span 2; text-align: center; font-size: 0.75rem; color: #16a34a; margin-top: 5px;">
+                <i class="fa-solid fa-check-circle"></i> CV values auto-filled below!
+            </div>
+        `;
+
+        // Ana hesaplamayı tetikle
+        calculateMU();
+        
+        // Inputu temizle (tekrar aynı dosya seçilebilsin diye)
+        input.value = '';
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
+
+// Yardımcı Fonksiyon: Ortalama, SD, CV Hesapla
+function calculateArrayStats(arr) {
+    const n = arr.length;
+    const mean = arr.reduce((a, b) => a + b, 0) / n;
+    const variance = arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1);
+    const sd = Math.sqrt(variance);
+    const cv = (sd / mean) * 100;
+    
+    return { mean, sd, cv };
+}
+
+// --- MEVCUT HESAPLAMA FONKSİYONU (Değişiklik Yok) ---
+function calculateMU() {
+    // Get Inputs
+    const cv1 = parseFloat(document.getElementById('mu_cv1').value);
+    const cv2 = parseFloat(document.getElementById('mu_cv2').value);
+    const bias = parseFloat(document.getElementById('mu_bias').value);
+    const tea = parseFloat(document.getElementById('mu_tea').value);
+    const isExpanded = document.getElementById('mu_expanded').checked;
+    
+    const resBox = document.getElementById('res-mu-final');
+
+    if (!isNaN(cv1) && !isNaN(cv2) && !isNaN(bias)) {
+        // 1. Calculate Within-Lab Reproducibility (uRw)
+        const uRw = Math.sqrt((Math.pow(cv1, 2) + Math.pow(cv2, 2)) / 2);
+
+        // 2. Calculate Bias Uncertainty (uBias)
+        const uBias = Math.abs(bias);
+
+        // 3. Combined Uncertainty (U)
+        const uC = Math.sqrt(Math.pow(uRw, 2) + Math.pow(uBias, 2));
+
+        // 4. Expanded Calculation (k=2)
+        let finalResult = uC;
+        let titleText = "Combined Uncertainty (u)";
+        let confText = "";
+        
+        if (isExpanded) {
+            finalResult = uC * 2;
+            titleText = "Expanded Uncertainty (U)";
+            confText = "at 95% confidence level";
+        }
+
+        // 5. TEa Interpretation
+        let interpretationHTML = "";
+        let color = "#1e293b";
+
+        if (!isNaN(tea)) {
+            const isPass = finalResult <= tea;
+            const statusText = isPass ? "within acceptable limits" : "NOT within acceptable limits";
+            const statusColor = isPass ? "#16a34a" : "#dc2626";
+            
+            interpretationHTML = `
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #334155; line-height: 1.5;">
+                    <strong style="color:${statusColor}">Result: ${isPass ? 'PASS' : 'FAIL'}</strong><br>
+                    Reporting of analysis results within <strong>±${finalResult.toFixed(2)}%</strong> ${confText} is <strong>${statusText}</strong> (TEa: ${tea.toFixed(1)}%).
+                </div>
+            `;
+            color = statusColor;
+        } else {
+            interpretationHTML = `
+                <div style="margin-top: 10px; font-size: 0.8rem; color: #64748b;">
+                    Enter <strong>TEa</strong> value to see clinical acceptability report.
+                </div>
+            `;
+        }
+
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 1.2rem; font-weight: 800; color: ${color}; margin-bottom: 2px;">
+                    ${titleText}: ±${finalResult.toFixed(2)}%
+                </div>
+                ${isExpanded ? '<div style="font-size: 0.75rem; color: #64748b; margin-bottom: 5px;">coverage factor k=2</div>' : ''}
+                
+                ${interpretationHTML}
+
+                <div style="margin-top: 10px; padding-top: 5px; font-size: 0.7rem; color: #94a3b8; font-family:monospace; border-top: 1px dashed rgba(0,0,0,0.1);">
+                    uRw: ${uRw.toFixed(2)}% | uBias: ${uBias.toFixed(2)}% | uc: ${uC.toFixed(2)}%
+                </div>
+            </div>
+        `;
+    } else {
+        resBox.style.display = 'none';
+        resBox.innerHTML = '';
+    }
+}
+
+
 </script>
 </body>
 </html>
