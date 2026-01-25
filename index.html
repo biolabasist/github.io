@@ -1176,6 +1176,15 @@
     <i class="fa-solid fa-circle-info"></i> 
     Enter your data manually or upload via Excel. When uploading, please ensure your file matches the template and uses dots (.) instead of commas (,) as decimal separators. You can either let the system calculate the Mean and SD automatically or enter your own values—be sure to select the appropriate option. You can edit or delete entries by clicking on the value or its sequence number. Select the Westgard rules you wish to apply from the checklist. Once everything is ready, click 'Calculate & Plot'.
 </div>
+
+<div class="input-group full-width" style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
+                     <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap;">
+                        <input type="radio" name="lj-calc-mode" value="manual" checked onchange="toggleLJMode()"> Enter mean and SD manually
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap;">
+                        <input type="radio" name="lj-calc-mode" value="auto" onchange="toggleLJMode()"> Calculate mean and SD from data
+                    </label>
+                </div>
             <div class="calc-input-grid">
                 <div class="input-group">
                     <div class="label-row"><label>Mean</label></div>
@@ -1186,14 +1195,7 @@
                     <input type="number" id="lj-sd" oninput="updateLJLimits()">
                 </div>
                 
-                <div class="input-group full-width" style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
-                     <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap;">
-                        <input type="radio" name="lj-calc-mode" value="manual" checked onchange="toggleLJMode()"> Enter mean and SD manually
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap;">
-                        <input type="radio" name="lj-calc-mode" value="auto" onchange="toggleLJMode()"> Calculate mean and SD from data
-                    </label>
-                </div>
+                
     
                 <div class="input-group full-width" style="margin-top:10px;">
                     <label style="color:var(--primary); margin-bottom:8px; display:block;">Westgard QC Rules</label>
@@ -1255,6 +1257,15 @@
             <div class="info-box" style="background: rgba(var(--primary-rgb), 0.08); padding: 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border-left: 4px solid var(--primary);">
     <i class="fa-solid fa-circle-info"></i> 
                 Enter your data manually or upload via Excel. When uploading, please ensure the file matches the template and uses dots (.) as decimal separators instead of commas (,). To use the methods and parameters established by Hacettepe University Hospitals Central Laboratory, select the 'Auto' option for calculations. Alternatively, you may manually select your preferred method and parameters. Additionally, you can enable the 'Truncation' option to apply biological variation-mediated truncation limits, and the 'Log Transformation' option to convert your data into a log-normal distribution. Once everything is ready, click 'Calculate & Plot'.
+</div>
+
+<div class="input-group full-width" style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
+    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap;">
+        <input type="checkbox" id="opt-trunc" checked> Truncation (RCV)
+    </label>
+    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap;">
+        <input type="checkbox" id="opt-norm" checked> Log Trans.
+    </label>
 </div>
             <div class="calc-input-grid">
                 <div class="input-group full-width">
@@ -1332,11 +1343,6 @@
             </div>
             <div style="text-align:right;"><button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="clearManualData()">Clear</button></div>
 
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <label><input type="checkbox" id="opt-trunc" checked> <span>Truncation (RCV)</span></label>
-                <label><input type="checkbox" id="opt-norm" checked> <span>Log Trans.</span></label>
-            </div>
-
             <button class="btn-action" onclick="runPBRTQC()">CALCULATE & PLOT</button>
 
             <div id="qc-result-area" style="display:none;">
@@ -1347,56 +1353,173 @@
         </div>
     </div>
 
-    <div class="qc-card">
-        <div class="qc-header" onclick="toggleQC('qc-sigma', this)">
-            <h3><i class="fa-solid fa-bullseye"></i> Sigma Metric & Method Decision</h3>
-            <i class="fa-solid fa-chevron-down"></i>
-        </div>
-        <div id="qc-sigma" class="qc-body">
-            <div class="calc-input-grid">
-                <div class="input-group">
-                    <div class="label-row"><label>TEa (Total Allowable Error)</label><span class="unit-badge">%</span></div>
-                    <input type="number" id="sigma-tea">
-                </div>
-                <div class="input-group">
-                    <div class="label-row"><label>CV (Coeff. of Variation)</label><span class="unit-badge">%</span></div>
-                    <input type="number" id="sigma-cv">
-                </div>
-                <div class="input-group">
-                    <div class="label-row"><label>Bias</label><span class="unit-badge">%</span></div>
-                    <input type="number" id="sigma-bias">
-                </div>
-                <div class="input-group" style="display:flex; align-items:center;">
-                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:500;">
-                        <input type="checkbox" id="sigma-use-bias" checked onchange="updateSigmaBiasToggle()">
-                        Use Bias in Calculation
-                    </label>
-                </div>
-                <div id="res-sigma-final" class="final-result-box" style="grid-column: span 2;"></div>
+   <div class="qc-card">
+    <div class="qc-header" onclick="toggleQC('qc-sigma', this)">
+        <h3><i class="fa-solid fa-bullseye"></i> Sigma Metric & Method Decision</h3>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+    
+    <div id="qc-sigma" class="qc-body">
+        
+        <div class="info-box" style="background: rgba(var(--primary-rgb), 0.08); padding: 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border-left: 4px solid var(--primary); color: #334155;">
+            <div style="margin-bottom: 8px;">
+                <i class="fa-solid fa-circle-info"></i> 
+                <strong>Total Analytical Error (TAE)</strong> is calculated alongside Sigma but requires a <strong>Bias</strong> value.
             </div>
             
-            <div class="input-group" style="margin-top:15px;">
-                <button class="btn-action" onclick="runSigmaMetric()">CALCULATE & PLOT</button>
-            </div>
-            <div style="margin-top:20px;">
-                <h4 style="margin-bottom:10px; color:var(--text-main); font-size:0.9rem;">Normalized Method Decision Chart</h4>
-                <div class="chart-container" style="height:350px;">
-                    <canvas id="sigmaChart"></canvas>
-                </div>
-                <button class="btn-action btn-secondary" onclick="downloadHighResChart('sigmaChart')" style="margin-top:10px;"><i class="fa-solid fa-download"></i> Download Chart (HD)</button>
-                <div style="margin-top:10px; font-size:0.75rem; color:var(--text-light); text-align:center;">
-                    Y-Axis: Bias % | X-Axis: CV % | Lines: Sigma Zones (2, 3, 4, 5, 6)
-                </div>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-left: 22px; font-size: 0.8rem; color: #64748b;">
+                <span style="display: flex; align-items: center; gap: 5px;">
+                    <i class="fa-solid fa-check" style="color: var(--primary); font-size: 0.7rem;"></i> Uncheck 'Use Bias' for CV only
+                </span>
+                <span style="display: flex; align-items: center; gap: 5px;">
+                    <i class="fa-solid fa-check" style="color: var(--primary); font-size: 0.7rem;"></i> Use 'Pooled CV' for average variance
+                </span>
+                <span style="display: flex; align-items: center; gap: 5px;">
+                    <i class="fa-solid fa-check" style="color: var(--primary); font-size: 0.7rem;"></i> Use 'Separate' for individual levels
+                </span>
             </div>
         </div>
+
+        <div class="calc-input-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            
+            <div class="input-group">
+                <div class="label-row" style="margin-bottom: 8px;">
+                    <label style="font-weight: 600; color: #475569; font-size: 0.85rem;">Calculation Mode</label>
+                </div>
+                <div style="display:flex; align-items: center; gap:15px; flex-wrap:wrap; height: 30px;"> <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap; color: #334155; margin:0;">
+                        <input type="radio" name="sigmaCalcMode" value="pooled" checked onchange="handleSigmaModeChange()" style="accent-color: var(--primary); margin:0;"> 
+                        Pooled CV
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap; color: #334155; margin:0;">
+                        <input type="radio" name="sigmaCalcMode" value="separate" onchange="handleSigmaModeChange()" style="accent-color: var(--primary); margin:0;"> 
+                        Separate (L1 & L2)
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row" style="margin-bottom: 8px;">
+                    <label style="font-weight: 600; color: #475569; font-size: 0.85rem;">Bias Parameter</label>
+                </div>
+                <div style="display: flex; align-items: center; height: 30px;"> <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; white-space:nowrap; color: #334155; margin: 0;">
+                        <input type="checkbox" id="sigma_use_bias" checked onchange="updateSigmaBiasToggle()" style="width: 16px; height: 16px; accent-color: var(--primary); margin: 0;">
+                        <span>Use Bias in Calculation</span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+      
+
+        <div class="calc-input-grid">
+            
+            <div id="sigma-pooled-inputs" style="grid-column: span 2;">
+                <div class="input-group full-width">
+                    <div class="label-row"><label>Pooled CV%</label><span class="unit-badge">%</span></div>
+                    <input type="number" id="sigma_cv_pooled" placeholder="Enter Pooled CV..." step="0.01" oninput="calculateSigmaTextOnly()">
+                </div>
+            </div>
+
+            <div id="sigma-separate-inputs" style="display: none; grid-template-columns: 1fr 1fr; gap: 20px; grid-column: span 2;">
+                <div class="input-group">
+                    <div class="label-row"><label>Level 1 CV%</label><span class="unit-badge">%</span></div>
+                    <input type="number" id="sigma_cv1" placeholder="Auto or Manual" step="0.01" oninput="calculateSigmaTextOnly()">
+                </div>
+                <div class="input-group">
+                    <div class="label-row"><label>Level 2 CV%</label><span class="unit-badge">%</span></div>
+                    <input type="number" id="sigma_cv2" placeholder="Auto or Manual" step="0.01" oninput="calculateSigmaTextOnly()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <label>Bias%</label>
+                    <span class="unit-badge">%</span>
+                </div>
+                <input type="number" id="sigma_bias" placeholder="Manual Entry" step="0.01" oninput="calculateSigmaTextOnly()">
+            </div>
+
+            <div class="input-group full-width">
+    <div class="label-row" style="justify-content: flex-start; gap: 10px; align-items: baseline; position: relative;">
+        <label>Total Allowable Error (TEa)</label>
+        <button onclick="toggleRefMenuSigma()" style="background: none; border: none; color: var(--primary); font-size: 0.75rem; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;">
+            <i class="fa-solid fa-book-medical"></i> Select Guideline
+        </button>
+        
+        <div id="sigma-ref-menu" style="display: none; position: absolute; left: 180px; top: 25px; background: white; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; width: 240px; z-index: 1000; padding: 5px 0;">
+            <a href="https://westgard.com/clia-a-quality/quality-requirements/2024-clia-requirements.html" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 15px; text-decoration: none; color: #334155; font-size: 0.8rem; border-bottom: 1px solid #f1f5f9;">
+                <i class="fa-solid fa-flag-usa" style="color: #ef4444; width:16px;"></i> <strong>CLIA 2024</strong>
+            </a>
+            <a href="https://datainnovations.com/allowable-total-error-table/" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 15px; text-decoration: none; color: #334155; font-size: 0.8rem; background: #f8fafc; border-bottom: 1px solid #f1f5f9;">
+                <i class="fa-solid fa-table-list" style="color: #0ea5e9; width:16px;"></i> <strong>Data Innovations</strong>
+            </a>
+            <a href="https://biologicalvariation.eu/meta_calculations" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 15px; text-decoration: none; color: #334155; font-size: 0.8rem;">
+                <i class="fa-solid fa-dna" style="color: #8b5cf6; width:16px;"></i> <strong>EFLM Database</strong>
+            </a>
+        </div>
     </div>
+    <input type="number" id="sigma_tea" placeholder="Target Limit (e.g. 10)" step="0.1" oninput="calculateSigmaTextOnly()">
+</div>
+
+<div style="grid-column: span 2; display: flex; gap: 10px; margin-top: 5px; margin-bottom: 5px;">
+    <button class="btn-action btn-secondary" style="flex:1;" onclick="triggerSigmaExcelInput()">
+                    <i class="fa-solid fa-file-excel"></i> Upload Excel
+                </button>
+    <input type="file" id="sigma-excel-upload" accept=".xlsx, .xls" style="display:none;" onchange="handleSigmaExcelUpload(this)">
+
+    <button class="btn-action btn-secondary" style="flex:1;" onclick="downloadSigmaTemplate()">
+                    <i class="fa-solid fa-download"></i> Template
+                </button>
+</div>
+<div id="sigma-upload-stats" style="display: none; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                </div>
+        </div>
+
+            
+        <div class="input-group full-width" style="margin-top:15px;">
+             <button class="btn-action" onclick="runSigmaMetric()">
+                <i class="fa-solid fa-calculator"></i> CALCULATE & PLOT
+            </button>
+        </div>
+
+        <div style="margin-top:20px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+        <h4 style="margin:0; color:var(--text-main); font-size:0.9rem; font-weight: 700;">
+            Normalized Method Decision Chart
+        </h4>
+        <a href="https://westgard.com/lessons/advanced-quality-management-six-sigma/secrets-sigma-studies-part-two.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 6px 12px; border-radius: 20px; transition: all 0.2s;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+            <i class="fa-solid fa-wrench"></i> Corrective Action
+            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7em;"></i>
+        </a>
+    </div>
+
+            <div class="chart-container" style="height:400px; position: relative;">
+                <canvas id="sigmaChart"></canvas>
+            </div>
+            
+            <button class="btn-action btn-secondary" onclick="downloadHighResChart('sigmaChart')" style="margin-top:10px; font-size: 0.85rem;">
+                <i class="fa-solid fa-download"></i> Download Chart
+            </button>
+        </div>
+    </div>
+</div>
+    
 
     <div class="qc-card">
         <div class="qc-header" onclick="toggleQC('qc-carryover', this)">
             <h3><i class="fa-solid fa-arrows-turn-to-dots"></i> Carryover Analysis</h3>
             <i class="fa-solid fa-chevron-down"></i>
         </div>
+
+        
         <div id="qc-carryover" class="qc-body">
+
+            <div class="info-box" style="background: rgba(var(--primary-rgb), 0.08); padding: 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+
+    <i class="fa-solid fa-circle-info"></i>
+
+    Enter your data manually. H represents high-concentration sample, and L represents low-concentration sample. Run the samples on the instrument in the sequence shown and enter the obtained results. To obtain the results, click the "Calculate" button.
+</div>
             <div class="input-group full-width" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
                 <label style="margin:0; color:var(--primary); font-weight:600;">TEa</label>
                 <input type="number" id="carry-tea" step="0.01" placeholder="Enter TEa" style="max-width:120px;">
@@ -1546,66 +1669,45 @@
             <i class="fa-solid fa-circle-info"></i> Enter your data manually or upload via Excel. When uploading, please ensure the file matches the template and uses dots (.) as decimal separators instead of commas (,). This tool uses the Top-Down (Nordtest) approach optimized for clinical labs. Unlike the GUM (Bottom-Up) method, it does not calculate uncertainty for individual components (e.g., pipettes, balances); instead, it relies on cumulative QC data.
         </div>
 
-<details style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden;">
-
+        <details style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden;">
             <summary style="padding: 12px 15px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 8px;">
-
                 <i class="fa-solid fa-circle-question"></i> Data Collection Guide & Tips
-
             </summary>
-
             <div style="padding: 15px; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-main); line-height: 1.5;">
-
                 <div style="margin-bottom: 10px;">
-
                     <strong style="color:var(--primary)">1. Data Timeframe (Crucial):</strong><br>
-
                     Values must represent long-term performance. To capture variations (reagent lots, maintenance), use cumulative data from <strong>at least 6 months</strong>.
-
                 </div>
-
                 <div style="margin-bottom: 10px;">
-
                     <strong style="color:var(--primary)">2. Where to find CV% (Precision):</strong><br>
-
                     Check LIS or Instrument QC Statistics. Select a 6-month range, ensure <strong>"All Lots"</strong> is checked, and use the <strong>Cumulative CV</strong>.
-
                 </div>
-
                 <div>
-
                     <strong style="color:var(--primary)">3. Where to find Bias%:</strong><br>
-
                     Refer to EQA/PT Reports (e.g., Bio-Rad, RIQAS). Use the <strong>"RMS Bias"</strong> or "Average Bias" from the last 12 months.
-
                 </div>
-
             </div>
-            </details>
+        </details>
 
-        <div style="background: #fff; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 25px; transition: all 0.3s;" id="mu-upload-area">
-            <div style="margin-bottom: 15px;">
-                <i class="fa-solid fa-file-excel" style="font-size: 2rem; color: #10b981;"></i>
-            </div>
-            <h4 style="margin: 0 0 5px 0; color: var(--text-main);">Auto-Calculate from QC Data</h4>
-            <p style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 15px;">
-                Upload Excel file with 'Level 1' and 'Level 2' columns.
-            </p>
-            
-            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <button onclick="downloadMUTemplate()" style="padding: 8px 15px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; color: #475569; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-download"></i> Get Template
-                </button>
+        <div class="input-group" style="margin-bottom: 20px;">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                 
-                <input type="file" id="mu_file_input" accept=".xlsx, .xls" style="display: none;" onchange="handleMUUpload(this)">
-                <button onclick="document.getElementById('mu_file_input').click()" style="padding: 8px 15px; background: var(--primary); border: none; border-radius: 6px; color: white; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-upload"></i> Upload Data
+                <button class="btn-action btn-secondary" style="flex:1;" onclick="triggerMUExcelInput()">
+                    <i class="fa-solid fa-file-excel"></i> Upload Excel
+                </button>
+                <input type="file" id="mu-excel-upload" accept=".xlsx, .xls" style="display:none;" onchange="handleMUExcelUpload(this)">
+                
+                <span id="mu-upload-status" style="font-size:0.8rem; color:#16a34a; display:none; margin-left:5px; font-weight:600;">
+                    <i class="fa-solid fa-check"></i> Loaded!
+                </span>
+                
+                <button class="btn-action btn-secondary" style="flex:1;" onclick="downloadMUTemplate()">
+                    <i class="fa-solid fa-download"></i> Template
                 </button>
             </div>
-
-            <div id="mu-upload-stats" style="display: none; margin-top: 20px; text-align: left; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                </div>
+            <div id="mu-upload-stats" style="display: none; margin-top: 10px; font-size: 0.85rem; color: #475569;"></div>
         </div>
+
         <div class="calc-input-grid">
             <div class="input-group">
                 <div class="label-row"><label>Level 1 CV%</label><span class="unit-badge">%</span></div>
@@ -1634,7 +1736,7 @@
             </div>
 
             <div style="grid-column: span 2; margin-top: 5px; display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <input type="checkbox" id="mu_expanded" onchange="calculateMU()" checked style="width: 18px; height: 18px; cursor: pointer;">
+                <input type="checkbox" id="mu_expanded" onchange="calculateMU()" checked style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
                 <label for="mu_expanded" style="font-size: 0.9rem; cursor: pointer; color: var(--text-main); font-weight: 500;">
                     Calculate Expanded Uncertainty (k=2)
                 </label>
@@ -1642,6 +1744,11 @@
             
             <div id="res-mu-final" class="final-result-box" style="grid-column: span 2;"></div>
         </div>
+
+        <button class="btn-action btn-primary" onclick="calculateMU()" style="width: 100%; margin-top: 15px; background: var(--primary); color: white; padding: 12px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            <i class="fa-solid fa-calculator"></i> Calculate
+        </button>
+
     </div>
 </div>
 
@@ -4789,164 +4896,387 @@ function getVal(id) {
         }
     }
 
-    function calculateSigmaMetric() {
-        const tea = parseFloat(document.getElementById('sigma-tea').value);
-        const cv = parseFloat(document.getElementById('sigma-cv').value);
-        const biasInput = parseFloat(document.getElementById('sigma-bias').value);
-        const useBias = document.getElementById('sigma-use-bias').checked;
-        const resEl = document.getElementById('res-sigma-final');
-        
-        let bias = useBias ? (isNaN(biasInput) ? 0 : biasInput) : 0;
-        document.getElementById('sigma-bias').disabled = !useBias;
-        document.getElementById('sigma-bias').parentElement.style.opacity = useBias ? '1' : '0.5';
+    // --- SIGMA & METHOD DECISION CHART JS ---
 
-        if (!isNaN(tea) && !isNaN(cv) && cv !== 0) {
-            const sigma = (tea - Math.abs(bias)) / cv;
-            let color = '';
-            let text = '';
-            
-            if (sigma >= 6) { color = '#16a34a'; text = 'World Class'; }
-            else if (sigma >= 5) { color = '#84cc16'; text = 'Excellent'; }
-            else if (sigma >= 4) { color = '#facc15'; text = 'Good'; }
-            else if (sigma >= 3) { color = '#f97316'; text = 'Marginal'; }
-            else { color = '#dc2626'; text = 'Poor'; }
-            
-            resEl.innerHTML = `
-                <div style="font-size:1.2rem; font-weight:bold; color:${color}">σ = ${sigma.toFixed(2)}</div>
-                <div style="color:${color}; font-weight:500;">${text}</div>
-            `;
-            
-            drawSigmaChart(tea, cv, bias);
+
+    // --- SIGMA & METHOD DECISION CHART JS (Dynamic Input Style) ---
+
+let sigmaChartInstance = null;
+
+function triggerSigmaExcelInput() {
+    document.getElementById('sigma-excel-upload').click();
+}
+
+function downloadSigmaTemplate() {
+    if (typeof XLSX === 'undefined') return alert("Excel library not loaded.");
+    const ws_data = [
+        ["Level 1 Results", "Level 2 Results"],
+        [85.2, 210.5], 
+        [84.9, 209.8],
+        [85.5, 211.2],
+        [86.0, 210.0],
+        [85.1, 209.5]
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    ws['!cols'] = [{wch: 20}, {wch: 20}]; 
+    XLSX.utils.book_append_sheet(wb, ws, "QC_Data");
+    XLSX.writeFile(wb, "Sigma_QC_Template.xlsx");
+}
+
+function handleSigmaExcelUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+        
+        const l1Data = [];
+        const l2Data = [];
+        
+        for (let i = 1; i < jsonData.length; i++) {
+            const row = jsonData[i];
+            if (row[0] !== undefined && !isNaN(row[0])) l1Data.push(parseFloat(row[0]));
+            if (row[1] !== undefined && !isNaN(row[1])) l2Data.push(parseFloat(row[1]));
+        }
+
+        if (l1Data.length < 2 || l2Data.length < 2) {
+            alert("Insufficient data. Please provide at least 2 values for both Level 1 and Level 2.");
+            return;
+        }
+
+        const s1 = calculateArrayStats(l1Data);
+        const s2 = calculateArrayStats(l2Data);
+        
+        // Populate inputs based on current mode
+        const mode = document.querySelector('input[name="sigmaCalcMode"]:checked').value;
+        
+        if (mode === 'pooled') {
+            const pooledCV = Math.sqrt((Math.pow(s1.cv, 2) + Math.pow(s2.cv, 2)) / 2);
+            document.getElementById('sigma_cv_pooled').value = pooledCV.toFixed(2);
         } else {
-            resEl.innerHTML = '';
-            drawSigmaChart(null, null, null); // Clear chart or draw empty grid
-        }
-    }
-    
-    function updateSigmaBiasToggle() {
-        const useBias = document.getElementById('sigma-use-bias').checked;
-        document.getElementById('sigma-bias').disabled = !useBias;
-        document.getElementById('sigma-bias').parentElement.style.opacity = useBias ? '1' : '0.5';
-    }
-    
-    function runSigmaMetric() {
-        calculateSigmaMetric();
-    }
-    
-    let sigmaChartInstance = null;
-    function drawSigmaChart(tea, userCV, userBias) {
-        const ctx = document.getElementById('sigmaChart').getContext('2d');
-        if (sigmaChartInstance) {
-            sigmaChartInstance.destroy();
-        }
-        
-        // If no valid input, just show empty grid or return
-        if (tea === null || isNaN(tea)) {
-             // Optional: Draw empty grid
-             return;
+            document.getElementById('sigma_cv1').value = s1.cv.toFixed(2);
+            document.getElementById('sigma_cv2').value = s2.cv.toFixed(2);
         }
 
-        // Define Chart Limits
-        // X-Axis: CV% (0 to TEa/2 usually covers most)
-        // Y-Axis: Bias% (0 to TEa)
-        // We need to draw lines for Sigma = 2, 3, 4, 5, 6
-        // Line Equation: |Bias| = TEa - Sigma * CV  => Y = TEa - Sigma * X
+        updateSigmaStatsDisplay(s1, s2);
+        calculateSigmaTextOnly();
         
-        const maxX = tea / 2; // CV usually doesn't go beyond half of TEa for decent methods
-        const maxY = tea; 
-        
-        // Generate line data points
-        // For each sigma level, we need 2 points: (0, TEa) and (TEa/Sigma, 0)
-        // Actually Y = TEa - Sigma*X. If Y=0, X = TEa/Sigma.
-        
-        const generateLine = (sigma) => {
-            return [
-                {x: 0, y: tea},
-                {x: tea/sigma, y: 0}
-            ];
-        };
+        const statusSpan = document.getElementById('sigma-upload-status');
+        if(statusSpan) {
+            statusSpan.style.display = 'inline-block';
+            setTimeout(() => { statusSpan.style.display = 'none'; }, 3000);
+        }
+        input.value = '';
+    };
+    reader.readAsArrayBuffer(file);
+}
 
-        const datasets = [
-            {
-                label: 'Sigma 6 (World Class)',
-                data: generateLine(6),
-                borderColor: '#16a34a', borderWidth: 2, fill: false, tension:0, pointRadius:0
-            },
-            {
-                label: 'Sigma 5 (Excellent)',
-                data: generateLine(5),
-                borderColor: '#84cc16', borderWidth: 2, fill: false, tension:0, pointRadius:0
-            },
-            {
-                label: 'Sigma 4 (Good)',
-                data: generateLine(4),
-                borderColor: '#facc15', borderWidth: 2, fill: false, tension:0, pointRadius:0
-            },
-            {
-                label: 'Sigma 3 (Marginal)',
-                data: generateLine(3),
-                borderColor: '#f97316', borderWidth: 2, fill: false, tension:0, pointRadius:0
-            },
-            {
-                label: 'Sigma 2 (Poor)',
-                data: generateLine(2),
-                borderColor: '#dc2626', borderWidth: 2, fill: false, tension:0, pointRadius:0
+function calculateArrayStats(arr) {
+    const n = arr.length;
+    const mean = arr.reduce((a, b) => a + b, 0) / n;
+    const variance = arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1);
+    const sd = Math.sqrt(variance);
+    const cv = (sd / mean) * 100;
+    return { mean, sd, cv, n };
+}
+
+function updateSigmaStatsDisplay(s1, s2) {
+    const mode = document.querySelector('input[name="sigmaCalcMode"]:checked').value;
+    const statsDiv = document.getElementById('sigma-upload-stats');
+    
+    let content = "";
+    const cardStyle = "background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); box-shadow: 0 1px 2px rgba(0,0,0,0.05);";
+    const labelStyle = "font-size: 0.7rem; color: #64748b; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;";
+    const valStyle = "font-size: 0.8rem; color: #334155; margin-bottom: 2px;";
+
+    if (mode === 'pooled') {
+        const pooledCV = Math.sqrt((Math.pow(s1.cv, 2) + Math.pow(s2.cv, 2)) / 2);
+        content = `
+            <div style="${cardStyle}">
+                <div style="${labelStyle}">Level 1 (n=${s1.n})</div>
+                <div style="${valStyle}">Mean: <strong>${s1.mean.toFixed(2)}</strong></div>
+                <div style="${valStyle}">SD: <strong>${s1.sd.toFixed(2)}</strong></div>
+                <div style="font-size: 0.75rem; color: #94a3b8;">CV: ${s1.cv.toFixed(2)}%</div>
+            </div>
+            <div style="${cardStyle}">
+                <div style="${labelStyle}">Level 2 (n=${s2.n})</div>
+                <div style="${valStyle}">Mean: <strong>${s2.mean.toFixed(2)}</strong></div>
+                <div style="${valStyle}">SD: <strong>${s2.sd.toFixed(2)}</strong></div>
+                <div style="font-size: 0.75rem; color: #94a3b8;">CV: ${s2.cv.toFixed(2)}%</div>
+            </div>
+            <div style="grid-column: span 2; background: #ecfdf5; border: 1px dashed #34d399; padding: 8px; border-radius: 6px; text-align: center;">
+                <span style="font-size: 0.8rem; color: #047857; font-weight: bold;">
+                    <i class="fa-solid fa-calculator"></i> Calculated Pooled CV: ${pooledCV.toFixed(2)}%
+                </span>
+            </div>
+        `;
+    } else {
+        content = `
+            <div style="${cardStyle}">
+                <div style="${labelStyle}">Level 1 (n=${s1.n})</div>
+                <div style="${valStyle}">Mean: <strong>${s1.mean.toFixed(2)}</strong></div>
+                <div style="${valStyle}">SD: <strong>${s1.sd.toFixed(2)}</strong></div>
+                <div style="color: var(--primary); font-weight: bold; font-size: 0.9rem;">CV: ${s1.cv.toFixed(2)}%</div>
+            </div>
+            <div style="${cardStyle}">
+                <div style="${labelStyle}">Level 2 (n=${s2.n})</div>
+                <div style="${valStyle}">Mean: <strong>${s2.mean.toFixed(2)}</strong></div>
+                <div style="${valStyle}">SD: <strong>${s2.sd.toFixed(2)}</strong></div>
+                <div style="color: var(--primary); font-weight: bold; font-size: 0.9rem;">CV: ${s2.cv.toFixed(2)}%</div>
+            </div>
+        `;
+    }
+    statsDiv.style.display = 'grid';
+    statsDiv.innerHTML = content;
+}
+
+// Handle Mode Switching (Toggles Visibility)
+function handleSigmaModeChange() {
+    const mode = document.querySelector('input[name="sigmaCalcMode"]:checked').value;
+    const infoText = document.getElementById('sigma-info-text');
+    const pooledDiv = document.getElementById('sigma-pooled-inputs');
+    const separateDiv = document.getElementById('sigma-separate-inputs');
+
+    if (mode === 'pooled') {
+        pooledDiv.style.display = 'block';
+        separateDiv.style.display = 'none';
+    } else {
+        pooledDiv.style.display = 'none';
+        separateDiv.style.display = 'grid';
+    }
+    calculateSigmaTextOnly();
+}
+
+function calculateSigmaTextOnly() {
+    const tea = parseFloat(document.getElementById('sigma_tea').value);
+    const biasInput = document.getElementById('sigma_bias');
+    const useBias = document.getElementById('sigma_use_bias').checked;
+    const resBox = document.getElementById('res-sigma-final');
+    const mode = document.querySelector('input[name="sigmaCalcMode"]:checked').value;
+
+    let bias = 0;
+    if (useBias && biasInput.value !== '') bias = parseFloat(biasInput.value);
+    const absBias = useBias ? Math.abs(bias) : 0;
+
+    let pooledCV = 0;
+    let cv1 = 0; 
+    let cv2 = 0;
+
+    // Get CV based on mode
+    if (mode === 'pooled') {
+        pooledCV = parseFloat(document.getElementById('sigma_cv_pooled').value) || 0;
+    } else {
+        cv1 = parseFloat(document.getElementById('sigma_cv1').value) || 0;
+        cv2 = parseFloat(document.getElementById('sigma_cv2').value) || 0;
+    }
+
+    if (!isNaN(tea)) {
+        resBox.style.display = 'block';
+        let htmlContent = "";
+
+        if (mode === 'pooled' && pooledCV > 0) {
+            let sigma = (tea - absBias) / pooledCV;
+            if (sigma < 0) sigma = 0;
+            let color = sigma >= 6 ? "#16a34a" : (sigma >= 3 ? "#ca8a04" : "#dc2626");
+            if (sigma >= 5 && sigma < 6) color = "#84cc16";
+            if (sigma >= 4 && sigma < 5) color = "#d97706";
+            htmlContent = createSigmaResultCard("POOLED PERFORMANCE", sigma, pooledCV, absBias, tea, color);
+        } else if (mode === 'separate' && (cv1 > 0 || cv2 > 0)) {
+            if (cv1 > 0) {
+                let sigma1 = (tea - absBias) / cv1;
+                if (sigma1 < 0) sigma1 = 0;
+                let color1 = sigma1 >= 6 ? "#16a34a" : (sigma1 >= 3 ? "#ca8a04" : "#dc2626");
+                if (sigma1 >= 5 && sigma1 < 6) color1 = "#84cc16";
+                if (sigma1 >= 4 && sigma1 < 5) color1 = "#d97706";
+                htmlContent += createSigmaResultCard("LEVEL 1 PERFORMANCE", sigma1, cv1, absBias, tea, color1);
             }
-        ];
+            if (cv2 > 0) {
+                let sigma2 = (tea - absBias) / cv2;
+                if (sigma2 < 0) sigma2 = 0;
+                let color2 = sigma2 >= 6 ? "#16a34a" : (sigma2 >= 3 ? "#ca8a04" : "#dc2626");
+                if (sigma2 >= 5 && sigma2 < 6) color2 = "#84cc16";
+                if (sigma2 >= 4 && sigma2 < 5) color2 = "#d97706";
+                htmlContent += createSigmaResultCard("LEVEL 2 PERFORMANCE", sigma2, cv2, absBias, tea, color2);
+            }
+        }
+        resBox.innerHTML = htmlContent;
+    } else {
+        resBox.style.display = 'none';
+    }
+}
 
-        // Add User Point
-        if (userCV !== null && userBias !== null) {
-            datasets.push({
-                label: 'Your Method',
-                data: [{x: userCV, y: Math.abs(userBias)}],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                pointRadius: 6,
-                pointHoverRadius: 8,
-                type: 'scatter'
+function createSigmaResultCard(title, sigma, cv, bias, tea, color) {
+    let interpretation = "Poor Performance (<3σ)";
+    if (sigma >= 6) interpretation = "World Class (≥6σ)";
+    else if (sigma >= 5) interpretation = "Excellent (5-6σ)";
+    else if (sigma >= 4) interpretation = "Good (4-5σ)";
+    else if (sigma >= 3) interpretation = "Marginal (3-4σ)";
+
+    let rulesRec = "Max Multi-rules (N=6+)";
+    if (sigma >= 6) rulesRec = "1:3s (N=2)";
+    else if (sigma >= 5) rulesRec = "1:3s/2:2s/R:4s (N=2)";
+    else if (sigma >= 4) rulesRec = "1:3s/2:2s/R:4s/4:1s (N=4)";
+
+    const tae = bias + (1.65 * cv);
+    const isPass = tae <= tea;
+    const taeColor = isPass ? "#166534" : "#991b1b";
+
+    return `
+        <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 6px; margin-top: 10px;">
+            <div style="font-size:0.8rem; font-weight:bold; color:#64748b; margin-bottom:4px;">${title}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-size: 1.4rem; font-weight: 800; color: ${color}; line-height:1;">
+                    ${sigma.toFixed(2)} σ
+                </div>
+                <div style="font-size:0.75rem; color:#64748b; text-align:right;">
+                    CV: ${cv.toFixed(2)}% | Bias: ${bias.toFixed(2)}%
+                </div>
+            </div>
+            <div style="font-size: 0.85rem; margin-top: 5px; color: #334155; font-weight: 600;">${interpretation}</div>
+            <div style="font-size: 0.75rem; color: #475569; margin-top: 2px;">Rec. QC: <strong>${rulesRec}</strong></div>
+            <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.1); font-size: 0.8rem; display:flex; justify-content:space-between;">
+                 <span><strong>TAE:</strong> <span style="color:${taeColor}">${tae.toFixed(2)}%</span></span>
+                 <span>${isPass ? '<i class="fa-solid fa-check"></i> Pass' : '<i class="fa-solid fa-xmark"></i> Fail'}</span>
+            </div>
+        </div>
+    `;
+}
+
+function runSigmaMetric() {
+    calculateSigmaTextOnly();
+    const tea = parseFloat(document.getElementById('sigma_tea').value);
+    const bias = parseFloat(document.getElementById('sigma_bias').value) || 0;
+    const mode = document.querySelector('input[name="sigmaCalcMode"]:checked').value;
+    
+    let cv1 = 0, cv2 = 0;
+
+    if (mode === 'pooled') {
+        // In pooled mode, we pass the single pooled value as "cv1" and "cv2" to trick the chart drawing function (or just use 1 point)
+        // But better logic: The drawing function handles 'pooled' mode specially.
+        const pooledVal = parseFloat(document.getElementById('sigma_cv_pooled').value);
+        if (pooledVal > 0) {
+            // Pass it as both to satisfy logic, but the draw function will look at 'mode'
+            cv1 = pooledVal; 
+            cv2 = pooledVal; 
+        }
+    } else {
+        cv1 = parseFloat(document.getElementById('sigma_cv1').value) || 0;
+        cv2 = parseFloat(document.getElementById('sigma_cv2').value) || 0;
+    }
+
+    if ((cv1 <= 0 && cv2 <= 0) || isNaN(tea)) {
+        alert("Please enter valid TEa and CV values.");
+        return;
+    }
+    drawMethodDecisionChart(cv1, cv2, Math.abs(bias), tea, mode);
+}
+
+function drawMethodDecisionChart(cv1, cv2, bias, tea, mode) {
+    const ctx = document.getElementById('sigmaChart').getContext('2d');
+    if (sigmaChartInstance) sigmaChartInstance.destroy();
+
+    const xMax = tea;
+    const yMax = tea;
+    const dataDiagonal = [{ x: 0, y: tea }, { x: tea, y: 0 }];
+
+    function generateSigmaLine(sigmaLevel) {
+        return [{ x: 0, y: tea }, { x: tea / sigmaLevel, y: 0 }];
+    }
+
+    let pointDatasets = [];
+    if (mode === 'pooled') {
+        // Pooled mode: Draw ONE point
+        // cv1 passed here is the pooled value
+        pointDatasets.push({
+            label: 'Pooled Result',
+            data: [{ x: cv1, y: bias }],
+            backgroundColor: '#2563eb', borderColor: '#ffffff', borderWidth: 3, pointRadius: 10, pointStyle: 'circle', order: -1
+        });
+    } else {
+        if (cv1 > 0) {
+            pointDatasets.push({
+                label: 'Level 1',
+                data: [{ x: cv1, y: bias }],
+                backgroundColor: '#3b82f6', borderColor: '#ffffff', borderWidth: 3, pointRadius: 10, pointStyle: 'triangle', rotation: 180, order: -1
             });
         }
+        if (cv2 > 0) {
+            pointDatasets.push({
+                label: 'Level 2',
+                data: [{ x: cv2, y: bias }],
+                backgroundColor: '#8b5cf6', borderColor: '#ffffff', borderWidth: 3, pointRadius: 10, pointStyle: 'rectRot', order: -1
+            });
+        }
+    }
 
-        sigmaChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: { datasets: datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                devicePixelRatio: (window.devicePixelRatio || 1),
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: { display: true, text: 'CV (%)', font:{weight:'bold'} },
-                        min: 0,
-                        // max: maxX * 1.1 // Add some padding
-                    },
-                    y: {
-                        type: 'linear',
-                        position: 'left',
-                        title: { display: true, text: 'Bias (%)', font:{weight:'bold'} },
-                        min: 0,
-                        max: maxY * 1.1
+    const backgroundDatasets = [
+        { label: 'Diagonal', data: dataDiagonal, showLine: true, borderColor: 'rgba(100, 116, 139, 0.9)', borderWidth: 2, pointRadius: 0, fill: false },
+        { label: '2σ', data: generateSigmaLine(2), showLine: true, borderColor: 'rgba(220, 38, 38, 1)', borderWidth: 2, pointRadius: 0, fill: false },
+        { label: '3σ', data: generateSigmaLine(3), showLine: true, borderColor: 'rgba(194, 65, 12, 1)', borderWidth: 2, pointRadius: 0, fill: false },
+        { label: '4σ', data: generateSigmaLine(4), showLine: true, borderColor: 'rgba(249, 115, 22, 1)', borderWidth: 2, pointRadius: 0, fill: false },
+        { label: '5σ', data: generateSigmaLine(5), showLine: true, borderColor: 'rgba(234, 179, 8, 1)', borderWidth: 2, pointRadius: 0, fill: false },
+        { label: '6σ', data: generateSigmaLine(6), showLine: true, borderColor: 'rgba(22, 163, 74, 1)', borderWidth: 3, pointRadius: 0, fill: false }
+    ];
+
+    sigmaChartInstance = new Chart(ctx, {
+        type: 'scatter',
+        data: { datasets: [...backgroundDatasets, ...pointDatasets] },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { type: 'linear', position: 'bottom', title: { display: true, text: 'Imprecision (CV %)', font: {weight:'bold'} }, min: 0, max: xMax },
+                y: { title: { display: true, text: 'Inaccuracy (Bias %)', font: {weight:'bold'} }, min: 0, max: yMax }
+            },
+            plugins: {
+                    tooltip: { enabled: false },
+                    datalabels: { display: false },
+                legend: {
+                    display: true, position: 'bottom',
+                    labels: {
+                        filter: (item) => item.text.includes('σ') || item.text.includes('Level') || item.text.includes('Pooled') || item.text.includes('Diagonal'),
+                        boxWidth: 12, usePointStyle: true, font: { size: 10 }
                     }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { boxWidth: 10, usePointStyle: true }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label;
-                            }
-                        }
-                    },
-                    datalabels: { display: false }
                 }
             }
-        });
+        }
+    });
+}
+
+function toggleRefMenuSigma() {
+    const menu = document.getElementById('sigma-ref-menu');
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    document.addEventListener('click', function closeMenu(e) {
+        if (!e.target.closest('.input-group') && menu.style.display === 'block') {
+            menu.style.display = 'none';
+            document.removeEventListener('click', closeMenu);
+        }
+    });
+}
+function updateSigmaBiasToggle() {
+    const chk = document.getElementById('sigma_use_bias');
+    const inp = document.getElementById('sigma_bias');
+    if (chk.checked) { inp.disabled = false; inp.style.backgroundColor = '#fff'; }
+    else { inp.disabled = true; inp.style.backgroundColor = '#f1f5f9'; inp.value = ''; }
+    calculateSigmaTextOnly();
+}
+function downloadHighResChart(chartId) {
+    const canvas = document.getElementById(chartId);
+    if(canvas) {
+        const link = document.createElement('a');
+        link.download = 'Sigma_Method_Decision_Chart.png';
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
     }
+}
+
+
 
     function recalcLJAuto() {
         const meanInput = document.getElementById('lj-mean');
@@ -5624,195 +5954,182 @@ function calculateGlucoQC() {
     }
 }
 
-// --- 1. Template İndirme Fonksiyonu ---
+// --- MEASUREMENT UNCERTAINTY (MU) UI HELPERS ---
+
+// 1. Gizli Excel Yükleme Butonunu Tetikle
+function triggerMUExcelInput() {
+    const fileInput = document.getElementById('mu-excel-upload');
+    if (fileInput) {
+        fileInput.click();
+    } else {
+        console.error("MU Excel input element not found!");
+    }
+}
+
+// 2. MU Excel Şablonunu İndir
 function downloadMUTemplate() {
-    // Basit bir şablon verisi oluştur
-    const ws_data = [
-        ["Level 1 Results", "Level 2 Results"], // Başlıklar
-        [85, 210],  // Örnek veri 1
-        [86, 212],  // Örnek veri 2
-        [84, 209],  // Örnek veri 3
-        [85, 211],  // Örnek veri ...
-        [87, 208]
-    ];
+    if (typeof XLSX === 'undefined') return alert("Excel library (SheetJS) not loaded.");
     
-    // Workbook oluştur
+    // Şablon Verisi: Level 1, Level 2 ve Opsiyonel Bias Sütunu
+    const ws_data = [
+        ["Level 1 Results", "Level 2 Results", "Bias % (Optional)"], 
+        [85.2, 210.5, 1.2], 
+        [84.9, 209.8, ],
+        [85.5, 211.2, ],
+        [86.0, 210.0, ],
+        [85.1, 209.5, ]
+    ];
+
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     
-    // Sütun genişliklerini ayarla
-    ws['!cols'] = [{wch: 15}, {wch: 15}];
+    // Sütun genişlikleri
+    ws['!cols'] = [{wch: 20}, {wch: 20}, {wch: 20}];
     
-    XLSX.utils.book_append_sheet(wb, ws, "QC_Data");
-    
-    // Dosyayı indir
-    XLSX.writeFile(wb, "QC_Data_Template.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, "MU_Data_Template");
+    XLSX.writeFile(wb, "MU_Nordtest_Template.xlsx");
 }
 
-// --- 2. Excel Yükleme ve Hesaplama Fonksiyonu ---
-function handleMUUpload(input) {
+// 3. MU Excel Yükleme ve Veri İşleme
+function handleMUExcelUpload(input) {
     const file = input.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     
     reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {type: 'array'});
-        
-        // İlk sayfayı al
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        
-        // JSON'a çevir (Header satırı 1. satır kabul edilir)
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-        
-        // Verileri ayıkla (İlk satır başlık olduğu için atlıyoruz)
-        const level1Data = [];
-        const level2Data = [];
-        
-        // Satır satır gez (i=1'den başla çünkü i=0 başlıktır)
-        for (let i = 1; i < jsonData.length; i++) {
-            const row = jsonData[i];
-            // 0. indeks Level 1, 1. indeks Level 2 (Template yapısına göre)
-            if (row[0] !== undefined && !isNaN(row[0])) level1Data.push(parseFloat(row[0]));
-            if (row[1] !== undefined && !isNaN(row[1])) level2Data.push(parseFloat(row[1]));
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Veriyi JSON formatına çevir (Başlık satırı hariç işlemleri biz yapacağız)
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+            
+            const l1Data = [];
+            const l2Data = [];
+            const biasData = [];
+            
+            // Satır satır gez (i=1'den başla çünkü 0. satır başlık)
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                // 1. Sütun: Level 1
+                if (row[0] !== undefined && row[0] !== null && !isNaN(parseFloat(row[0]))) {
+                    l1Data.push(parseFloat(row[0]));
+                }
+                // 2. Sütun: Level 2
+                if (row[1] !== undefined && row[1] !== null && !isNaN(parseFloat(row[1]))) {
+                    l2Data.push(parseFloat(row[1]));
+                }
+                // 3. Sütun: Bias (Varsa)
+                if (row[2] !== undefined && row[2] !== null && !isNaN(parseFloat(row[2]))) {
+                    biasData.push(parseFloat(row[2]));
+                }
+            }
+
+            // Veri Kontrolü
+            if (l1Data.length < 2 || l2Data.length < 2) {
+                alert("Insufficient data. Please provide at least 2 numeric values for both Level 1 and Level 2.");
+                input.value = ''; // Inputu temizle
+                return;
+            }
+
+            // İstatistikleri Hesapla
+            // (calculateArrayStats fonksiyonu Sigma bölümünde tanımlı olmalı. Değilse aşağıya ekleyin)
+            const s1 = calculateArrayStats(l1Data);
+            const s2 = calculateArrayStats(l2Data);
+            
+            // Bias Ortalaması (Eğer excelde bias sütunu doluysa)
+            let avgBias = null;
+            if (biasData.length > 0) {
+                avgBias = biasData.reduce((a, b) => a + b, 0) / biasData.length;
+            }
+
+            // Input Alanlarını Doldur
+            document.getElementById('mu_cv1').value = s1.cv.toFixed(2);
+            document.getElementById('mu_cv2').value = s2.cv.toFixed(2);
+            
+            if (avgBias !== null) {
+                document.getElementById('mu_bias').value = avgBias.toFixed(2);
+            }
+
+            // İstatistik Bilgi Kartlarını Güncelle
+            updateMUStatsDisplay(s1, s2, avgBias);
+            
+            // Ana Hesaplama Fonksiyonunu Tetikle (Sonucu görmek için)
+            if (typeof calculateMU === 'function') {
+                calculateMU();
+            }
+            
+            // Başarılı Yüklendi Mesajı
+            const statusSpan = document.getElementById('mu-upload-status');
+            if(statusSpan) {
+                statusSpan.style.display = 'inline-block';
+                setTimeout(() => { statusSpan.style.display = 'none'; }, 3000);
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert("Error processing file. Please ensure it matches the template.");
+        } finally {
+            // Dosya inputunu her halükarda temizle ki aynı dosya tekrar seçilebilsin
+            input.value = '';
         }
-
-        if (level1Data.length < 2 || level2Data.length < 2) {
-            alert("Insufficient data. Please define at least 2 numeric values for both levels.");
-            return;
-        }
-
-        // --- 3. İstatistikleri Hesapla ---
-        const stats1 = calculateArrayStats(level1Data);
-        const stats2 = calculateArrayStats(level2Data);
-
-        // --- 4. UI Güncelleme ---
-        
-        // CV Değerlerini inputlara yaz
-        document.getElementById('mu_cv1').value = stats1.cv.toFixed(2);
-        document.getElementById('mu_cv2').value = stats2.cv.toFixed(2);
-
-        // İstatistikleri Göster (Görsel Bölüm)
-        const statsDiv = document.getElementById('mu-upload-stats');
-        statsDiv.style.display = 'grid';
-        statsDiv.style.gridTemplateColumns = '1fr 1fr';
-        statsDiv.style.gap = '10px';
-        
-        statsDiv.innerHTML = `
-            <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary);">
-                <div style="font-size: 0.75rem; color: #64748b; font-weight: bold;">LEVEL 1 (n=${level1Data.length})</div>
-                <div style="font-size: 0.8rem; margin-top: 4px;">Mean: <strong>${stats1.mean.toFixed(2)}</strong></div>
-                <div style="font-size: 0.8rem;">SD: <strong>${stats1.sd.toFixed(2)}</strong></div>
-                <div style="font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-top: 2px;">CV: ${stats1.cv.toFixed(2)}%</div>
-            </div>
-            <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary);">
-                <div style="font-size: 0.75rem; color: #64748b; font-weight: bold;">LEVEL 2 (n=${level2Data.length})</div>
-                <div style="font-size: 0.8rem; margin-top: 4px;">Mean: <strong>${stats2.mean.toFixed(2)}</strong></div>
-                <div style="font-size: 0.8rem;">SD: <strong>${stats2.sd.toFixed(2)}</strong></div>
-                <div style="font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-top: 2px;">CV: ${stats2.cv.toFixed(2)}%</div>
-            </div>
-            <div style="grid-column: span 2; text-align: center; font-size: 0.75rem; color: #16a34a; margin-top: 5px;">
-                <i class="fa-solid fa-check-circle"></i> CV values auto-filled below!
-            </div>
-        `;
-
-        // Ana hesaplamayı tetikle
-        calculateMU();
-        
-        // Inputu temizle (tekrar aynı dosya seçilebilsin diye)
-        input.value = '';
     };
     
     reader.readAsArrayBuffer(file);
 }
 
-// Yardımcı Fonksiyon: Ortalama, SD, CV Hesapla
-function calculateArrayStats(arr) {
-    const n = arr.length;
-    const mean = arr.reduce((a, b) => a + b, 0) / n;
-    const variance = arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1);
-    const sd = Math.sqrt(variance);
-    const cv = (sd / mean) * 100;
-    
-    return { mean, sd, cv };
+// 4. MU İstatistiklerini Ekrana Yaz (Görsel Düzenleme)
+function updateMUStatsDisplay(s1, s2, bias) {
+    const statsDiv = document.getElementById('mu-upload-stats');
+    if (!statsDiv) return;
+
+    // Stil Tanımları
+    const cardStyle = "background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); box-shadow: 0 1px 2px rgba(0,0,0,0.05);";
+    const labelStyle = "font-size: 0.7rem; color: #64748b; font-weight: bold; text-transform: uppercase; margin-bottom: 4px;";
+    const valStyle = "font-size: 0.8rem; color: #334155; margin-bottom: 2px;";
+
+    const content = `
+        <div style="${cardStyle}">
+            <div style="${labelStyle}">Level 1 (n=${s1.n})</div>
+            <div style="${valStyle}">Mean: <strong>${s1.mean.toFixed(2)}</strong></div>
+            <div style="${valStyle}">SD: <strong>${s1.sd.toFixed(2)}</strong></div>
+            <div style="color: var(--primary); font-weight: bold; font-size: 0.9rem;">CV: ${s1.cv.toFixed(2)}%</div>
+        </div>
+        <div style="${cardStyle}">
+            <div style="${labelStyle}">Level 2 (n=${s2.n})</div>
+            <div style="${valStyle}">Mean: <strong>${s2.mean.toFixed(2)}</strong></div>
+            <div style="${valStyle}">SD: <strong>${s2.sd.toFixed(2)}</strong></div>
+            <div style="color: var(--primary); font-weight: bold; font-size: 0.9rem;">CV: ${s2.cv.toFixed(2)}%</div>
+        </div>
+    `;
+
+    statsDiv.style.display = 'grid';
+    statsDiv.innerHTML = content;
 }
 
-// --- MEVCUT HESAPLAMA FONKSİYONU (Değişiklik Yok) ---
-function calculateMU() {
-    // Get Inputs
-    const cv1 = parseFloat(document.getElementById('mu_cv1').value);
-    const cv2 = parseFloat(document.getElementById('mu_cv2').value);
-    const bias = parseFloat(document.getElementById('mu_bias').value);
-    const tea = parseFloat(document.getElementById('mu_tea').value);
-    const isExpanded = document.getElementById('mu_expanded').checked;
+// 5. Referans Menüsü Toggle (Dropdown Aç/Kapa)
+function toggleRefMenuMU() {
+    const menu = document.getElementById('mu-ref-menu');
+    if (!menu) return;
     
-    const resBox = document.getElementById('res-mu-final');
-
-    if (!isNaN(cv1) && !isNaN(cv2) && !isNaN(bias)) {
-        // 1. Calculate Within-Lab Reproducibility (uRw)
-        const uRw = Math.sqrt((Math.pow(cv1, 2) + Math.pow(cv2, 2)) / 2);
-
-        // 2. Calculate Bias Uncertainty (uBias)
-        const uBias = Math.abs(bias);
-
-        // 3. Combined Uncertainty (U)
-        const uC = Math.sqrt(Math.pow(uRw, 2) + Math.pow(uBias, 2));
-
-        // 4. Expanded Calculation (k=2)
-        let finalResult = uC;
-        let titleText = "Combined Uncertainty (u)";
-        let confText = "";
-        
-        if (isExpanded) {
-            finalResult = uC * 2;
-            titleText = "Expanded Uncertainty (U)";
-            confText = "at 95% confidence level";
-        }
-
-        // 5. TEa Interpretation
-        let interpretationHTML = "";
-        let color = "#1e293b";
-
-        if (!isNaN(tea)) {
-            const isPass = finalResult <= tea;
-            const statusText = isPass ? "within acceptable limits" : "NOT within acceptable limits";
-            const statusColor = isPass ? "#16a34a" : "#dc2626";
-            
-            interpretationHTML = `
-                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #334155; line-height: 1.5;">
-                    <strong style="color:${statusColor}">Result: ${isPass ? 'PASS' : 'FAIL'}</strong><br>
-                    Reporting of analysis results within <strong>±${finalResult.toFixed(2)}%</strong> ${confText} is <strong>${statusText}</strong> (TEa: ${tea.toFixed(1)}%).
-                </div>
-            `;
-            color = statusColor;
-        } else {
-            interpretationHTML = `
-                <div style="margin-top: 10px; font-size: 0.8rem; color: #64748b;">
-                    Enter <strong>TEa</strong> value to see clinical acceptability report.
-                </div>
-            `;
-        }
-
-        resBox.style.display = 'block';
-        resBox.innerHTML = `
-            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 15px; border-radius: 8px; margin-top: 10px;">
-                <div style="font-size: 1.2rem; font-weight: 800; color: ${color}; margin-bottom: 2px;">
-                    ${titleText}: ±${finalResult.toFixed(2)}%
-                </div>
-                ${isExpanded ? '<div style="font-size: 0.75rem; color: #64748b; margin-bottom: 5px;">coverage factor k=2</div>' : ''}
-                
-                ${interpretationHTML}
-
-                <div style="margin-top: 10px; padding-top: 5px; font-size: 0.7rem; color: #94a3b8; font-family:monospace; border-top: 1px dashed rgba(0,0,0,0.1);">
-                    uRw: ${uRw.toFixed(2)}% | uBias: ${uBias.toFixed(2)}% | uc: ${uC.toFixed(2)}%
-                </div>
-            </div>
-        `;
-    } else {
-        resBox.style.display = 'none';
-        resBox.innerHTML = '';
+    const isVisible = menu.style.display === 'block';
+    menu.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+        // Menü açıldığında, dışarı tıklanınca kapanması için event ekle
+        const closeHandler = function(e) {
+            if (!e.target.closest('.input-group') && menu.style.display === 'block') {
+                menu.style.display = 'none';
+                document.removeEventListener('click', closeHandler);
+            }
+        };
+        // Timeout ile ekle ki tıklama anında kapanmasın
+        setTimeout(() => {
+            document.addEventListener('click', closeHandler);
+        }, 0);
     }
 }
 
