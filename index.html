@@ -5051,27 +5051,6 @@
                     const target = document.getElementById(targetId);
                     if (target) {
                         target.style.display = 'block';
-                        // Add global SI convert badge next to header and disable per-field conversion
-                        setTimeout(() => {
-                            const header = target.querySelector('h3');
-                            if (header && !header.querySelector('.global-si-badge')) {
-                                const siBadge = document.createElement('span');
-                                siBadge.className = 'unit-badge global-si-badge';
-                                siBadge.style.marginLeft = '10px';
-                                siBadge.style.cursor = 'pointer';
-                                siBadge.textContent = 'SI unit conversion';
-                                siBadge.dataset.mode = 'conv';
-                                siBadge.onclick = () => convertCalcToSI(targetId);
-                                header.appendChild(siBadge);
-                            }
-                            target.querySelectorAll('.unit-badge').forEach(badge => {
-                                if (badge.classList.contains('global-si-badge')) return;
-                                badge.style.cursor = 'default';
-                                badge.onclick = null;
-                                const icon = badge.querySelector('i');
-                                if (icon) icon.remove();
-                            });
-                        }, 10);
                     }
                 }
                 function closeCalcDetail() {
@@ -5086,53 +5065,6 @@
                     if (badge.querySelector('i')) {
                         badge.querySelector('i').classList.toggle('fa-spin');
                     }
-                }
-                function convertCalcToSI(containerId) {
-                    const cont = document.getElementById(containerId);
-                    if (!cont) return;
-                    const header = cont.querySelector('h3');
-                    const toggle = header ? header.querySelector('.global-si-badge') : null;
-                    const currentMode = toggle ? (toggle.dataset.mode || 'conv') : 'conv';
-                    const badges = Array.from(cont.querySelectorAll('.unit-badge'));
-
-                    const isBadgeSI = (badge) => {
-                        const txtNode = badge.cloneNode(true);
-                        const icon = txtNode.querySelector('i'); if (icon) icon.remove();
-                        const currentUnit = txtNode.textContent.trim();
-                        return currentUnit.includes('(SI)') || ['µmol/L', 'mmol/L', 'g/L', 'µkat/L', 'kPa', '10⁹/L', '10¹²/L', 'L', 'pmol/L', 'nmol/L', 'm'].includes(currentUnit.replace(/\s*\(SI\)/g, '').trim());
-                    };
-
-                    if (containerId === 'calc-fai') {
-                        const ttBadge = cont.querySelector('#fai-tt') ? cont.querySelector('#fai-tt').parentNode.querySelector('.unit-badge') : null;
-                        const shbgBadge = cont.querySelector('#fai-shbg') ? cont.querySelector('#fai-shbg').parentNode.querySelector('.unit-badge') : null;
-                        const albBadge = cont.querySelector('#fai-alb') ? cont.querySelector('#fai-alb').parentNode.querySelector('.unit-badge') : null;
-                        if (currentMode !== 'si') {
-                            if (ttBadge && !isBadgeSI(ttBadge)) convertToSI(ttBadge);
-                            if (shbgBadge && !isBadgeSI(shbgBadge)) convertToSI(shbgBadge);
-                            if (albBadge && !isBadgeSI(albBadge)) convertToSI(albBadge);
-                            if (toggle) { toggle.dataset.mode = 'si'; }
-                        } else {
-                            if (ttBadge && isBadgeSI(ttBadge)) convertToSI(ttBadge);
-                            if (albBadge && isBadgeSI(albBadge)) convertToSI(albBadge);
-                            if (toggle) { toggle.dataset.mode = 'conv'; }
-                        }
-                        badges.forEach(b => { if (b.classList.contains('global-si-badge')) return; b.style.cursor = 'default'; b.onclick = null; const icon = b.querySelector('i'); if (icon) icon.remove(); });
-                        const inputs = cont.querySelectorAll('input[type="number"]');
-                        inputs.forEach(inp => { inp.dispatchEvent(new Event('input', { bubbles: true })); });
-                        return;
-                    }
-
-                    if (currentMode !== 'si') {
-                        badges.forEach(b => { if (!b.classList.contains('global-si-badge') && !isBadgeSI(b)) convertToSI(b); });
-                        if (toggle) { toggle.dataset.mode = 'si'; }
-                    } else {
-                        badges.forEach(b => { if (!b.classList.contains('global-si-badge') && isBadgeSI(b)) convertToSI(b); });
-                        if (toggle) { toggle.dataset.mode = 'conv'; }
-                    }
-
-                    badges.forEach(b => { if (b.classList.contains('global-si-badge')) return; b.style.cursor = 'default'; b.onclick = null; const icon = b.querySelector('i'); if (icon) icon.remove(); });
-                    const inputs = cont.querySelectorAll('input[type="number"]');
-                    inputs.forEach(inp => { inp.dispatchEvent(new Event('input', { bubbles: true })); });
                 }
 
                 // Convert to SI unit when clicking on unit badge
@@ -5668,11 +5600,11 @@
                 }
 
                 function calculateHoma() {
-                    const g = parseFloat(document.getElementById('homa-glu').value),
-                        i = parseFloat(document.getElementById('homa-ins').value);
+                    const g = getNormalizedValue('homa-glu', 'mg/dL');
+                    const i = getNormalizedValue('homa-ins', 'µIU/mL');
                     const resBox = document.getElementById('res-homa-final');
 
-                    if (g && i) {
+                    if (!isNaN(g) && !isNaN(i)) {
                         // Standart HOMA-IR Formülü (Glucose mg/dL bazında)
                         const v = ((g * i) / 405);
 
@@ -5714,12 +5646,12 @@
 
                 function calculateFIB4() {
                     const a = parseFloat(document.getElementById('fib-age').value),
-                        ast = parseFloat(document.getElementById('fib-ast').value),
-                        alt = parseFloat(document.getElementById('fib-alt').value),
-                        p = parseFloat(document.getElementById('fib-plt').value);
+                        ast = getNormalizedValue('fib-ast', 'U/L'),
+                        alt = getNormalizedValue('fib-alt', 'U/L'),
+                        p = getNormalizedValue('fib-plt', '10³/µL');
                     const resBox = document.getElementById('res-fib4-final');
 
-                    if (a && ast && alt && p && alt > 0) {
+                    if (!isNaN(a) && !isNaN(ast) && !isNaN(alt) && !isNaN(p) && alt > 0) {
                         // FIB-4 Formula: (Age * AST) / (Platelet * sqrt(ALT))
                         const res = (a * ast) / (p * Math.sqrt(alt));
 
@@ -5757,23 +5689,15 @@
                     }
                 }
                 function calculateCorrNa() {
-                    const nEl = document.getElementById('na-meas'), gEl = document.getElementById('na-glu');
-                    const n = parseFloat(nEl.value), g = parseFloat(gEl.value);
+                    const n = getNormalizedValue('na-meas', 'mEq/L');
+                    const g = getNormalizedValue('na-glu', 'mg/dL');
                     const resBox = document.getElementById('res-na-final');
 
-                    if (n && g) {
-                        const gUnit = gEl.parentNode.querySelector('.unit-badge').textContent.trim();
-                        const isMmol = gUnit.includes('mmol/L');
-
-                        // Eşik değer kontrolü (400 mg/dL veya 22.2 mmol/L)
-                        const threshold = isMmol ? 22.2 : 400;
-                        const baseline = isMmol ? 5.6 : 100;
-
-                        // Katsayı: 400 mg/dL altı için 1.6, üstü için 2.4
+                    if (!isNaN(n) && !isNaN(g)) {
+                        const threshold = 400;
+                        const baseline = 100;
                         const coefficient = g > threshold ? 2.4 : 1.6;
-
-                        // Formül uygulaması
-                        const corr = n + coefficient * ((g - baseline) / (isMmol ? 5.6 : 100));
+                        const corr = n + coefficient * ((g - baseline) / 100);
 
                         let interpretation = "";
                         let color = "#1e293b";
@@ -5808,20 +5732,12 @@
                     }
                 }
                 function calculateCa() {
-                    const cEl = document.getElementById('ca-tot'), aEl = document.getElementById('ca-alb');
-                    const c = parseFloat(cEl.value), a = parseFloat(aEl.value);
+                    const caMg = getNormalizedValue('ca-tot', 'mg/dL');
+                    const aGdL = getNormalizedValue('ca-alb', 'g/dL');
                     const resBox = document.getElementById('res-ca-final');
 
-                    if (c && a) {
-                        const cUnit = cEl.parentNode.querySelector('.unit-badge').textContent.trim();
-                        const aUnit = aEl.parentNode.querySelector('.unit-badge').textContent.trim();
-
-                        // Birim çevrimleri
-                        const cMg = cUnit.includes('mmol/L') ? c * 4 : c;
-                        const aGdL = aUnit.includes('g/L') ? a / 10 : a;
-
-                        // Formül: Total Ca + 0.8 * (4.0 - Albumin)
-                        const corrMgdl = cMg + 0.8 * (4.0 - aGdL);
+                    if (!isNaN(caMg) && !isNaN(aGdL)) {
+                        const corrMgdl = caMg + 0.8 * (4.0 - aGdL);
                         const corrMmol = corrMgdl * 0.25;
 
                         let interpretation = "";
