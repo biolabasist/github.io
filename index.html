@@ -1189,6 +1189,50 @@
                 font-size: 1.1rem !important;
             }
         }
+
+        /* Info Cards */
+        .info-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 8px;
+            transition: color 0.3s;
+            vertical-align: middle;
+        }
+
+        .info-toggle-btn:hover {
+            color: var(--primary);
+        }
+
+        .info-toggle-btn i {
+            margin-right: 4px;
+        }
+
+        .info-card {
+            background: rgba(var(--primary-rgb), 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -1298,7 +1342,12 @@
                     <h3
                         style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
                         <i class="fas fa-vial" style="margin-right:10px;"></i>Manual Dilution Planner
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-dilution')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
                     </h3>
+                    <div id="calc-dilution-info" class="info-card">
+                        Helps calculate the volumes of stock and diluent needed to achieve a target dilution.
+                    </div>
 
                     <div class="calc-input-grid"
                         style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: start;">
@@ -1444,7 +1493,14 @@
                 </div>
 
                 <div id="calc-gfr" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">GFR Calculator</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">GFR Calculator
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-gfr')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-gfr-info" class="info-card">
+                        Estimates kidney function by calculating the glomerular filtration rate using creatinine or
+                        cystatin C.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group full-width">
                             <label style="margin-bottom:5px;">Select Method</label>
@@ -1508,7 +1564,14 @@
                 </div>
 
                 <div id="calc-ldl" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">LDL Calculator</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">LDL Calculator
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-ldl')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-ldl-info" class="info-card">
+                        Calculates low-density lipoprotein cholesterol (LDL-c) levels, typically using the Friedewald or
+                        Martin-Hopkins equation.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Total Cholesterol</label><span class="unit-badge"
@@ -1533,7 +1596,13 @@
                 </div>
 
                 <div id="calc-homa" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">HOMA-IR</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">HOMA-IR
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-homa')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-homa-info" class="info-card">
+                        Evaluates insulin resistance based on fasting glucose and insulin levels.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Fasting Glucose</label><span class="unit-badge"
@@ -1550,7 +1619,13 @@
                 </div>
 
                 <div id="calc-schwartz" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Schwartz Formula</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Schwartz Formula
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-schwartz')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-schwartz-info" class="info-card">
+                        Estimates GFR specifically in pediatric patients using height and creatinine.
+                    </div>
                     <div class="radio-vertical-group">
                         <div class="radio-option" onclick="setSchwartzK(0.33, this)">
                             <div class="radio-circle"></div><span>Low Birth Weight</span>
@@ -1580,7 +1655,13 @@
                 </div>
 
                 <div id="calc-fib4" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">FIB-4 Score</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">FIB-4 Score
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-fib4')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-fib4-info" class="info-card">
+                        A non-invasive index used to estimate liver fibrosis based on age, AST, ALT, and platelet count.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Age</label><span class="unit-badge">Year</span></div><input
@@ -1603,7 +1684,13 @@
                 </div>
 
                 <div id="calc-ddimer" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">D-Dimer Universal Converter</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">D-Dimer Universal Converter
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-ddimer')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-ddimer-info" class="info-card">
+                        Translates D-Dimer results between different units and formats (FEU vs. DDU).
+                    </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div
@@ -1663,7 +1750,13 @@
                     <h3
                         style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
                         <i class="fas fa-magic" style="margin-right:10px;"></i>Smart Dilution Planner
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-serial-planner')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
                     </h3>
+                    <div id="calc-serial-planner-info" class="info-card">
+                        Simplifies the calculation of volumetric steps for sequential dilutions in scientific
+                        experiments.
+                    </div>
 
                     <div class="calc-input-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="input-group">
@@ -1734,7 +1827,14 @@
                 </div>
 
                 <div id="calc-corr-na" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Sodium</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Sodium
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-corr-na')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-corr-na-info" class="info-card">
+                        Adjusts measured sodium levels in the presence of hyperglycemia to better reflect true hydration
+                        status.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Measured Sodium</label><span class="unit-badge">mEq/L</span>
@@ -1749,7 +1849,14 @@
                 </div>
 
                 <div id="calc-calcium" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Calcium</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Calcium
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-calcium')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-calcium-info" class="info-card">
+                        Adjusts total calcium levels based on albumin concentration to estimate the physiological active
+                        calcium.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Total Calcium</label><span class="unit-badge"
@@ -1768,7 +1875,13 @@
                 </div>
 
                 <div id="calc-corr-mg" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Magnesium</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Magnesium
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-corr-mg')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-corr-mg-info" class="info-card">
+                        Adjusts magnesium levels for albumin levels to provide a more accurate clinical assessment.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Measured Mg</label><span class="unit-badge">mg/dL</span></div>
@@ -1783,7 +1896,14 @@
                 </div>
 
                 <div id="calc-anion" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Serum Anion Gap</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Serum Anion Gap
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-anion')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-anion-info" class="info-card">
+                        Helps differentiate between types of metabolic acidosis by calculating the difference between
+                        measured cations and anions.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Na (Sodium)</label><span class="unit-badge">mEq/L</span></div>
@@ -1806,7 +1926,14 @@
                 </div>
 
                 <div id="calc-osmo" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Serum Osmolality & Osmolal Gap</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Serum Osmolality & Osmolal Gap
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-osmo')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-osmo-info" class="info-card">
+                        Estimates the concentration of solutes in serum, useful in evaluating fluid and electrolyte
+                        disorders.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Na (Sodium)</label><span class="unit-badge">mEq/L</span></div>
@@ -1837,7 +1964,14 @@
                 </div>
 
                 <div id="calc-fena" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Fractional Excretion of Sodium (FENa)</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Fractional Excretion of Sodium (FENa)
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-fena')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-fena-info" class="info-card">
+                        Calculates the fractional excretion of sodium to help differentiate between prerenal and
+                        intrinsic renal failure.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Serum Sodium</label><span class="unit-badge">mEq/L</span>
@@ -1860,7 +1994,13 @@
                 </div>
 
                 <div id="calc-saag" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">SAAG</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">SAAG
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-saag')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-saag-info" class="info-card">
+                        Calculates the gradient between serum and ascites albumin to diagnose the cause of ascites.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Serum Albumin</label><span class="unit-badge"
@@ -1879,7 +2019,14 @@
                 </div>
 
                 <div id="calc-ph" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">pH Estimation</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">pH Estimation
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-ph')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-ph-info" class="info-card">
+                        Calculates blood pH using the Henderson-Hasselbalch equation based on bicarbonate and pCO2
+                        levels.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>HCO3</label><span class="unit-badge">mmol/L</span></div><input
@@ -1894,7 +2041,14 @@
                 </div>
 
                 <div id="calc-mentzer" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Mentzer Index</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Mentzer Index
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-mentzer')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-mentzer-info" class="info-card">
+                        Differentiates between iron deficiency anemia and beta-thalassemia trait based on MCV and RBC
+                        count.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>MCV</label><span class="unit-badge">fL</span></div><input
@@ -1909,7 +2063,13 @@
                 </div>
 
                 <div id="calc-albglob" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Alb/Glob Ratio</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Alb/Glob Ratio
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-albglob')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-albglob-info" class="info-card">
+                        Compares albumin and globulin levels to identify liver, kidney, or inflammatory diseases.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Albumin</label><span class="unit-badge">g/dL</span></div>
@@ -1924,7 +2084,14 @@
                 </div>
 
                 <div id="calc-rbc" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">RBC Indices</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">RBC Indices
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-rbc')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-rbc-info" class="info-card">
+                        Calculated values (MCV, MCH, MCHC) used to characterize the size and hemoglobin content of red
+                        blood cells.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Hgb</label><span class="unit-badge">g/dL</span></div><input
@@ -1943,7 +2110,13 @@
                 </div>
 
                 <div id="calc-retic" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Reticulocyte</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Reticulocyte
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-retic')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-retic-info" class="info-card">
+                        Adjusts the reticulocyte percentage for anemia and marrow response using the hematocrit.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Reticulocyte %</label><span class="unit-badge">%</span></div>
@@ -1962,7 +2135,13 @@
                 </div>
 
                 <div id="calc-inr" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">INR Calculator</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">INR Calculator
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-inr')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-inr-info" class="info-card">
+                        Standardizes prothrombin time results to monitor warfarin therapy and assess liver function.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>PT (Patient)</label><span class="unit-badge">sec</span></div>
@@ -1981,7 +2160,13 @@
                 </div>
 
                 <div id="calc-bun-crea" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">BUN/Creatinine Ratio</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">BUN/Creatinine Ratio
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-bun-crea')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-bun-crea-info" class="info-card">
+                        Helps distinguish pre-renal from intrinsic renal causes of kidney injury.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>BUN</label><span class="unit-badge"
@@ -2000,7 +2185,14 @@
                 </div>
 
                 <div id="calc-h-ion" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">ABG Validation [H+]</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">ABG Validation [H+]
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-h-ion')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-h-ion-info" class="info-card">
+                        Verifies the internal consistency of arterial blood gas results using the Kassirer-Bleich
+                        equation.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group full-width">
                             <div class="label-row"><label>Measured pH</label></div><input type="number" id="h-ph"
@@ -2020,7 +2212,12 @@
 
                 <div id="calc-fai" class="calculator-view">
                     <h3 style="margin-bottom: 20px; color: var(--primary);">Free & Bioavailable Testosterone Calculator
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-fai')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
                     </h3>
+                    <div id="calc-fai-info" class="info-card">
+                        Estimates the amount of bioavailable testosterone in the blood by adjusting for SHBG.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row">
@@ -2050,7 +2247,14 @@
                 </div>
 
                 <div id="calc-fpsa" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Free PSA %</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Free PSA %
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-fpsa')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-fpsa-info" class="info-card">
+                        Compares free and total PSA levels to help distinguish between prostate cancer and benign
+                        conditions.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Free PSA</label><span class="unit-badge">ng/mL</span></div>
@@ -2065,7 +2269,13 @@
                 </div>
 
                 <div id="calc-ttkg" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Transtubular Potassium Gradient (TTKG)</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Transtubular Potassium Gradient (TTKG)
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-ttkg')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-ttkg-info" class="info-card">
+                        Assesses potassium handling by the kidneys in the setting of hyperkalemia or hypokalemia.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Urine Potassium (U<sub>K</sub>)</label><span
@@ -2101,7 +2311,13 @@
                 </div>
 
                 <div id="calc-ca-ion" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Est. Ionized Calcium</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Est. Ionized Calcium
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-ca-ion')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-ca-ion-info" class="info-card">
+                        Provides an estimate of the physiologically active calcium fraction without direct measurement.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Total Calcium</label><span class="unit-badge">mg/dL</span>
@@ -2119,7 +2335,13 @@
                 </div>
 
                 <div id="calc-igg-index" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">IgG Index</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">IgG Index
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-igg-index')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-igg-index-info" class="info-card">
+                        Evaluates intrathecal IgG production to assist in the diagnosis of Multiple Sclerosis.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>IgG CSF</label><span class="unit-badge">mg/dL</span></div>
@@ -2142,7 +2364,14 @@
                 </div>
 
                 <div id="calc-transferrin" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Transferrin Saturation</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Transferrin Saturation
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-transferrin')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-transferrin-info" class="info-card">
+                        Indicates the amount of iron bound to transferrin, helping to diagnose iron deficiency or
+                        overload.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Serum Iron</label><span class="unit-badge">µg/dL</span></div>
@@ -2157,7 +2386,14 @@
                 </div>
 
                 <div id="calc-lights" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Light's Criteria (Pleural Effusion)</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Light's Criteria (Pleural Effusion)
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-lights')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-lights-info" class="info-card">
+                        Helps distinguish between exudative and transudative pleural effusions using protein and LDH
+                        levels.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>Pleural Fluid Protein</label><span
@@ -2195,7 +2431,14 @@
                 </div>
 
                 <div id="calc-a1c" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">HbA1c Converter</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">HbA1c Converter
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-a1c')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-a1c-info" class="info-card">
+                        Converts glycated hemoglobin results between different reporting units (NGSP and IFCC) and
+                        calculates eAG.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>% (NGSP)</label><span class="unit-badge">%</span></div><input
@@ -2215,7 +2458,13 @@
 
                 <div id="calc-apri" class="calculator-view">
                     <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fa-solid fa-file-medical"></i>
-                        APRI Score (AST to Platelet Ratio Index)</h3>
+                        APRI Score (AST to Platelet Ratio Index)
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-apri')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-apri-info" class="info-card">
+                        Uses AST levels and platelet count to non-invasively assess liver fibrosis and cirrhosis.
+                    </div>
                     <div class="calc-input-grid">
                         <div class="input-group">
                             <div class="label-row"><label>AST (Measured)</label><span class="unit-badge">U/L</span>
@@ -2238,7 +2487,13 @@
                 </div>
 
                 <div id="calc-winters" class="calculator-view">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">Winters' Formula (Expected pCO2)</h3>
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Winters' Formula (Expected pCO2)
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-winters')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-winters-info" class="info-card">
+                        Predicts the expected respiratory compensation (pCO2) in the setting of metabolic acidosis.
+                    </div>
                     <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 15px;">
                         Calculates expected pCO2 in primary metabolic acidosis. Compare with measured pCO2 to detect
                         concurrent respiratory disorder.
@@ -2256,6 +2511,74 @@
                                 placeholder="For comparison">
                         </div>
                         <div id="res-winters-final" class="final-result-box"></div>
+                    </div>
+                </div>
+
+                <div id="calc-peg" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">PEG Recovery Calculator
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-peg')"><i
+                                class="fa-solid fa-circle-info"></i> Quick note</button>
+                    </h3>
+                    <div id="calc-peg-info" class="info-card">
+                        Measures enzyme activity recovery after PEG precipitation to detect large molecular complexes
+                        like macro-enzymes.
+                    </div>
+                    <div class="calc-input-grid">
+                        <div class="input-group full-width">
+                            <div class="label-row"><label>Enzyme activity after PEG</label></div>
+                            <input type="number" id="peg-after" oninput="calculatePEG()"
+                                placeholder="Activity after PEG">
+                        </div>
+                        <div class="input-group full-width">
+                            <div class="label-row"><label>Enzyme activity in untreated serum</label></div>
+                            <input type="number" id="peg-untreated" oninput="calculatePEG()"
+                                placeholder="Activity untreated">
+                        </div>
+                        <div id="res-peg-final" class="final-result-box" style="display: none; grid-column: span 2;">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                        <h4 style="font-size: 0.9rem; color: var(--primary); margin-bottom: 10px;">Clinical References
+                        </h4>
+                        <div
+                            style="font-size: 0.75rem; color: var(--text-light); line-height: 1.4; max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                            <p><strong>1. Amylase Studies:</strong></p>
+                            <p>Wyness et al. (2011): They found the % recovery reference range for the PEG method in
+                                healthy individuals to be 38-78%, and for the ultrafiltration method to be 86-113%
+                                (median 104). They also showed that these methods could detect 11 cases of macroamylase.
+                            </p>
+                            <p>Levitt et al. (1982): In their study on macroamylase samples, they determined a 48%
+                                recovery value as the "cut-off" (threshold) value for the PEG method.</p>
+                            <p>Lawson (2001): In a large-scale study on 454 individuals, he compared the PEG
+                                precipitation method with gel filtration chromatography and suggested 43% as the
+                                threshold value.</p>
+
+                            <p style="margin-top: 10px;"><strong>2. AST Studies:</strong></p>
+                            <p>Davidson et al. (2013): In a group of 40 people with high enzyme levels, they determined
+                                the % recovery reference range for AST using the PEG method to be 47-82%.</p>
+                            <p>Wyness et al. (2011): In their study of 125 healthy individuals, they found reference
+                                ranges of 26-88% with the PEG method and 50-89% with the ultrafiltration method.</p>
+                            <p>Patteet et al. (2012): In their study on 31 individuals, they obtained the best result
+                                with 25% PEG 6000 concentration and found the reference range to be 37.5-58%.</p>
+                            <p>Caropreso et al. (2009): They gave the threshold value for macroAST detection in the
+                                pediatric population as 26.7%.</p>
+
+                            <p style="margin-top: 10px;"><strong>3. Creatine Kinase (CK) Studies:</strong></p>
+                            <p>Wyness et al. (2011): They determined reference ranges of 36-85% for the PEG method and
+                                43-73% for the ultrafiltration method.</p>
+                            <p>Davidson et al. (2013/2012): In one study, they found a range of 47-82% for the PEG
+                                method in a group with high enzyme levels, while in another study, they determined the
+                                lower limit as 53% in 255 patients without macroenzymes.</p>
+                            <p>Ciriza and Varo (2015): They recommended 25% PEG 6000 and 10 minutes of centrifugation as
+                                the optimum method for macroCK detection.</p>
+
+                            <p style="margin-top: 10px;"><strong>4. LDH Studies:</strong></p>
+                            <p>Wyness et al. (2011): They determined reference ranges of 18-52% for LDH with the PEG
+                                method and 27-63% with ultrafiltration.</p>
+                            <p>Davidson et al. (2013): They found a range of 30-88% with the PEG method in patients with
+                                high enzyme values.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -4508,8 +4831,15 @@
                     { id: 'calc-a1c', title: 'HbA1c Converter', icon: 'fa-cube' },
                     { id: 'calc-apri', title: 'APRI Score', icon: 'fa-file-medical' },
                     { id: 'calc-winters', title: 'Winters Formula', icon: 'fa-wind' },
-                    { id: 'calc-ba', title: 'Method Comparison', icon: 'fa-compress' }
+                    { id: 'calc-peg', title: 'PEG Recovery', icon: 'fa-vial-circle-check' }
                 ];
+
+                function toggleInfo(id) {
+                    const el = document.getElementById(id + '-info');
+                    if (el) {
+                        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+                    }
+                }
 
                 // --- 3. INIT ---
                 window.onload = function () {
@@ -8319,6 +8649,27 @@
             </div>
         </div>
     `;
+                }
+                function calculatePEG() {
+                    const after = parseFloat(document.getElementById('peg-after').value);
+                    const untreated = parseFloat(document.getElementById('peg-untreated').value);
+                    const resBox = document.getElementById('res-peg-final');
+
+                    if (!isNaN(after) && !isNaN(untreated) && untreated > 0) {
+                        const recovery = (after / untreated) * 2 * 100;
+                        resBox.style.display = 'block';
+                        resBox.innerHTML = `
+                            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                                <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-dark);">% Recovery: ${recovery.toFixed(1)}%</div>
+                                <div style="margin-top:5px; font-size:0.85rem; color:#64748b;">
+                                    Formula: (Activity after PEG / Activity untreated) × 2 × 100
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        resBox.innerHTML = '';
+                        resBox.style.display = 'none';
+                    }
                 }
 
                 // --- GFR FUNCTIONS (UPDATED) ---
