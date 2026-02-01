@@ -216,6 +216,7 @@
             padding: 6px;
             box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.12);
         }
+
         .nav-btn.active i {
             box-shadow: 0 0 0 2px var(--ring-color);
         }
@@ -369,6 +370,7 @@
                 width: 78px !important;
                 flex-basis: 78px !important;
             }
+
             .nav-tabs {
                 flex-wrap: nowrap;
                 gap: 5px;
@@ -1096,14 +1098,17 @@
                 gap: 10px;
                 text-align: center;
             }
+
             footer .footer-info p {
                 font-size: 0.6rem !important;
                 line-height: 1.15 !important;
                 margin: 1px 0 !important;
             }
+
             footer .footer-info p:first-child {
                 font-size: 0.7rem !important;
             }
+
             .control-btn {
                 width: 28px !important;
                 height: 28px !important;
@@ -1160,19 +1165,23 @@
                 position: static;
                 margin-top: 10px;
             }
+
             footer .footer-info p {
                 font-size: 0.55rem !important;
                 line-height: 1.12 !important;
                 margin: 1px 0 !important;
             }
+
             footer .footer-info p:first-child {
                 font-size: 0.65rem !important;
             }
+
             footer .footer-info div {
                 font-size: 0.5rem !important;
                 letter-spacing: 0.1px !important;
                 margin: 1px 0 !important;
             }
+
             .control-btn {
                 width: 26px !important;
                 height: 26px !important;
@@ -1303,6 +1312,7 @@
         .info-toggle-btn i {
             margin-right: 4px;
         }
+
         .mini-toggle-btn {
             background: var(--bg-input);
             border: 1px solid var(--border-color);
@@ -1315,11 +1325,13 @@
             transition: all 0.2s;
             vertical-align: middle;
         }
+
         .mini-toggle-btn:hover {
             background: var(--primary-light);
             color: var(--primary-dark);
             border-color: var(--primary);
         }
+
         .mini-toggle-btn.active {
             background: var(--primary-light);
             color: var(--primary-dark);
@@ -1397,7 +1409,8 @@
 
                 <div id="calc-spot-urine" class="calculator-view">
                     <h3 style="margin-bottom: 20px; color: var(--primary);">Spot Urine Analysis
-                        <button class="mini-toggle-btn" onclick="toggleMiniPractical('calc-spot-urine','spot')"><i class="fa-solid fa-wand-magic-sparkles"></i> Mini Practical</button>
+                        <button class="mini-toggle-btn" onclick="toggleMiniPractical('calc-spot-urine','spot')"><i
+                                class="fa-solid fa-wand-magic-sparkles"></i> Mini Practical</button>
                         <button class="info-toggle-btn" onclick="toggleInfo('calc-spot-urine')"><i
                                 class="fa-solid fa-circle-info"></i> Info & Guide</button>
                     </h3>
@@ -1458,112 +1471,155 @@
                             <div id="res-spot-prot" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Sodium</label><span class="unit-badge">mEq/L</span></div>
+                            <div class="label-row"><label>Urine Sodium</label><span class="unit-badge">mEq/L</span>
+                            </div>
                             <input type="number" id="spot-na" oninput="calculateSpotUrine()">
                             <div id="res-spot-na" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Glucose</label><span class="unit-badge" data-cycle="mg/dL|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Glucose</label><span class="unit-badge"
+                                    data-cycle="mg/dL|g/L|mmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-glu" oninput="calculateSpotUrine()">
                             <div id="res-spot-glu" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Magnesium</label><span class="unit-badge" data-cycle="mg/dL|mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Magnesium</label><span class="unit-badge"
+                                    data-cycle="mg/dL|mg/L|mmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-mg" oninput="calculateSpotUrine()">
                             <div id="res-spot-mg" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Zinc</label><span class="unit-badge" onclick="convertToSI(this)" style="cursor:pointer;">µg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Zinc</label><span class="unit-badge"
+                                    onclick="convertToSI(this)" style="cursor:pointer;">µg/dL <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-zinc" oninput="calculateSpotUrine()">
                             <div id="res-spot-zinc" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Uric Acid</label><span class="unit-badge" onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Uric Acid</label><span class="unit-badge"
+                                    onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-uric" oninput="calculateSpotUrine()">
                             <div id="res-spot-uric" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Beta-2 Microglobulin</label><span class="unit-badge" data-cycle="mg/L|µg/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Beta-2 Microglobulin</label><span class="unit-badge"
+                                    data-cycle="mg/L|µg/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-b2m" oninput="calculateSpotUrine()">
                             <div id="res-spot-b2m" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine HVA (Homovanillic acid)</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine HVA (Homovanillic acid)</label><span class="unit-badge"
+                                    data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-hva" oninput="calculateSpotUrine()">
                             <div id="res-spot-hva" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine VMA (Vanillylmandelic acid)</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine VMA (Vanillylmandelic acid)</label><span
+                                    class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-vma" oninput="calculateSpotUrine()">
                             <div id="res-spot-vma" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine 5-HIAA (5-Hydroxyindoleacetic acid)</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine 5-HIAA (5-Hydroxyindoleacetic acid)</label><span
+                                    class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-5hiaa" oninput="calculateSpotUrine()">
                             <div id="res-spot-5hiaa" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Metanephrine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Metanephrine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-metanephrine" oninput="calculateSpotUrine()">
                             <div id="res-spot-metanephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Normetanephrine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Normetanephrine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-normetanephrine" oninput="calculateSpotUrine()">
                             <div id="res-spot-normetanephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine 3-Methoxytyramine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine 3-Methoxytyramine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-3mt" oninput="calculateSpotUrine()">
                             <div id="res-spot-3mt" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Cortisol</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Cortisol</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-cort" oninput="calculateSpotUrine()">
                             <div id="res-spot-cort" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Dopamine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Dopamine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-dopamine" oninput="calculateSpotUrine()">
                             <div id="res-spot-dopamine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Epinephrine (Adrenaline)</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Epinephrine (Adrenaline)</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-epinephrine" oninput="calculateSpotUrine()">
                             <div id="res-spot-epinephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Norepinephrine (Noradrenalin)</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Norepinephrine (Noradrenalin)</label><span
+                                    class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-norepinephrine" oninput="calculateSpotUrine()">
                             <div id="res-spot-norepinephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Kappa Total Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Kappa Total Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-kappa-total" oninput="calculateSpotUrine()">
                             <div id="res-spot-kappa-total" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Lambda Total Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Lambda Total Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-lambda-total" oninput="calculateSpotUrine()">
                             <div id="res-spot-lambda-total" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Kappa Free Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Kappa Free Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-kappa-free" oninput="calculateSpotUrine()">
                             <div id="res-spot-kappa-free" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Lambda Free Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Lambda Free Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-lambda-free" oninput="calculateSpotUrine()">
                             <div id="res-spot-lambda-free" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Oxalate</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Oxalate</label><span class="unit-badge"
+                                    data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-ox" oninput="calculateSpotUrine()">
                             <div id="res-spot-ox" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Citrate</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Citrate</label><span class="unit-badge"
+                                    data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="spot-cit" oninput="calculateSpotUrine()">
                             <div id="res-spot-cit" class="mini-result"></div>
                         </div>
@@ -1651,7 +1707,8 @@
 
                 <div id="calc-urine24" class="calculator-view">
                     <h3 style="margin-bottom: 20px; color: var(--primary);">24-Hour Urine Calculation
-                        <button class="mini-toggle-btn" onclick="toggleMiniPractical('calc-urine24','24h')"><i class="fa-solid fa-wand-magic-sparkles"></i> Mini Practical</button>
+                        <button class="mini-toggle-btn" onclick="toggleMiniPractical('calc-urine24','24h')"><i
+                                class="fa-solid fa-wand-magic-sparkles"></i> Mini Practical</button>
                         <button class="info-toggle-btn" onclick="toggleInfo('calc-urine24')"><i
                                 class="fa-solid fa-circle-info"></i> Info & Guide</button>
                     </h3>
@@ -1749,87 +1806,121 @@
                             <div id="res-uProt" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Glucose</label><span class="unit-badge" data-cycle="mg/dL|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Glucose</label><span class="unit-badge"
+                                    data-cycle="mg/dL|g/L|mmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uGlu" oninput="calculateUrineMulti()">
                             <div id="res-uGlu" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Magnesium</label><span class="unit-badge" data-cycle="mg/dL|mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Magnesium</label><span class="unit-badge"
+                                    data-cycle="mg/dL|mg/L|mmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">mg/dL <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uMg" oninput="calculateUrineMulti()">
                             <div id="res-uMg" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine HVA (Homovanillic acid)</label><span class="unit-badge" data-cycle="mg/L|µg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine HVA (Homovanillic acid)</label><span class="unit-badge"
+                                    data-cycle="mg/L|µg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uHVA" oninput="calculateUrineMulti()">
                             <div id="res-uHVA" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Oxalate</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Oxalate</label><span class="unit-badge"
+                                    data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uOx" oninput="calculateUrineMulti()">
                             <div id="res-uOx" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Citrate</label><span class="unit-badge" data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Citrate</label><span class="unit-badge"
+                                    data-cycle="mg/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i
+                                        class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uCit" oninput="calculateUrineMulti()">
                             <div id="res-uCit" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Serotonin</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Serotonin</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uSerotonin" oninput="calculateUrineMulti()">
                             <div id="res-uSerotonin" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Kappa Free Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Kappa Free Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uKappaFree" oninput="calculateUrineMulti()">
                             <div id="res-uKappaFree" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Kappa Total Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Kappa Total Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uKappaTotal" oninput="calculateUrineMulti()">
                             <div id="res-uKappaTotal" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Lambda Free Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Lambda Free Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uLambdaFree" oninput="calculateUrineMulti()">
                             <div id="res-uLambdaFree" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Lambda Total Light Chain</label><span class="unit-badge" data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Lambda Total Light Chain</label><span class="unit-badge"
+                                    data-cycle="mg/L|g/L|mmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">mg/L
+                                    <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uLambdaTotal" oninput="calculateUrineMulti()">
                             <div id="res-uLambdaTotal" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Free Cortisol</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Free Cortisol</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uCortFree" oninput="calculateUrineMulti()">
                             <div id="res-uCortFree" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Dopamine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Dopamine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uDopamine" oninput="calculateUrineMulti()">
                             <div id="res-uDopamine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Epinephrine (Adrenaline)</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Epinephrine (Adrenaline)</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uEpinephrine" oninput="calculateUrineMulti()">
                             <div id="res-uEpinephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Metanephrine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Metanephrine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uMetanephrine" oninput="calculateUrineMulti()">
                             <div id="res-uMetanephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Normetanephrine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Normetanephrine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uNormetanephrine" oninput="calculateUrineMulti()">
                             <div id="res-uNormetanephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine Norepinephrine (Noradrenaline)</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine Norepinephrine (Noradrenaline)</label><span
+                                    class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="uNorepinephrine" oninput="calculateUrineMulti()">
                             <div id="res-uNorepinephrine" class="mini-result"></div>
                         </div>
                         <div class="input-group">
-                            <div class="label-row"><label>Urine 3-Methoxytyramine</label><span class="unit-badge" data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)" style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
+                            <div class="label-row"><label>Urine 3-Methoxytyramine</label><span class="unit-badge"
+                                    data-cycle="µg/L|ng/mL|nmol/L" onclick="cycleUnit(this)"
+                                    style="cursor:pointer;">µg/L <i class="fa-solid fa-rotate"></i></span></div>
                             <input type="number" id="u3MT" oninput="calculateUrineMulti()">
                             <div id="res-u3MT" class="mini-result"></div>
                         </div>
@@ -1840,6 +1931,43 @@
                         Daily Excretion = Urine Concentration × Urine Volume × 0.01 (Factor for mg/dL to mg/day)<br>
                         <span style="font-style: italic;">*Results are normalized to total volume provided. Matched
                             units (e.g., mg/day, mEq/day) are displayed.</span>
+                    </div>
+                </div>
+
+                <div id="calc-rcf" class="calculator-view">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">RCF ↔ RPM Converter
+                        <button class="info-toggle-btn" onclick="toggleInfo('calc-rcf')"><i
+                                class="fa-solid fa-circle-info"></i> Info</button>
+                    </h3>
+                    <div id="calc-rcf-info" class="info-card" style="display:none;">
+                        RCF = 1.118×10⁻⁵ × r(cm) × (RPM)². RPM = √(RCF ÷ [1.118×10⁻⁵ × r(cm)]).
+                    </div>
+                    <div class="input-group full-width">
+                        <label style="margin-bottom:10px;">Mode</label>
+                        <div class="radio-vertical-group" style="flex-direction:row;">
+                            <div id="btn-rcf-mode-rcf" class="radio-option selected"
+                                style="flex:1; justify-content:center;" onclick="setRCFMode('rcf')">Compute RCF</div>
+                            <div id="btn-rcf-mode-rpm" class="radio-option" style="flex:1; justify-content:center;"
+                                onclick="setRCFMode('rpm')">Compute RPM</div>
+                        </div>
+                    </div>
+                    <div class="calc-input-grid">
+                        <div class="input-group">
+                            <div class="label-row"><label>Rotor Radius</label><span class="unit-badge"
+                                    data-cycle="mm|cm|m" onclick="cycleUnit(this)" style="cursor:pointer;">cm <i
+                                        class="fa-solid fa-rotate"></i></span></div>
+                            <input type="number" id="rcf-radius" placeholder="Required" oninput="updateRCFConverter()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>RPM</label></div>
+                            <input type="number" id="rcf-rpm" placeholder="Enter RPM" oninput="updateRCFConverter()">
+                        </div>
+                        <div class="input-group">
+                            <div class="label-row"><label>RCF (g)</label></div>
+                            <input type="number" id="rcf-rcf" placeholder="Enter RCF" oninput="updateRCFConverter()">
+                        </div>
+                        <div id="rcf-result-box" class="final-result-box" style="grid-column: span 2;"></div>
+                        <div id="rcf-formula" class="formula-display" style="text-align: left;"></div>
                     </div>
                 </div>
 
@@ -7541,6 +7669,7 @@
                                                             { id: 'spot-urine', title: 'Spot Urine Analysis', icon: 'fa-vial', keywords: 'protein creatinine albumin amylase bun calcium chloride copper phosphorus potassium sodium' },
                                                             { id: 'calc-dilution', title: 'Manual Dilution Planner', icon: 'fa-flask', keywords: 'serial dilution ratio factor pipetting' },
                                                             { id: 'calc-urine24', title: '24-Hour Urine Calculation', icon: 'fa-clock', keywords: 'volume clearance creatinine protein calcium copper collection' },
+                                                            { id: 'calc-rcf', title: 'RCF ↔ RPM Converter', icon: 'fa-fan', keywords: 'centrifuge rcf rpm radius rotor' },
                                                             { id: 'calc-gfr', title: 'Glomerular Filtration Rate (GFR) Calculator', icon: 'fa-list-check', keywords: 'renal kidney creatinine cystatin ckd epi mdrd cockcroft' },
                                                             { id: 'calc-ldl', title: 'Low-Density Lipoprotein (LDL) Calculator', icon: 'fa-heart-pulse', keywords: 'lipid cholesterol hdl triglyceride friedewald martin sampson' },
                                                             { id: 'calc-homa', title: 'Homeostatic Model Assessment for Insulin Resistance (HOMA-IR)', icon: 'fa-chart-line', keywords: 'insulin glucose resistance metabolic diabetes pcos' },
@@ -7659,6 +7788,8 @@
                                                                     if (e.key === 'Enter') { e.preventDefault(); addManualValue(); }
                                                                 });
                                                             }
+                                                            setRCFMode('rcf');
+                                                            updateRCFConverter();
                                                         };
 
                                                         // --- JOURNAL HELPER FUNCTIONS ---
@@ -8253,10 +8384,10 @@
                                                             const creaVal = getNormalizedValue('spot-crea', 'mg/dL');
                                                             if (!creaVal) return;
                                                             const ids = [
-                                                                'spot-prot','spot-alb','spot-ca','spot-na','spot-k','spot-cl','spot-p','spot-bun','spot-amy','spot-cu',
-                                                                'spot-serotonin','spot-vma','spot-5hiaa','spot-metanephrine','spot-normetanephrine','spot-3mt','spot-cort','spot-ox','spot-cit',
-                                                                'spot-kappa-total','spot-lambda-total','spot-kappa-free','spot-lambda-free','spot-zinc','spot-uric','spot-mg','spot-b2m',
-                                                                'spot-dopamine','spot-epinephrine','spot-hva','spot-norepinephrine'
+                                                                'spot-prot', 'spot-alb', 'spot-ca', 'spot-na', 'spot-k', 'spot-cl', 'spot-p', 'spot-bun', 'spot-amy', 'spot-cu',
+                                                                'spot-serotonin', 'spot-vma', 'spot-5hiaa', 'spot-metanephrine', 'spot-normetanephrine', 'spot-3mt', 'spot-cort', 'spot-ox', 'spot-cit',
+                                                                'spot-kappa-total', 'spot-lambda-total', 'spot-kappa-free', 'spot-lambda-free', 'spot-zinc', 'spot-uric', 'spot-mg', 'spot-b2m',
+                                                                'spot-dopamine', 'spot-epinephrine', 'spot-hva', 'spot-norepinephrine'
                                                             ];
                                                             ids.forEach(id => {
                                                                 const inp = document.getElementById(id);
@@ -8305,10 +8436,10 @@
                                                             const vol = getNormalizedValue('uVol', 'mL');
                                                             if (!vol) return;
 
-                                                            const ids = ['uProt','uAlb','uCrea','uCa','uP','uBun','uCl','uNa','uK','uAmy','uCu','uGlu','uMg','uHVA','uOx','uCit','uSerotonin','uKappaFree','uKappaTotal','uLambdaFree','uLambdaTotal','uCortFree','uDopamine','uEpinephrine','uMetanephrine','uNormetanephrine','uNorepinephrine','u3MT'];
-                                                            const mgPerMmol = { 'uGlu':180.16, 'uMg':24.305, 'uHVA':182.23, 'uOx':88.0, 'uCit':191.9, 'uKappaFree':22500, 'uKappaTotal':22500, 'uLambdaFree':22500, 'uLambdaTotal':22500 };
-                                                            const nmolPerUg = { 'uSerotonin':5.675, 'uDopamine':6.528, 'uEpinephrine':5.458, 'uMetanephrine':5.071, 'uNormetanephrine':5.458, 'uNorepinephrine':5.911, 'u3MT':5.981, 'uCortFree':2.759 };
-                                                            const unitDayMap = { 'mg/dL':'mg/day','mg/L':'mg/day','g/L':'g/day','mmol/L':'mmol/day','µmol/L':'µmol/day','mEq/L':'mEq/day','U/L':'U/day','µg/L':'µg/day','ng/mL':'ng/day','nmol/L':'nmol/day' };
+                                                            const ids = ['uProt', 'uAlb', 'uCrea', 'uCa', 'uP', 'uBun', 'uCl', 'uNa', 'uK', 'uAmy', 'uCu', 'uGlu', 'uMg', 'uHVA', 'uOx', 'uCit', 'uSerotonin', 'uKappaFree', 'uKappaTotal', 'uLambdaFree', 'uLambdaTotal', 'uCortFree', 'uDopamine', 'uEpinephrine', 'uMetanephrine', 'uNormetanephrine', 'uNorepinephrine', 'u3MT'];
+                                                            const mgPerMmol = { 'uGlu': 180.16, 'uMg': 24.305, 'uHVA': 182.23, 'uOx': 88.0, 'uCit': 191.9, 'uKappaFree': 22500, 'uKappaTotal': 22500, 'uLambdaFree': 22500, 'uLambdaTotal': 22500 };
+                                                            const nmolPerUg = { 'uSerotonin': 5.675, 'uDopamine': 6.528, 'uEpinephrine': 5.458, 'uMetanephrine': 5.071, 'uNormetanephrine': 5.458, 'uNorepinephrine': 5.911, 'u3MT': 5.981, 'uCortFree': 2.759 };
+                                                            const unitDayMap = { 'mg/dL': 'mg/day', 'mg/L': 'mg/day', 'g/L': 'g/day', 'mmol/L': 'mmol/day', 'µmol/L': 'µmol/day', 'mEq/L': 'mEq/day', 'U/L': 'U/day', 'µg/L': 'µg/day', 'ng/mL': 'ng/day', 'nmol/L': 'nmol/day' };
                                                             ids.forEach(id => {
                                                                 const inp = document.getElementById(id);
                                                                 if (!inp) return;
@@ -8371,6 +8502,104 @@
                                                                 resEl.innerHTML = `${resVal.toFixed(2)} ${dayUnit}${extra}`;
                                                             });
                                                         }
+                                                        function updateRCFConverter() {
+                                                            if (typeof window.rcfMode === 'undefined') window.rcfMode = 'rcf';
+                                                            const rInput = document.getElementById('rcf-radius');
+                                                            const rpmInput = document.getElementById('rcf-rpm');
+                                                            const rcfInput = document.getElementById('rcf-rcf');
+                                                            if (!rInput) return;
+
+                                                            const badge = rInput.parentNode.querySelector('.unit-badge');
+                                                            let unit = 'cm';
+                                                            if (badge) {
+                                                                const bc = badge.cloneNode(true);
+                                                                if (bc.querySelector('i')) bc.querySelector('i').remove();
+                                                                unit = bc.textContent.trim();
+                                                            }
+
+                                                            let r = parseFloat((rInput.value || '').toString().replace(',', '.'));
+                                                            const box = document.getElementById('rcf-result-box');
+                                                            const formulaEl = document.getElementById('rcf-formula');
+
+                                                            // Static formula logic
+                                                            if (formulaEl) {
+                                                                formulaEl.textContent = window.rcfMode === 'rcf'
+                                                                    ? 'RCF = 1.118×10⁻⁵ × r(cm) × RPM²'
+                                                                    : 'RPM = √(RCF ÷ [1.118×10⁻⁵ × r(cm)])';
+                                                            }
+
+                                                            if (isNaN(r) || r <= 0) {
+                                                                if (box) box.innerHTML = window.rcfMode === 'rcf' ? 'Enter Rotor Radius and RPM to compute RCF.' : 'Enter Rotor Radius and RCF to compute RPM.';
+                                                                return;
+                                                            }
+
+                                                            if (unit === 'mm') r = r / 10;
+                                                            if (unit === 'm' || unit === 'm (SI)') r = r * 100;
+
+                                                            const k = 1.118e-5;
+                                                            const rpmVal = parseFloat((rpmInput?.value || '').toString().replace(',', '.'));
+                                                            const rcfVal = parseFloat((rcfInput?.value || '').toString().replace(',', '.'));
+
+                                                            if (window.rcfMode === 'rcf') {
+                                                                if (!isNaN(rpmVal)) {
+                                                                    const rcf = k * r * rpmVal * rpmVal;
+                                                                    if (box) box.innerHTML = `Result: <span style="color:var(--primary);">${rcf.toFixed(2)} g</span>`;
+                                                                } else {
+                                                                    if (box) box.innerHTML = 'Enter Rotor Radius and RPM to compute RCF.';
+                                                                }
+                                                            } else {
+                                                                if (!isNaN(rcfVal)) {
+                                                                    const rpm = Math.sqrt(rcfVal / (k * r));
+                                                                    if (box) box.innerHTML = `Result: <span style="color:var(--primary);">${rpm.toFixed(0)} rpm</span>`;
+                                                                } else {
+                                                                    if (box) box.innerHTML = 'Enter Rotor Radius and RCF to compute RPM.';
+                                                                }
+                                                            }
+                                                        }
+                                                        function setRCFMode(mode) {
+                                                            window.rcfMode = mode === 'rpm' ? 'rpm' : 'rcf';
+                                                            const btnRcf = document.getElementById('btn-rcf-mode-rcf');
+                                                            const btnRpm = document.getElementById('btn-rcf-mode-rpm');
+                                                            if (btnRcf && btnRpm) {
+                                                                btnRcf.classList.toggle('selected', window.rcfMode === 'rcf');
+                                                                btnRpm.classList.toggle('selected', window.rcfMode === 'rpm');
+                                                            }
+                                                            const rpmInput = document.getElementById('rcf-rpm');
+                                                            const rcfInput = document.getElementById('rcf-rcf');
+                                                            const rpmGroup = rpmInput?.closest('.input-group');
+                                                            const rcfGroup = rcfInput?.closest('.input-group');
+                                                            if (window.rcfMode === 'rcf') {
+                                                                if (rpmGroup) rpmGroup.style.display = '';
+                                                                if (rcfGroup) rcfGroup.style.display = 'none';
+                                                                if (rpmInput) rpmInput.placeholder = 'Enter RPM (compute RCF)';
+                                                                if (rcfInput) rcfInput.placeholder = 'Hidden in this mode';
+                                                            } else {
+                                                                if (rpmGroup) rpmGroup.style.display = 'none';
+                                                                if (rcfGroup) rcfGroup.style.display = '';
+                                                                if (rcfInput) rcfInput.placeholder = 'Enter RCF (compute RPM)';
+                                                            }
+                                                            const rInput = document.getElementById('rcf-radius');
+                                                            const box = document.getElementById('rcf-result-box');
+                                                            const formulaEl = document.getElementById('rcf-formula');
+                                                            let r = parseFloat((rInput?.value || '').toString().replace(',', '.'));
+                                                            if (isNaN(r) || r <= 0) {
+                                                                if (box) box.innerHTML = window.rcfMode === 'rcf' ? 'Enter Rotor Radius and RPM to compute RCF.' : 'Enter Rotor Radius and RCF to compute RPM.';
+                                                                if (formulaEl) formulaEl.textContent = window.rcfMode === 'rcf'
+                                                                    ? 'RCF = 1.118×10⁻⁵ × r(cm) × RPM²'
+                                                                    : 'RPM = √(RCF ÷ [1.118×10⁻⁵ × r(cm)])';
+                                                                return;
+                                                            }
+                                                            const badge = rInput.parentNode.querySelector('.unit-badge');
+                                                            let unit = 'cm';
+                                                            if (badge) {
+                                                                const bc = badge.cloneNode(true);
+                                                                if (bc.querySelector('i')) bc.querySelector('i').remove();
+                                                                unit = bc.textContent.trim();
+                                                            }
+                                                            if (unit === 'mm') r = r / 10;
+                                                            if (unit === 'm' || unit === 'm (SI)') r = r * 100;
+                                                            updateRCFConverter();
+                                                        }
 
                                                         function toggleMiniPractical(calcId, mode) {
                                                             const container = document.getElementById(calcId);
@@ -8379,8 +8608,8 @@
                                                             if (!grid) return;
                                                             const btn = container.querySelector('.mini-toggle-btn');
                                                             const isMini = grid.getAttribute('data-mini') === '1';
-                                                            const allowSpot = ['spot-crea','spot-prot','spot-alb','spot-na','spot-k','spot-cl','spot-p','spot-amy'];
-                                                            const allow24 = ['uVol','uProt','uAlb','uNa','uK','uCl','uP','uAmy','uCrea'];
+                                                            const allowSpot = ['spot-crea', 'spot-prot', 'spot-alb', 'spot-na', 'spot-k', 'spot-cl', 'spot-p', 'spot-amy'];
+                                                            const allow24 = ['uVol', 'uProt', 'uAlb', 'uNa', 'uK', 'uCl', 'uP', 'uAmy', 'uCrea'];
                                                             const allow = mode === 'spot' ? allowSpot : allow24;
                                                             if (!isMini) {
                                                                 grid.setAttribute('data-mini', '1');
