@@ -665,16 +665,17 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: clamp(8px, 1.5vw, 10px);
             width: 100%;
+            padding-top: 4px;
         }
 
         .calc-card-mini {
             background: var(--bg-card);
-            padding: clamp(12px, 2vw, 15px);
+            padding: 15px;
             border-radius: var(--radius);
             text-align: center;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            height: clamp(90px, 12vw, 110px);
+            min-height: 110px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -692,13 +693,13 @@
         }
 
         .calc-icon {
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-size: 1.8rem;
             color: var(--primary);
             margin-bottom: 8px;
         }
 
         .calc-title {
-            font-size: clamp(0.7rem, 1.3vw, 0.75rem);
+            font-size: 0.75rem;
             font-weight: 600;
             line-height: 1.2;
         }
@@ -971,16 +972,8 @@
             }
 
             .calc-card-mini {
-                height: 85px;
-                padding: 10px;
-            }
-
-            .calc-icon {
-                font-size: 1.3rem;
-            }
-
-            .calc-title {
-                font-size: 0.65rem;
+                min-height: 110px;
+                padding: 15px;
             }
 
             .nav-tabs {
@@ -1554,12 +1547,14 @@
                 <div class="onboarding-step">
                     <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
                     <div class="step-text"><strong>QC Tab:</strong> Upload and analyze quality control data with
-                        Levey-Jennings charts, Westgard rules, and statistical summaries.</div>
+                        Levey-Jennings charts, Westgard rules, and statistical summaries. Includes PBRTQC, RCV, Sigma
+                        metric, and Carryover analysis tools.</div>
                 </div>
                 <div class="onboarding-step">
                     <div class="step-icon"><i class="fa-solid fa-book-bookmark"></i></div>
                     <div class="step-text"><strong>Guide Tab:</strong> Reference guides, clinical ranges, and
-                        interpretation notes for laboratory parameters.</div>
+                        interpretation notes for laboratory parameters. Fetch the latest articles from leading journals
+                        via PubMed integration.</div>
                 </div>
                 <div class="onboarding-step">
                     <div class="step-icon"><i class="fa-solid fa-sticky-note"></i></div>
