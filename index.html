@@ -142,6 +142,8 @@
             border-bottom-right-radius: 30px;
             box-shadow: var(--shadow);
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         .header-content {
@@ -7901,6 +7903,12 @@
                                             </footer>
 
                                             <script>
+                                                // ===== MOBILE SCROLL RESTORATION FIX =====
+                                                if ('scrollRestoration' in history) {
+                                                    history.scrollRestoration = 'manual';
+                                                }
+                                                // ===== END MOBILE SCROLL RESTORATION FIX =====
+
                                                 Chart.register(ChartDataLabels);
                                                 try { Chart.register(window.ChartZoom || window['chartjs-plugin-zoom']); } catch (e) { }
                                                 const ljBgPlugin = {
@@ -8060,6 +8068,7 @@
 
                                                 // --- 3. INIT ---
                                                 window.onload = function () {
+                                                    window.scrollTo(0, 0);
                                                     populateAnalyteSelect();
                                                     updatePBRTQCConfig();
                                                     renderQCMenu(); // QC menüsünü oluştur
@@ -8223,6 +8232,7 @@
 
                                                 function switchTab(tabId, btn) {
                                                     try {
+                                                        window.scrollTo({ top: 0, behavior: 'instant' });
                                                         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                                                         if (btn) btn.classList.add('active');
                                                         document.querySelectorAll('.section').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
@@ -8249,6 +8259,8 @@
                                                     } catch (e) {
                                                         console.error('Error in switchTab:', e);
                                                     }
+                                                    // Mobile fallback: delayed scroll ensures content has rendered
+                                                    setTimeout(function () { window.scrollTo({ top: 0, behavior: 'instant' }); }, 10);
                                                 }
 
                                                 // --- 4. CALC MENU ---
@@ -8266,6 +8278,7 @@
                                                     });
                                                 }
                                                 function openCalc(id) {
+                                                    window.scrollTo({ top: 0, behavior: 'instant' });
                                                     document.getElementById('calc-list-view').style.display = 'none';
                                                     document.getElementById('calc-detail-view').style.display = 'block';
                                                     document.querySelectorAll('.calculator-view').forEach(e => e.style.display = 'none');
@@ -8277,6 +8290,7 @@
                                                     }
                                                 }
                                                 function closeCalcDetail() {
+                                                    window.scrollTo({ top: 0, behavior: 'instant' });
                                                     document.querySelectorAll('.calculator-view input').forEach(el => el.value = '');
                                                     document.querySelectorAll('.mini-result').forEach(el => el.innerHTML = '');
                                                     document.querySelectorAll('.final-result-box').forEach(el => { el.innerHTML = ''; el.style.display = 'none'; });
@@ -8294,6 +8308,7 @@
                                                 // --- 5. QC MENU ---
 
                                                 function closeQCDetail() {
+                                                    window.scrollTo({ top: 0, behavior: 'instant' });
                                                     document.getElementById('qc-detail-view').style.display = 'none';
                                                     document.getElementById('qc-list-view').style.display = 'block';
                                                     // Clear inputs if needed, similar to closeCalcDetail
@@ -15397,6 +15412,17 @@
                                                     });
 
                                                 });
+
+                                                // ===== SCROLL-TO-TOP PATCH FOR openQC =====
+                                                (function () {
+                                                    // Wrap openQC (wherever it is defined) to always scroll to top first
+                                                    var _origOpenQC2 = (typeof openQC === 'function') ? openQC : null;
+                                                    window.openQC = openQC = function (id) {
+                                                        window.scrollTo({ top: 0, behavior: 'instant' });
+                                                        if (_origOpenQC2) _origOpenQC2(id);
+                                                    };
+                                                })();
+                                                // ===== END SCROLL-TO-TOP PATCH =====
 
                                                 // ===== URL HASH DEEP LINKING =====
                                                 (function () {
