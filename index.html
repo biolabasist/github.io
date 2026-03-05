@@ -14648,13 +14648,11 @@
                                                     const menu = document.getElementById('qc-menu');
                                                     if (!menu) return;
                                                     menu.innerHTML = '';
+                                                    qcTools.sort((a, b) => a.title.localeCompare(b.title));
                                                     qcTools.forEach(tool => {
                                                         const card = document.createElement('div');
                                                         card.className = 'calc-card-mini';
-                                                        card.innerHTML = `
-                                                            <div class="calc-icon"><i class="fa-solid ${tool.icon}"></i></div>
-                                                            <div class="calc-title">${tool.title}</div>
-                                                        `;
+                                                        card.innerHTML = `<i class="fa-solid ${tool.icon} calc-icon"></i><div class="calc-title">${tool.title}</div>`;
                                                         card.onclick = () => openQC(tool.id);
                                                         menu.appendChild(card);
                                                     });
