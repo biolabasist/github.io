@@ -4972,8 +4972,10 @@
                                                                         </button>
                                                                     </div>
 
-                                                                    <div
-                                                                        style="margin-top:20px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                                                                    <div id="res-sigma-final" style="display:none; margin-top:15px;"></div>
+
+                                                                    <div id="sigma-chart-area"
+                                                                        style="display:none; margin-top:20px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                                                                         <div
                                                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                                                                             <h4
@@ -7298,6 +7300,7 @@
                                                 const ljBgPlugin = {
                                                     id: 'ljBgPlugin',
                                                     beforeDraw(chart, args, pluginOptions) {
+                                                        if (chart.canvas && chart.canvas.id === 'sigmaChart') return;
                                                         const { ctx, chartArea, scales } = chart;
                                                         if (!chartArea || !scales || !scales.y) return;
                                                         const y = scales.y;
@@ -9332,6 +9335,7 @@
                                                 let baChartDiff = null;
                                                 let baChartCorr = null;
                                                 let baResults = null;
+                                                let blandAltmanData = [];
 
                                                 // Bland-Altman Excel Support
                                                 function triggerBAExcelInput() {
@@ -9358,31 +9362,32 @@
                                                             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                                                             const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-                                                            const tbody = document.getElementById('ba-data-body');
-                                                            tbody.innerHTML = ''; // Clear existing
-
-                                                            jsonData.forEach((row, idx) => {
-                                                                if (idx === 0) return; // Skip header
-                                                                const v1 = parseFloat(row[0]);
-                                                                const v2 = parseFloat(row[1]);
-                                                                if (!isNaN(v1) && !isNaN(v2)) {
-                                                                    const tr = document.createElement('tr');
-                                                                    tr.style.borderBottom = '1px solid var(--border-color)';
-                                                                    tr.innerHTML = `
-                                                                        <td style="padding: 8px; text-align: center; color: var(--text-light);">${tbody.children.length + 1}</td>
-                                                                        <td style="padding: 6px;"><input type="number" class="ba-m1" value="${v1}" step="any" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; text-align: center;" onchange="updateBASampleCount()"></td>
-                                                                        <td style="padding: 6px;"><input type="number" class="ba-m2" value="${v2}" step="any" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; text-align: center;" onchange="updateBASampleCount()"></td>
-                                                                        <td style="padding: 6px; text-align: center;">
-                                                                            <button onclick="removeBARow(this)" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.9rem;"><i class="fa-solid fa-xmark"></i></button>
-                                                                        </td>
-                                                                    `;
-                                                                    tbody.appendChild(tr);
-                                                                }
+                                                            const header = (jsonData && jsonData[0]) ? jsonData[0].map(h => (h || '').toString().trim().toLowerCase()) : [];
+                                                            // Default column indices
+                                                            let idxA = 0, idxB = 1;
+                                                            // Map flexible headers: support "Method A"/"Method B", "Method1"/"Method2"
+                                                            header.forEach((h, i) => {
+                                                                if (h === 'method a' || h === 'methoda' || h === 'method1') idxA = i;
+                                                                if (h === 'method b' || h === 'methodb' || h === 'method2') idxB = i;
                                                             });
+
+                                                            // Optional: clear previous dataset before appending
+                                                            blandAltmanData = [];
+                                                            for (let r = 1; r < jsonData.length; r++) {
+                                                                const row = jsonData[r];
+                                                                if (!row) continue;
+                                                                const v1 = parseFloat(row[idxA]);
+                                                                const v2 = parseFloat(row[idxB]);
+                                                                if (!isNaN(v1) && !isNaN(v2)) {
+                                                                    blandAltmanData.push({ methodA: v1, methodB: v2 });
+                                                                }
+                                                            }
+                                                            renderBlandAltmanTable();
 
                                                             const status = document.getElementById('ba-upload-status');
                                                             if (status) {
-                                                                status.textContent = "Loaded: " + tbody.children.length + " points";
+                                                                const tbodyNow = document.getElementById('blandAltmanTableBody') || document.getElementById('ba-data-body');
+                                                                status.textContent = "Loaded: " + (tbodyNow ? tbodyNow.children.length : blandAltmanData.length) + " points";
                                                                 status.style.display = "inline";
                                                             }
 
@@ -9397,6 +9402,26 @@
                                                         }
                                                     };
                                                     reader.readAsArrayBuffer(file);
+                                                }
+
+                                                function renderBlandAltmanTable() {
+                                                    const tbody = document.getElementById('blandAltmanTableBody') || document.getElementById('ba-data-body');
+                                                    if (!tbody) return;
+                                                    tbody.innerHTML = '';
+                                                    blandAltmanData.forEach(function (item, idx) {
+                                                        const tr = document.createElement('tr');
+                                                        tr.style.borderBottom = '1px solid var(--border-color)';
+                                                        tr.innerHTML = `
+                                                            <td style="padding: 8px; text-align: center; color: var(--text-light);">${idx + 1}</td>
+                                                            <td style="padding: 6px;"><input type="number" class="ba-m1" value="${item.methodA}" step="any" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; text-align: center;" onchange="updateBASampleCount()"></td>
+                                                            <td style="padding: 6px;"><input type="number" class="ba-m2" value="${item.methodB}" step="any" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; text-align: center;" onchange="updateBASampleCount()"></td>
+                                                            <td style="padding: 6px; text-align: center;">
+                                                                <button onclick="removeBARow(this)" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.9rem;"><i class="fa-solid fa-xmark"></i></button>
+                                                            </td>
+                                                        `;
+                                                        tbody.appendChild(tr);
+                                                    });
+                                                    renumberBARows();
                                                 }
 
                                                 function addBAPoint() {
@@ -10672,7 +10697,7 @@
                                                 }
 
                                                 function renderBATable() {
-                                                    const tbody = document.getElementById('ba-data-tbody');
+                                                    const tbody = document.getElementById('ba-data-body');
                                                     if (!tbody) return;
                                                     tbody.innerHTML = '';
 
@@ -13590,69 +13615,132 @@
                                                 }
 
                                                 function drawMethodDecisionChart(cv1, cv2, bias, tea, mode) {
-                                                    const ctx = document.getElementById('sigmaChart').getContext('2d');
-                                                    if (sigmaChartInstance) sigmaChartInstance.destroy();
+                                                    const canvas = document.getElementById('sigmaChart');
+                                                    if (!canvas) return;
+                                                    const ctx = canvas.getContext('2d');
+                                                    if (sigmaChartInstance) { sigmaChartInstance.destroy(); sigmaChartInstance = null; }
 
-                                                    const xMax = tea;
+                                                    const xMax = Math.ceil(Math.max(tea, cv1, cv2) * 1.2);
                                                     const yMax = tea;
-                                                    const dataDiagonal = [{ x: 0, y: tea }, { x: tea, y: 0 }];
 
-                                                    function generateSigmaLine(sigmaLevel) {
-                                                        return [{ x: 0, y: tea }, { x: tea / sigmaLevel, y: 0 }];
+                                                    function sigmaLine(sigma) {
+                                                        return [{ x: 0, y: tea }, { x: tea / sigma, y: 0 }];
                                                     }
+
+                                                    const lineDatasets = [
+                                                        {
+                                                            label: 'TEa Boundary',
+                                                            data: [{ x: 0, y: tea }, { x: tea, y: 0 }],
+                                                            borderColor: 'rgba(100,116,139,0.9)', borderWidth: 2,
+                                                            pointRadius: 0, tension: 0, fill: false, showLine: true
+                                                        },
+                                                        {
+                                                            label: '2\u03c3',
+                                                            data: sigmaLine(2),
+                                                            borderColor: 'rgba(220,38,38,1)', borderWidth: 2,
+                                                            pointRadius: 0, tension: 0, fill: false, showLine: true
+                                                        },
+                                                        {
+                                                            label: '3\u03c3',
+                                                            data: sigmaLine(3),
+                                                            borderColor: 'rgba(194,65,12,1)', borderWidth: 2,
+                                                            pointRadius: 0, tension: 0, fill: false, showLine: true
+                                                        },
+                                                        {
+                                                            label: '4\u03c3',
+                                                            data: sigmaLine(4),
+                                                            borderColor: 'rgba(249,115,22,1)', borderWidth: 2,
+                                                            pointRadius: 0, tension: 0, fill: false, showLine: true
+                                                        },
+                                                        {
+                                                            label: '5\u03c3',
+                                                            data: sigmaLine(5),
+                                                            borderColor: 'rgba(234,179,8,1)', borderWidth: 2,
+                                                            pointRadius: 0, tension: 0, fill: false, showLine: true
+                                                        },
+                                                        {
+                                                            label: '6\u03c3',
+                                                            data: sigmaLine(6),
+                                                            borderColor: 'rgba(22,163,74,1)', borderWidth: 3,
+                                                            pointRadius: 0, tension: 0, fill: false, showLine: true
+                                                        }
+                                                    ];
 
                                                     let pointDatasets = [];
                                                     if (mode === 'pooled') {
-                                                        // Pooled mode: Draw ONE point
-                                                        // cv1 passed here is the pooled value
                                                         pointDatasets.push({
                                                             label: 'Pooled Result',
                                                             data: [{ x: cv1, y: bias }],
-                                                            backgroundColor: '#2563eb', borderColor: '#ffffff', borderWidth: 3, pointRadius: 10, pointStyle: 'circle', order: -1
+                                                            backgroundColor: '#2563eb', borderColor: '#ffffff', borderWidth: 3,
+                                                            pointRadius: 10, pointStyle: 'circle', showLine: false
                                                         });
                                                     } else {
-                                                        if (cv1 > 0) {
-                                                            pointDatasets.push({
-                                                                label: 'Level 1',
-                                                                data: [{ x: cv1, y: bias }],
-                                                                backgroundColor: '#3b82f6', borderColor: '#ffffff', borderWidth: 3, pointRadius: 10, pointStyle: 'triangle', rotation: 180, order: -1
-                                                            });
-                                                        }
-                                                        if (cv2 > 0) {
-                                                            pointDatasets.push({
-                                                                label: 'Level 2',
-                                                                data: [{ x: cv2, y: bias }],
-                                                                backgroundColor: '#8b5cf6', borderColor: '#ffffff', borderWidth: 3, pointRadius: 10, pointStyle: 'rectRot', order: -1
-                                                            });
-                                                        }
+                                                        if (cv1 > 0) pointDatasets.push({
+                                                            label: 'Level 1',
+                                                            data: [{ x: cv1, y: bias }],
+                                                            backgroundColor: '#3b82f6', borderColor: '#ffffff', borderWidth: 3,
+                                                            pointRadius: 10, pointStyle: 'triangle', showLine: false
+                                                        });
+                                                        if (cv2 > 0) pointDatasets.push({
+                                                            label: 'Level 2',
+                                                            data: [{ x: cv2, y: bias }],
+                                                            backgroundColor: '#8b5cf6', borderColor: '#ffffff', borderWidth: 3,
+                                                            pointRadius: 10, pointStyle: 'rectRot', showLine: false
+                                                        });
                                                     }
 
-                                                    const backgroundDatasets = [
-                                                        { label: 'Diagonal', data: dataDiagonal, showLine: true, borderColor: 'rgba(100, 116, 139, 0.9)', borderWidth: 2, pointRadius: 0, fill: false },
-                                                        { label: '2σ', data: generateSigmaLine(2), showLine: true, borderColor: 'rgba(220, 38, 38, 1)', borderWidth: 2, pointRadius: 0, fill: false },
-                                                        { label: '3σ', data: generateSigmaLine(3), showLine: true, borderColor: 'rgba(194, 65, 12, 1)', borderWidth: 2, pointRadius: 0, fill: false },
-                                                        { label: '4σ', data: generateSigmaLine(4), showLine: true, borderColor: 'rgba(249, 115, 22, 1)', borderWidth: 2, pointRadius: 0, fill: false },
-                                                        { label: '5σ', data: generateSigmaLine(5), showLine: true, borderColor: 'rgba(234, 179, 8, 1)', borderWidth: 2, pointRadius: 0, fill: false },
-                                                        { label: '6σ', data: generateSigmaLine(6), showLine: true, borderColor: 'rgba(22, 163, 74, 1)', borderWidth: 3, pointRadius: 0, fill: false }
-                                                    ];
-
+                                                    const chartArea = document.getElementById('sigma-chart-area');
+                                                    if (chartArea) chartArea.style.display = 'block';
                                                     sigmaChartInstance = new Chart(ctx, {
-                                                        type: 'scatter',
-                                                        data: { datasets: [...backgroundDatasets, ...pointDatasets] },
+                                                        type: 'line',
+                                                        data: { datasets: [...lineDatasets, ...pointDatasets] },
                                                         options: {
-                                                            responsive: true, maintainAspectRatio: false,
+                                                            responsive: true,
+                                                            maintainAspectRatio: false,
+                                                            devicePixelRatio: (window.devicePixelRatio || 1),
+                                                            parsing: false,
                                                             scales: {
-                                                                x: { type: 'linear', position: 'bottom', title: { display: true, text: 'Imprecision (CV %)', font: { weight: 'bold' } }, min: 0, max: xMax },
-                                                                y: { title: { display: true, text: 'Inaccuracy (Bias %)', font: { weight: 'bold' } }, min: 0, max: yMax }
+                                                                x: {
+                                                                    type: 'linear',
+                                                                    position: 'bottom',
+                                                                    min: 0,
+                                                                    max: xMax,
+                                                                    title: {
+                                                                        display: true,
+                                                                        text: 'Imprecision (CV %)',
+                                                                        font: { weight: 'bold' }
+                                                                    }
+                                                                },
+                                                                y: {
+                                                                    type: 'linear',
+                                                                    min: 0,
+                                                                    max: yMax,
+                                                                    title: {
+                                                                        display: true,
+                                                                        text: 'Inaccuracy (Bias %)',
+                                                                        font: { weight: 'bold' }
+                                                                    }
+                                                                }
                                                             },
                                                             plugins: {
+                                                                zoom: {
+                                                                    pan: { enabled: false },
+                                                                    zoom: { wheel: { enabled: false }, pinch: { enabled: false } }
+                                                                },
                                                                 tooltip: { enabled: false },
                                                                 datalabels: { display: false },
                                                                 legend: {
-                                                                    display: true, position: 'bottom',
+                                                                    display: true,
+                                                                    position: 'bottom',
                                                                     labels: {
-                                                                        filter: (item) => item.text.includes('σ') || item.text.includes('Level') || item.text.includes('Pooled') || item.text.includes('Diagonal'),
-                                                                        boxWidth: 12, usePointStyle: true, font: { size: 10 }
+                                                                        filter: (item) =>
+                                                                            item.text.includes('\u03c3') ||
+                                                                            item.text.includes('Level') ||
+                                                                            item.text.includes('Pooled') ||
+                                                                            item.text.includes('TEa'),
+                                                                        boxWidth: 12,
+                                                                        usePointStyle: true,
+                                                                        font: { size: 10 }
                                                                     }
                                                                 }
                                                             }
@@ -14235,6 +14323,20 @@
 
                                                     const visibleCard = Array.from(detailView.querySelectorAll('.calculator-view')).find(card => card && card.style.display === 'block');
                                                     if (!visibleCard) return;
+
+                                                    // Bland-Altman data array temizliği
+                                                    if (visibleCard.id === 'qc-blandaltman') {
+                                                        if (typeof baData !== 'undefined') { baData = []; }
+                                                        if (typeof blandAltmanData !== 'undefined') { blandAltmanData = []; }
+                                                        if (typeof renderBATable === 'function') renderBATable();
+                                                        if (typeof renderBlandAltmanTable === 'function') renderBlandAltmanTable();
+                                                    }
+
+                                                    // Levey-Jennings data array temizliği
+                                                    if (visibleCard.id === 'qc-lj') {
+                                                        if (typeof ljData !== 'undefined') { ljData = []; }
+                                                        if (typeof renderLJData === 'function') renderLJData();
+                                                    }
 
                                                     // Reset all basic form controls within the active QC tool
                                                     visibleCard.querySelectorAll('input').forEach(inp => {
