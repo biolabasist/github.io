@@ -721,6 +721,10 @@
             padding-top: 4px;
         }
 
+        .qc-menu-item {
+            display: flex !important;
+        }
+
         .calc-card-mini {
             background: var(--bg-card);
             padding: 15px;
@@ -4057,6 +4061,8 @@
                                                         <div id="res-winters-final" class="final-result-box"></div>
                                                     </div>
                                                 </div>
+
+                                            </div>
 
                                                 <div id="tab-qc" class="section">
                                                         <div class="info-box"
@@ -7449,7 +7455,7 @@
                                                     if (saved) document.getElementById('myNotes').value = saved;
                                                     loadTheme();
                                                     renderCalcMenu();
-                                                    renderQCMenu();
+                                                    
                                                     renderLJData();
                                                     initJournalListTicks();
                                                     sortJournalLists();
@@ -7617,7 +7623,20 @@
                                                                 if (tabId === 'tab-calc') {
                                                                     closeCalcDetail();
                                                                 } else if (tabId === 'tab-qc') {
+                                                                    renderQCMenu();
                                                                     closeQCDetail();
+                                                                    const menu = document.getElementById('qc-menu');
+                                                                    if (menu) menu.style.display = 'grid';
+                                                                    // Fallback: QC hâlâ #tab-calc içinde ise, üst kapsayıcıyı görünür yap
+                                                                    const qc = document.getElementById('tab-qc');
+                                                                    const calc = document.getElementById('tab-calc');
+                                                                    if (qc && calc && calc.contains(qc)) {
+                                                                        calc.style.display = 'block';
+                                                                        const clv = document.getElementById('calc-list-view');
+                                                                        const cdv = document.getElementById('calc-detail-view');
+                                                                        if (clv) clv.style.display = 'none';
+                                                                        if (cdv) cdv.style.display = 'none';
+                                                                    }
                                                                 } else {
                                                                     const views = sec.querySelectorAll('.calculator-view');
                                                                     views.forEach(view => view.style.display = 'block');
@@ -14162,15 +14181,21 @@
                                                 function renderQCMenu() {
                                                     const menu = document.getElementById('qc-menu');
                                                     if (!menu) return;
+                                                    menu.style.display = 'grid';
                                                     menu.innerHTML = '';
                                                     qcTools.sort((a, b) => a.title.localeCompare(b.title));
                                                     qcTools.forEach(tool => {
                                                         const card = document.createElement('div');
-                                                        card.className = 'calc-card-mini';
+                                                        card.className = 'calc-card-mini qc-menu-item';
+                                                        if (card.classList.contains('calculator-view')) {
+                                                            card.style.display = 'block';
+                                                        }
                                                         card.innerHTML = `<i class="fa-solid ${tool.icon} calc-icon"></i><div class="calc-title">${tool.title}</div>`;
                                                         card.onclick = () => openQC(tool.id);
                                                         menu.appendChild(card);
                                                     });
+                                                    var _el = document.getElementById('qc-menu-grid') || document.getElementById('qc-menu');
+                                                    console.log('QC Menu rendered:', _el ? _el.innerHTML : '');
                                                 }
 
                                                 function openQC(id) {
