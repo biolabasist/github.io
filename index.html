@@ -3033,185 +3033,185 @@
                                     </div>
                                     <div id="res-mentzer-final" class="final-result-box"></div>
                                 </div>
+                    </div>
+
+                    <div id="calc-albglob" class="calculator-view">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">Albumin/Globulin Ratio
+                            <button class="info-toggle-btn" onclick="toggleInfo('calc-albglob')"><i
+                                    class="fa-solid fa-circle-info"></i> Info & Guide</button>
+                        </h3>
+                        <div id="calc-albglob-info" class="info-card">
+                            Used to understand the direction of unexplained total protein changes. A low ratio (<1)
+                                helps distinguish between increased globulin production (Multiple Myeloma, chronic
+                                infection, autoimmunity) and selective albumin loss (nephrotic syndrome). Should be
+                                interpreted alongside the patient's hydration status, as dehydration can mask
+                                changes. </div>
+                                <div class="calc-input-grid">
+                                    <div class="input-group">
+                                        <div class="label-row"><label>Albumin</label><span
+                                                class="unit-badge">g/dL</span></div>
+                                        <input type="number" id="albglob-alb" oninput="calculateAlbGlob()">
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="label-row"><label>Total Protein</label><span
+                                                class="unit-badge">g/dL</span>
+                                        </div><input type="number" id="albglob-tp" oninput="calculateAlbGlob()">
+                                    </div>
+                                    <div id="res-albglob-final" class="final-result-box"></div>
+                                </div>
+                    </div>
+
+                    <div id="calc-rbc" class="calculator-view">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">Red Blood Cell (RBC) Indices
+                            <button class="info-toggle-btn" onclick="toggleInfo('calc-rbc')"><i
+                                    class="fa-solid fa-circle-info"></i> Info & Guide</button>
+                        </h3>
+                        <div id="calc-rbc-info" class="info-card">
+                            Derived from hemoglobin, hematocrit, and red cell count for the morphological
+                            classification of
+                            anemia (microcytic, normocytic, macrocytic). Fundamental for manual control or when
+                            automated
+                            counters are unavailable; however, the count and calculation will be distorted in
+                            the presence
+                            of cold agglutinins.
                         </div>
-
-                        <div id="calc-albglob" class="calculator-view">
-                            <h3 style="margin-bottom: 20px; color: var(--primary);">Albumin/Globulin Ratio
-                                <button class="info-toggle-btn" onclick="toggleInfo('calc-albglob')"><i
-                                        class="fa-solid fa-circle-info"></i> Info & Guide</button>
-                            </h3>
-                            <div id="calc-albglob-info" class="info-card">
-                                Used to understand the direction of unexplained total protein changes. A low ratio (<1)
-                                    helps distinguish between increased globulin production (Multiple Myeloma, chronic
-                                    infection, autoimmunity) and selective albumin loss (nephrotic syndrome). Should be
-                                    interpreted alongside the patient's hydration status, as dehydration can mask
-                                    changes. </div>
-                                    <div class="calc-input-grid">
-                                        <div class="input-group">
-                                            <div class="label-row"><label>Albumin</label><span
-                                                    class="unit-badge">g/dL</span></div>
-                                            <input type="number" id="albglob-alb" oninput="calculateAlbGlob()">
-                                        </div>
-                                        <div class="input-group">
-                                            <div class="label-row"><label>Total Protein</label><span
-                                                    class="unit-badge">g/dL</span>
-                                            </div><input type="number" id="albglob-tp" oninput="calculateAlbGlob()">
-                                        </div>
-                                        <div id="res-albglob-final" class="final-result-box"></div>
-                                    </div>
+                        <div class="calc-input-grid">
+                            <div class="input-group">
+                                <div class="label-row"><label>Hgb</label><span class="unit-badge">g/dL</span>
+                                </div><input type="number" id="rbc-hgb" oninput="calculateRBCIndices()">
                             </div>
-
-                            <div id="calc-rbc" class="calculator-view">
-                                <h3 style="margin-bottom: 20px; color: var(--primary);">Red Blood Cell (RBC) Indices
-                                    <button class="info-toggle-btn" onclick="toggleInfo('calc-rbc')"><i
-                                            class="fa-solid fa-circle-info"></i> Info & Guide</button>
-                                </h3>
-                                <div id="calc-rbc-info" class="info-card">
-                                    Derived from hemoglobin, hematocrit, and red cell count for the morphological
-                                    classification of
-                                    anemia (microcytic, normocytic, macrocytic). Fundamental for manual control or when
-                                    automated
-                                    counters are unavailable; however, the count and calculation will be distorted in
-                                    the presence
-                                    of cold agglutinins.
-                                </div>
-                                <div class="calc-input-grid">
-                                    <div class="input-group">
-                                        <div class="label-row"><label>Hgb</label><span class="unit-badge">g/dL</span>
-                                        </div><input type="number" id="rbc-hgb" oninput="calculateRBCIndices()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>Hct</label><span class="unit-badge">%</span></div>
-                                        <input type="number" id="rbc-hct" oninput="calculateRBCIndices()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>RBC</label><span class="unit-badge">10⁶/µL</span>
-                                        </div><input type="number" id="rbc-count" oninput="calculateRBCIndices()">
-                                    </div>
-                                    <div id="res-rbc-final" class="final-result-box"></div>
-                                </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>Hct</label><span class="unit-badge">%</span></div>
+                                <input type="number" id="rbc-hct" oninput="calculateRBCIndices()">
                             </div>
-
-                            <div id="calc-retic" class="calculator-view">
-                                <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Reticulocyte Count
-                                    <button class="info-toggle-btn" onclick="toggleInfo('calc-retic')"><i
-                                            class="fa-solid fa-circle-info"></i> Info & Guide</button>
-                                </h3>
-                                <div id="calc-retic-info" class="info-card">
-                                    Evaluates whether the bone marrow is responding appropriately to anemia
-                                    (regenerative vs. hypoproliferative). The raw reticulocyte percentage can look
-                                    misleadingly high due to a low hematocrit; this calculation provides the
-                                    "reticulocyte production index" to reveal the marrow's true performance.
-                                </div>
-                                <div class="calc-input-grid">
-                                    <div class="input-group">
-                                        <div class="label-row"><label>Reticulocyte %</label><span
-                                                class="unit-badge">%</span></div>
-                                        <input type="number" id="ret-pct" oninput="calculateRetic()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>Hct</label><span class="unit-badge">%</span></div>
-                                        <input type="number" id="ret-hct" oninput="calculateRetic()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>Normal Hct</label><span
-                                                class="unit-badge">%</span></div>
-                                        <input type="number" id="ret-hct-normal" value="45" oninput="calculateRetic()">
-                                    </div>
-                                    <div id="res-retic-final" class="final-result-box"></div>
-                                </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>RBC</label><span class="unit-badge">10⁶/µL</span>
+                                </div><input type="number" id="rbc-count" oninput="calculateRBCIndices()">
                             </div>
+                            <div id="res-rbc-final" class="final-result-box"></div>
+                        </div>
+                    </div>
 
-                            <div id="calc-inr" class="calculator-view">
-                                <h3 style="margin-bottom: 20px; color: var(--primary);">International Normalized Ratio
-                                    (INR) Calculator
-                                    <button class="info-toggle-btn" onclick="toggleInfo('calc-inr')"><i
-                                            class="fa-solid fa-circle-info"></i> Info & Guide</button>
-                                </h3>
-                                <div id="calc-inr-info" class="info-card">
-                                    Standardizes prothrombin time (PT) results across different laboratories to manage
-                                    bleeding or clotting risks, especially for patients on warfarin. Essential for
-                                    dosage adjustment; note that INR can be elevated in liver failure even without
-                                    anticoagulants, which may not perfectly reflect bleeding risk.
-                                </div>
-                                <div class="calc-input-grid">
-                                    <div class="input-group">
-                                        <div class="label-row"><label>PT (Patient)</label><span
-                                                class="unit-badge">sec</span></div>
-                                        <input type="number" id="inr-pt" oninput="calculateINR()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>PT (Control)</label><span
-                                                class="unit-badge">sec</span></div>
-                                        <input type="number" id="inr-control" oninput="calculateINR()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>ISI</label><span class="unit-badge">-</span></div>
-                                        <input type="number" id="inr-isi" value="1.0" oninput="calculateINR()">
-                                    </div>
-                                    <div id="res-inr-final" class="final-result-box"></div>
-                                </div>
+                    <div id="calc-retic" class="calculator-view">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">Corrected Reticulocyte Count
+                            <button class="info-toggle-btn" onclick="toggleInfo('calc-retic')"><i
+                                    class="fa-solid fa-circle-info"></i> Info & Guide</button>
+                        </h3>
+                        <div id="calc-retic-info" class="info-card">
+                            Evaluates whether the bone marrow is responding appropriately to anemia
+                            (regenerative vs. hypoproliferative). The raw reticulocyte percentage can look
+                            misleadingly high due to a low hematocrit; this calculation provides the
+                            "reticulocyte production index" to reveal the marrow's true performance.
+                        </div>
+                        <div class="calc-input-grid">
+                            <div class="input-group">
+                                <div class="label-row"><label>Reticulocyte %</label><span
+                                        class="unit-badge">%</span></div>
+                                <input type="number" id="ret-pct" oninput="calculateRetic()">
                             </div>
-
-                            <div id="calc-bun-crea" class="calculator-view">
-                                <h3 style="margin-bottom: 20px; color: var(--primary);">Blood Urea Nitrogen
-                                    (BUN)/Creatinine Ratio
-                                    <button class="info-toggle-btn" onclick="toggleInfo('calc-buncrea')"><i
-                                            class="fa-solid fa-circle-info"></i> Info & Guide</button>
-                                </h3>
-                                <div id="calc-bun-crea-info" class="info-card">
-                                    Differentiates between prerenal causes (dehydration, heart failure) and renal
-                                    parenchymal damage in acute kidney injury. A ratio >20 strongly supports prerenal
-                                    azotemia or increased protein load (e.g., GI bleed); however, steroid use and
-                                    catabolic states can also raise the ratio independently of renal function.
-                                </div>
-                                <div class="calc-input-grid">
-                                    <div class="input-group">
-                                        <div class="label-row"><label>BUN</label><span class="unit-badge"
-                                                onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i
-                                                    class="fa-solid fa-rotate"></i></span></div><input type="number"
-                                            id="bc-bun" oninput="calculateBunCrea()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>Creatinine</label><span class="unit-badge"
-                                                onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i
-                                                    class="fa-solid fa-rotate"></i></span></div><input type="number"
-                                            id="bc-crea" oninput="calculateBunCrea()">
-                                    </div>
-                                    <div id="res-bun-crea-final" class="final-result-box"></div>
-                                </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>Hct</label><span class="unit-badge">%</span></div>
+                                <input type="number" id="ret-hct" oninput="calculateRetic()">
                             </div>
-
-                            <div id="calc-h-ion" class="calculator-view">
-                                <h3 style="margin-bottom: 20px; color: var(--primary);">Arterial Blood Gas (ABG)
-                                    Validation [H+]
-                                    <button class="info-toggle-btn" onclick="toggleInfo('calc-abg-val')"><i
-                                            class="fa-solid fa-circle-info"></i> Info & Guide</button>
-                                </h3>
-                                <div id="calc-h-ion-info" class="info-card">
-                                    A laboratory quality control tool that tests the technical reliability of blood gas
-                                    results by checking the mathematical balance (Henderson-Hasselbalch) between pH,
-                                    pCO2, and HCO3. It helps detect instrument errors or improper sample handling before
-                                    clinical intervention.
-                                </div>
-                                <div class="calc-input-grid">
-                                    <div class="input-group full-width">
-                                        <div class="label-row"><label>Measured pH</label></div><input type="number"
-                                            id="h-ph" oninput="calculateHIon()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>pCO2</label><span class="unit-badge">mmHg</span>
-                                        </div><input type="number" id="h-pco2" oninput="calculateHIon()">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="label-row"><label>HCO3</label><span class="unit-badge">mmol/L</span>
-                                        </div><input type="number" id="h-hco3" oninput="calculateHIon()">
-                                    </div>
-                                    <div id="res-h-ion-final" class="final-result-box"></div>
-                                </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>Normal Hct</label><span
+                                        class="unit-badge">%</span></div>
+                                <input type="number" id="ret-hct-normal" value="45" oninput="calculateRetic()">
                             </div>
+                            <div id="res-retic-final" class="final-result-box"></div>
+                        </div>
+                    </div>
 
-                            <div id="calc-fai" class="calculator-view">
+                    <div id="calc-inr" class="calculator-view">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">International Normalized Ratio
+                            (INR) Calculator
+                            <button class="info-toggle-btn" onclick="toggleInfo('calc-inr')"><i
+                                    class="fa-solid fa-circle-info"></i> Info & Guide</button>
+                        </h3>
+                        <div id="calc-inr-info" class="info-card">
+                            Standardizes prothrombin time (PT) results across different laboratories to manage
+                            bleeding or clotting risks, especially for patients on warfarin. Essential for
+                            dosage adjustment; note that INR can be elevated in liver failure even without
+                            anticoagulants, which may not perfectly reflect bleeding risk.
+                        </div>
+                        <div class="calc-input-grid">
+                            <div class="input-group">
+                                <div class="label-row"><label>PT (Patient)</label><span
+                                        class="unit-badge">sec</span></div>
+                                <input type="number" id="inr-pt" oninput="calculateINR()">
+                            </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>PT (Control)</label><span
+                                        class="unit-badge">sec</span></div>
+                                <input type="number" id="inr-control" oninput="calculateINR()">
+                            </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>ISI</label><span class="unit-badge">-</span></div>
+                                <input type="number" id="inr-isi" value="1.0" oninput="calculateINR()">
+                            </div>
+                            <div id="res-inr-final" class="final-result-box"></div>
+                        </div>
+                    </div>
+
+                    <div id="calc-bun-crea" class="calculator-view">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">Blood Urea Nitrogen
+                            (BUN)/Creatinine Ratio
+                            <button class="info-toggle-btn" onclick="toggleInfo('calc-buncrea')"><i
+                                    class="fa-solid fa-circle-info"></i> Info & Guide</button>
+                        </h3>
+                        <div id="calc-bun-crea-info" class="info-card">
+                            Differentiates between prerenal causes (dehydration, heart failure) and renal
+                            parenchymal damage in acute kidney injury. A ratio >20 strongly supports prerenal
+                            azotemia or increased protein load (e.g., GI bleed); however, steroid use and
+                            catabolic states can also raise the ratio independently of renal function.
+                        </div>
+                        <div class="calc-input-grid">
+                            <div class="input-group">
+                                <div class="label-row"><label>BUN</label><span class="unit-badge"
+                                        onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i
+                                            class="fa-solid fa-rotate"></i></span></div><input type="number"
+                                    id="bc-bun" oninput="calculateBunCrea()">
+                            </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>Creatinine</label><span class="unit-badge"
+                                        onclick="convertToSI(this)" style="cursor:pointer;">mg/dL <i
+                                            class="fa-solid fa-rotate"></i></span></div><input type="number"
+                                    id="bc-crea" oninput="calculateBunCrea()">
+                            </div>
+                            <div id="res-bun-crea-final" class="final-result-box"></div>
+                        </div>
+                    </div>
+
+                    <div id="calc-h-ion" class="calculator-view">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">Arterial Blood Gas (ABG)
+                            Validation [H+]
+                            <button class="info-toggle-btn" onclick="toggleInfo('calc-abg-val')"><i
+                                    class="fa-solid fa-circle-info"></i> Info & Guide</button>
+                        </h3>
+                        <div id="calc-h-ion-info" class="info-card">
+                            A laboratory quality control tool that tests the technical reliability of blood gas
+                            results by checking the mathematical balance (Henderson-Hasselbalch) between pH,
+                            pCO2, and HCO3. It helps detect instrument errors or improper sample handling before
+                            clinical intervention.
+                        </div>
+                        <div class="calc-input-grid">
+                            <div class="input-group full-width">
+                                <div class="label-row"><label>Measured pH</label></div><input type="number"
+                                    id="h-ph" oninput="calculateHIon()">
+                            </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>pCO2</label><span class="unit-badge">mmHg</span>
+                                </div><input type="number" id="h-pco2" oninput="calculateHIon()">
+                            </div>
+                            <div class="input-group">
+                                <div class="label-row"><label>HCO3</label><span class="unit-badge">mmol/L</span>
+                                </div><input type="number" id="h-hco3" oninput="calculateHIon()">
+                            </div>
+                            <div id="res-h-ion-final" class="final-result-box"></div>
+                        </div>
+                    </div>
+
+                    <div id="calc-fai" class="calculator-view">
                                 <h3 style="margin-bottom: 20px; color: var(--primary);">Free Androgen Index (FAI)
                                     <button class="info-toggle-btn" onclick="toggleInfo('calc-fai')"><i
                                             class="fa-solid fa-circle-info"></i> Info & Guide</button>
@@ -4058,629 +4058,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div id="calc-peg" class="calculator-view">
-                                                    <h3 style="margin-bottom: 20px; color: var(--primary);">Polyethylene
-                                                        Glycol (PEG) Recovery
-                                                        <button class="info-toggle-btn"
-                                                            onclick="toggleInfo('calc-peg')"><i
-                                                                class="fa-solid fa-circle-info"></i> Info &
-                                                            Guide</button>
-                                                    </h3>
-                                                    <div id="calc-peg-info" class="info-card">
-                                                        Distinguishes whether unexplained high hormone or enzyme levels
-                                                        (e.g.,
-                                                        Prolactin,
-                                                        Amylase, AST, CK, LDH) are due to true pathological excess or
-                                                        biologically
-                                                        inactive "macro-complexes". This avoids misdiagnosis and
-                                                        unnecessary clinical
-                                                        interventions; the assessment is based on the recovery rate
-                                                        following the
-                                                        Polyethylene Glycol (PEG) precipitation process.
-                                                    </div>
-                                                    <div class="calc-input-grid">
-
-                                                        <div class="input-group full-width">
-                                                            <div class="label-row"><label>Enzyme/Analyte activity after
-                                                                    PEG</label>
-                                                            </div>
-                                                            <input type="number" id="peg-after" oninput="calculatePEG()"
-                                                                placeholder="Activity after PEG">
-                                                        </div>
-                                                        <div class="input-group full-width">
-                                                            <div class="label-row"><label>Enzyme activity in untreated
-                                                                    serum</label>
-                                                            </div>
-                                                            <input type="number" id="peg-untreated"
-                                                                oninput="calculatePEG()"
-                                                                placeholder="Activity untreated">
-                                                        </div>
-                                                        <div id="res-peg-final" class="final-result-box"
-                                                            style="display: none; grid-column: span 2;">
-                                                        </div>
-                                                    </div>
-
-                                                    <div
-                                                        style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                                                        <h4
-                                                            style="font-size: 0.9rem; color: var(--primary); margin-bottom: 10px;">
-                                                            Clinical
-                                                            References
-                                                        </h4>
-                                                        <div
-                                                            style="font-size: 0.75rem; color: var(--text-light); line-height: 1.4; max-height: 300px; overflow-y: auto; padding-right: 5px;">
-                                                            <p><strong>1. Amylase Studies:</strong></p>
-                                                            <p>Wyness et al. (2011): They found the % recovery reference
-                                                                range for the
-                                                                PEG
-                                                                method in
-                                                                healthy individuals to be 38-78%, and for the
-                                                                ultrafiltration method to
-                                                                be
-                                                                86-113%
-                                                                (median 104). They also showed that these methods could
-                                                                detect 11 cases
-                                                                of
-                                                                macroamylase.
-                                                            </p>
-                                                            <p>Levitt et al. (1982): In their study on macroamylase
-                                                                samples, they
-                                                                determined
-                                                                a 48%
-                                                                recovery value as the "cut-off" (threshold) value for
-                                                                the PEG method.
-                                                            </p>
-                                                            <p>Lawson (2001): In a large-scale study on 454 individuals,
-                                                                he compared the
-                                                                PEG
-                                                                precipitation method with gel filtration chromatography
-                                                                and suggested
-                                                                43% as
-                                                                the
-                                                                threshold value.</p>
-
-                                                            <p style="margin-top: 10px;"><strong>2. AST
-                                                                    Studies:</strong></p>
-                                                            <p>Davidson et al. (2013): In a group of 40 people with high
-                                                                enzyme levels,
-                                                                they
-                                                                determined
-                                                                the % recovery reference range for AST using the PEG
-                                                                method to be
-                                                                47-82%.
-                                                            </p>
-                                                            <p>Wyness et al. (2011): In their study of 125 healthy
-                                                                individuals, they
-                                                                found
-                                                                reference
-                                                                ranges of 26-88% with the PEG method and 50-89% with the
-                                                                ultrafiltration
-                                                                method.</p>
-                                                            <p>Patteet et al. (2012): In their study on 31 individuals,
-                                                                they obtained
-                                                                the
-                                                                best result
-                                                                with 25% PEG 6000 concentration and found the reference
-                                                                range to be
-                                                                37.5-58%.</p>
-                                                            <p>Caropreso et al. (2009): They gave the threshold value
-                                                                for macroAST
-                                                                detection
-                                                                in the
-                                                                pediatric population as 26.7%.</p>
-
-                                                            <p style="margin-top: 10px;"><strong>3. Creatine Kinase (CK)
-                                                                    Studies:</strong>
-                                                            </p>
-                                                            <p>Wyness et al. (2011): They determined reference ranges of
-                                                                36-85% for the
-                                                                PEG
-                                                                method and
-                                                                43-73% for the ultrafiltration method.</p>
-                                                            <p>Davidson et al. (2013/2012): In one study, they found a
-                                                                range of 47-82%
-                                                                for
-                                                                the PEG
-                                                                method in a group with high enzyme levels, while in
-                                                                another study, they
-                                                                determined the
-                                                                lower limit as 53% in 255 patients without macroenzymes.
-                                                            </p>
-                                                            <p>Ciriza and Varo (2015): They recommended 25% PEG 6000 and
-                                                                10 minutes of
-                                                                centrifugation as
-                                                                the optimum method for macroCK detection.</p>
-
-                                                            <p style="margin-top: 10px;"><strong>4. LDH
-                                                                    Studies:</strong></p>
-                                                            <p>Wyness et al. (2011): They determined reference ranges of
-                                                                18-52% for LDH
-                                                                with
-                                                                the PEG
-                                                                method and 27-63% with ultrafiltration.</p>
-                                                            <p>Davidson et al. (2013): They found a range of 30-88% with
-                                                                the PEG method
-                                                                in
-                                                                patients with
-                                                                high enzyme values.</p>
-
-                                                            <p style="margin-top: 10px;"><strong>5. Prolactin
-                                                                    Studies:</strong></p>
-                                                            <p>Ae JC, Schlechte J. Hyperprolactinemia. Pituitary.
-                                                                11:141–6.</p>
-                                                            <p>A recovery rate of >60% indicates the presence of
-                                                                monomeric prolactin,
-                                                                while
-                                                                <40% indicates the presence of macroprolactinemia. For
-                                                                    values between 40-60%, clinical correlation is
-                                                                    recommended.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div id="calc-feurea" class="calculator-view">
-                                                    <h3 style="margin-bottom: 20px; color: var(--primary);">Fractional
-                                                        Excretion of Urea (FEUrea)
-                                                        <button class="info-toggle-btn"
-                                                            onclick="toggleInfo('calc-feurea')"><i
-                                                                class="fa-solid fa-circle-info"></i> Info &
-                                                            Guide</button>
-                                                    </h3>
-                                                    <div id="calc-feurea-info" class="info-card">
-                                                        FEUrea is used to distinguish between prerenal azotemia and
-                                                        acute
-                                                        tubular necrosis
-                                                        (ATN), particularly in patients taking diuretics where FENa
-                                                        results
-                                                        may be
-                                                        unreliable. A value < 35% strongly suggests prerenal causes.
-                                                            </div>
-                                                            <div class="calc-input-grid">
-                                                                <div class="input-group">
-                                                                    <div class="label-row"><label>Serum
-                                                                            Urea</label><span
-                                                                            class="unit-badge">mg/dL</span></div><input
-                                                                        type="number" id="feurea-su"
-                                                                        oninput="calculateFEUrea()">
-                                                                </div>
-                                                                <div class="input-group">
-                                                                    <div class="label-row"><label>Urine
-                                                                            Urea</label><span
-                                                                            class="unit-badge">mg/dL</span></div><input
-                                                                        type="number" id="feurea-uu"
-                                                                        oninput="calculateFEUrea()">
-                                                                </div>
-                                                                <div class="input-group">
-                                                                    <div class="label-row"><label>Serum
-                                                                            Creatinine</label><span
-                                                                            class="unit-badge">mg/dL</span></div><input
-                                                                        type="number" id="feurea-sc"
-                                                                        oninput="calculateFEUrea()">
-                                                                </div>
-                                                                <div class="input-group">
-                                                                    <div class="label-row"><label>Urine
-                                                                            Creatinine</label><span
-                                                                            class="unit-badge">mg/dL</span></div><input
-                                                                        type="number" id="feurea-uc"
-                                                                        oninput="calculateFEUrea()">
-                                                                </div>
-                                                                <div id="res-feurea-final" class="final-result-box"
-                                                                    style="grid-column: span 2;"></div>
-                                                            </div>
-                                                    </div>
-
-                                                    <div id="calc-feca" class="calculator-view">
-                                                        <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                            Fractional
-                                                            Excretion of Calcium (FECa)
-                                                            <button class="info-toggle-btn"
-                                                                onclick="toggleInfo('calc-feca')"><i
-                                                                    class="fa-solid fa-circle-info"></i> Info &
-                                                                Guide</button>
-                                                        </h3>
-                                                        <div id="calc-feca-info" class="info-card">
-                                                            FECa helps differentiate Familial Hypocalciuric
-                                                            Hypercalcemia
-                                                            (FHH) from primary
-                                                            hyperparathyroidism. A FECa < 0.01 is suggestive of FHH,
-                                                                while>
-                                                                0.02 suggests
-                                                                primary hyperparathyroidism.
-                                                        </div>
-                                                        <div class="calc-input-grid">
-                                                            <div class="input-group">
-                                                                <div class="label-row"><label>Serum Calcium</label><span
-                                                                        class="unit-badge">mg/dL</span></div><input
-                                                                    type="number" id="feca-sca"
-                                                                    oninput="calculateFECa()">
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <div class="label-row"><label>Urine Calcium</label><span
-                                                                        class="unit-badge">mg/dL</span></div><input
-                                                                    type="number" id="feca-uca"
-                                                                    oninput="calculateFECa()">
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <div class="label-row"><label>Serum
-                                                                        Creatinine</label><span
-                                                                        class="unit-badge">mg/dL</span></div><input
-                                                                    type="number" id="feca-sc"
-                                                                    oninput="calculateFECa()">
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <div class="label-row"><label>Urine
-                                                                        Creatinine</label><span
-                                                                        class="unit-badge">mg/dL</span></div><input
-                                                                    type="number" id="feca-uc"
-                                                                    oninput="calculateFECa()">
-                                                            </div>
-                                                            <div id="res-feca-final" class="final-result-box"
-                                                                style="grid-column: span 2;">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div id="calc-accr" class="calculator-view">
-                                                        <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                            Amylase-Creatinine Clearance Ratio (ACCR)
-                                                            <button class="info-toggle-btn"
-                                                                onclick="toggleInfo('calc-accr')"><i
-                                                                    class="fa-solid fa-circle-info"></i> Info &
-                                                                Guide</button>
-                                                        </h3>
-                                                        <div id="calc-accr-info" class="info-card">
-                                                            Used to differentiate macroamylasemia (clinically
-                                                            insignificant
-                                                            elevation) from
-                                                            acute pancreatitis. ACCR > 5% is characteristic of
-                                                            pancreatitis;
-                                                            values < 1% suggest macroamylasemia. </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Serum
-                                                                                Amylase</label><span
-                                                                                class="unit-badge">U/L</span></div>
-                                                                        <input type="number" id="accr-sa"
-                                                                            oninput="calculateACCR()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Urine
-                                                                                Amylase</label><span
-                                                                                class="unit-badge">U/L</span></div>
-                                                                        <input type="number" id="accr-ua"
-                                                                            oninput="calculateACCR()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Serum
-                                                                                Creatinine</label><span
-                                                                                class="unit-badge">mg/dL</span></div>
-                                                                        <input type="number" id="accr-sc"
-                                                                            oninput="calculateACCR()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Urine
-                                                                                Creatinine</label><span
-                                                                                class="unit-badge">mg/dL</span></div>
-                                                                        <input type="number" id="accr-uc"
-                                                                            oninput="calculateACCR()">
-                                                                    </div>
-                                                                    <div id="res-accr-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                        </div>
-
-                                                        <div id="calc-deritis" class="calculator-view">
-                                                            <h3 style="margin-bottom: 20px; color: var(--primary);">De
-                                                                Ritis
-                                                                Ratio (AST/ALT)
-                                                                <button class="info-toggle-btn"
-                                                                    onclick="toggleInfo('calc-deritis')"><i
-                                                                        class="fa-solid fa-circle-info"></i> Info &
-                                                                    Guide</button>
-                                                            </h3>
-                                                            <div id="calc-deritis-info" class="info-card">
-                                                                The ratio of AST to ALT can provide clues to the
-                                                                etiology of
-                                                                liver disease.
-                                                                A ratio > 2.0 suggests alcoholic liver disease, while a
-                                                                ratio < 1.0 is more common in NAFLD or chronic viral
-                                                                    hepatitis. </div>
-                                                                    <div class="calc-input-grid">
-                                                                        <div class="input-group">
-                                                                            <div class="label-row">
-                                                                                <label>AST</label><span
-                                                                                    class="unit-badge">U/L</span>
-                                                                            </div>
-                                                                            <input type="number" id="deritis-ast"
-                                                                                oninput="calculateDeRitis()">
-                                                                        </div>
-                                                                        <div class="input-group">
-                                                                            <div class="label-row">
-                                                                                <label>ALT</label><span
-                                                                                    class="unit-badge">U/L</span>
-                                                                            </div>
-                                                                            <input type="number" id="deritis-alt"
-                                                                                oninput="calculateDeRitis()">
-                                                                        </div>
-                                                                        <div id="res-deritis-final"
-                                                                            class="final-result-box"
-                                                                            style="grid-column: span 2;"></div>
-                                                                    </div>
-                                                            </div>
-
-                                                            <div id="calc-gpr" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Gamma-Glutamyl Transpeptidase to Platelet Ratio
-                                                                    (GPR)
-                                                                    Score
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-gpr')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-gpr-info" class="info-card">
-                                                                    A simple non-invasive marker for cirrhosis and
-                                                                    advanced
-                                                                    fibrosis in
-                                                                    patients with chronic Hepatitis B. Calculated as
-                                                                    (GGT /
-                                                                    ULN of GGT) /
-                                                                    Platelets.
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>GGT</label><span
-                                                                                class="unit-badge">U/L</span></div>
-                                                                        <input type="number" id="gpr-ggt"
-                                                                            oninput="calculateGPR()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>ULN of
-                                                                                GGT</label><span
-                                                                                class="unit-badge">U/L</span></div>
-                                                                        <input type="number" id="gpr-uln" value="60"
-                                                                            oninput="calculateGPR()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row">
-                                                                            <label>Platelets</label><span
-                                                                                class="unit-badge">10³/µL</span>
-                                                                        </div>
-                                                                        <input type="number" id="gpr-plt"
-                                                                            oninput="calculateGPR()">
-                                                                    </div>
-                                                                    <div id="res-gpr-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="calc-tyg" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Triglyceride-Glucose (TyG) Index
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-tyg')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-tyg-info" class="info-card">
-                                                                    A reliable surrogate marker for assessing insulin
-                                                                    resistance. It has
-                                                                    shown good correlation with the
-                                                                    hyperinsulinemic-euglycemic clamp
-                                                                    method.
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row">
-                                                                            <label>Triglyceride</label><span
-                                                                                class="unit-badge">mg/dL</span>
-                                                                        </div><input type="number" id="tyg-tg"
-                                                                            oninput="calculateTyG()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Fasting
-                                                                                Glucose</label><span
-                                                                                class="unit-badge">mg/dL</span></div>
-                                                                        <input type="number" id="tyg-glu"
-                                                                            oninput="calculateTyG()">
-                                                                    </div>
-                                                                    <div id="res-tyg-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="calc-srivastava" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Srivastava Index (MCH/MCV Ratio)
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-srivastava')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-srivastava-info" class="info-card">
-                                                                    A discrimination index used to differentiate between
-                                                                    iron deficiency
-                                                                    anemia and beta-thalassemia trait based on RBC
-                                                                    parameters.
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>MCV</label><span
-                                                                                class="unit-badge">fL</span></div><input
-                                                                            type="number" id="sriva-mcv"
-                                                                            oninput="calculateSrivastava()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>MCH</label><span
-                                                                                class="unit-badge">pg</span></div><input
-                                                                            type="number" id="sriva-mch"
-                                                                            oninput="calculateSrivastava()">
-                                                                    </div>
-                                                                    <div id="res-srivastava-final"
-                                                                        class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="calc-stfr-f" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Soluble Transferrin Receptor (sTfR)-Ferritin Index
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-stfr-f')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-stfr-f-info" class="info-card">
-                                                                    Useful for detecting iron deficiency in patients
-                                                                    with
-                                                                    concurrent
-                                                                    inflammation, where ferritin alone may be falsely
-                                                                    elevated as an
-                                                                    acute-phase reactant.
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>sTfR</label><span
-                                                                                class="unit-badge">mg/L</span></div>
-                                                                        <input type="number" id="stfr-val"
-                                                                            oninput="calculateStfrF()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row">
-                                                                            <label>Ferritin</label><span
-                                                                                class="unit-badge">µg/L</span>
-                                                                        </div>
-                                                                        <input type="number" id="stfr-fer"
-                                                                            oninput="calculateStfrF()">
-                                                                    </div>
-                                                                    <div id="res-stfr-f-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="calc-quicki" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Quantitative Insulin Sensitivity Check Index
-                                                                    (QUICKI)
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-quicki')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-quicki-info" class="info-card">
-                                                                    The Quantitative Insulin Sensitivity Check Index
-                                                                    (QUICKI) is a
-                                                                    mathematically derived index using fasting glucose
-                                                                    and
-                                                                    insulin levels to
-                                                                    estimate insulin sensitivity.
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Fasting
-                                                                                Insulin</label><span
-                                                                                class="unit-badge">µIU/mL</span></div>
-                                                                        <input type="number" id="quicki-ins"
-                                                                            oninput="calculateQUICKI()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Fasting
-                                                                                Glucose</label><span
-                                                                                class="unit-badge">mg/dL</span></div>
-                                                                        <input type="number" id="quicki-glu"
-                                                                            oninput="calculateQUICKI()">
-                                                                    </div>
-                                                                    <div id="res-quicki-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="calc-aip" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Atherogenic Index of Plasma (AIP)
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-aip')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-aip-info" class="info-card">
-                                                                    AIP is a strong marker for predicting cardiovascular
-                                                                    disease risk. It reflects the relationship between
-                                                                    protective and
-                                                                    atherogenic lipoproteins (log10 TG/HDL).
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row">
-                                                                            <label>Triglyceride</label><span
-                                                                                class="unit-badge">mg/dL</span>
-                                                                        </div><input type="number" id="aip-tg"
-                                                                            oninput="calculateAIP()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>HDL
-                                                                                Cholesterol</label><span
-                                                                                class="unit-badge">mg/dL</span></div>
-                                                                        <input type="number" id="aip-hdl"
-                                                                            oninput="calculateAIP()">
-                                                                    </div>
-                                                                    <div id="res-aip-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="calc-kfre" class="calculator-view">
-                                                                <h3 style="margin-bottom: 20px; color: var(--primary);">
-                                                                    Kidney Failure Risk Equation (KFRE)
-                                                                    <button class="info-toggle-btn"
-                                                                        onclick="toggleInfo('calc-kfre')"><i
-                                                                            class="fa-solid fa-circle-info"></i> Info &
-                                                                        Guide</button>
-                                                                </h3>
-                                                                <div id="calc-kfre-info" class="info-card">
-                                                                    Estimates the risk of a CKD patient progressing to
-                                                                    kidney failure
-                                                                    requiring dialysis or transplant within 2 and 5
-                                                                    years
-                                                                    (Tangri et al.,
-                                                                    4-variable equation).
-                                                                </div>
-                                                                <div class="calc-input-grid">
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Age</label></div>
-                                                                        <input type="number" id="kfre-age"
-                                                                            oninput="calculateKFRE()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>Sex</label></div>
-                                                                        <select id="kfre-sex" onchange="calculateKFRE()"
-                                                                            style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-main); font-size: 0.9rem;">
-                                                                            <option value="1">Male</option>
-                                                                            <option value="0">Female</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>eGFR</label><span
-                                                                                class="unit-badge">mL/min/1.73m²</span>
-                                                                        </div><input type="number" id="kfre-gfr"
-                                                                            oninput="calculateKFRE()">
-                                                                    </div>
-                                                                    <div class="input-group">
-                                                                        <div class="label-row"><label>ACR (Urine
-                                                                                Alb/Cr)</label><span
-                                                                                class="unit-badge">mg/g</span>
-                                                                        </div><input type="number" id="kfre-acr"
-                                                                            oninput="calculateKFRE()">
-                                                                    </div>
-                                                                    <div id="res-kfre-final" class="final-result-box"
-                                                                        style="grid-column: span 2;"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div id="tab-qc" class="section">
+                                                <div id="tab-qc" class="section">
                                                         <div class="info-box"
                                                             style="background: #eff6ff; border: 1px solid #dbeafe; border-left: 5px solid #3b82f6; color: #1e40af; margin-top: 10px; margin-bottom: 25px; padding: 20px; border-radius: 6px;">
                                                             <div
@@ -6400,19 +5778,19 @@
                                                                             style="background: white; padding: 10px; border-radius: 6px; margin-top: 10px;">
                                                                             <strong style="color: var(--primary);"><i
                                                                                     class="fa-solid fa-calculator"></i>
-                                                                                Formula:</strong> II = CVᵢ / CV₉
+                                                                                Formula:</strong> II = CVi / CVg
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="calc-input-grid">
                                                                         <div class="input-group">
-                                                                            <div class="label-row"><label>CVᵢ
+                                                                            <div class="label-row"><label>CVi
                                                                                     (Intra-individual)</label></div>
                                                                             <input type="number" id="ii-cvi" step="0.01"
                                                                                 oninput="calculateII()">
                                                                         </div>
                                                                         <div class="input-group">
-                                                                            <div class="label-row"><label>CV₉
+                                                                            <div class="label-row"><label>CVg
                                                                                     (Inter-individual)</label></div>
                                                                             <input type="number" id="ii-cvg" step="0.01"
                                                                                 oninput="calculateII()">
@@ -7983,15 +7361,16 @@
 
                                                 // --- 2. CALCULATOR LIST ---
                                                 const calculators = [
-                                                    { id: 'spot-urine', title: 'Spot Urine Analysis', icon: 'fa-vial', keywords: 'protein creatinine albumin amylase bun calcium chloride copper phosphorus potassium sodium' },
+                                                    { id: 'calc-spot-urine', title: 'Spot Urine Indices', icon: 'fa-flask', keywords: 'urine protein creatinine acr albumin random spot' },
                                                     { id: 'calc-dilution', title: 'Manual Dilution Planner', icon: 'fa-flask', keywords: 'serial dilution ratio factor pipetting' },
+                                                    { id: 'calc-serial-planner', title: 'Smart Dilution Planner', icon: 'fa-magic', keywords: 'serial dilution ratio stepwise titer' },
                                                     { id: 'calc-urine24', title: '24-Hour Urine Calculation', icon: 'fa-clock', keywords: 'volume clearance creatinine protein calcium copper collection' },
                                                     { id: 'calc-rcf', title: 'RCF ↔ RPM Converter', icon: 'fa-fan', keywords: 'centrifuge rcf rpm radius rotor' },
                                                     { id: 'calc-gfr', title: 'Glomerular Filtration Rate (GFR) Calculator', icon: 'fa-list-check', keywords: 'renal kidney creatinine cystatin ckd epi mdrd cockcroft' },
                                                     { id: 'calc-ldl', title: 'Low-Density Lipoprotein (LDL) Calculator', icon: 'fa-heart-pulse', keywords: 'lipid cholesterol hdl triglyceride friedewald martin sampson' },
                                                     { id: 'calc-homa', title: 'Homeostatic Model Assessment for Insulin Resistance (HOMA-IR)', icon: 'fa-chart-line', keywords: 'insulin glucose resistance metabolic diabetes pcos' },
                                                     { id: 'calc-schwartz', title: 'Schwartz Formula (Pediatric GFR)', icon: 'fa-baby', keywords: 'pediatric child kidney gfr height creatinine' },
-                                                    { id: 'fib4', title: 'Fibrosis-4 (FIB-4) Score', icon: 'fa-file-medical', keywords: 'liver fibrosis ast alt platelet age nafld' },
+                                                    { id: 'calc-fib4', title: 'FIB-4 Score (Liver Fibrosis)', icon: 'fa-file-medical', keywords: 'fibrosis liver ast alt platelet age hepatitis' },
                                                     { id: 'calc-corr-na', title: 'Corrected Sodium', icon: 'fa-vial', keywords: 'glucose hyperglycemia hyponatremia' },
                                                     { id: 'calc-calcium', title: 'Corrected Calcium', icon: 'fa-bone', keywords: 'albumin hypocalcemia' },
                                                     { id: 'calc-corr-mg', title: 'Corrected Magnesium', icon: 'fa-capsules', keywords: 'albumin hypomagnesemia' },
@@ -8014,13 +7393,7 @@
                                                     { id: 'calc-igg-index', title: 'Immunoglobulin G (IgG) Index', icon: 'fa-brain', keywords: 'csf albumin multiple sclerosis barrier' },
                                                     { id: 'calc-transferrin', title: 'Transferrin Saturation', icon: 'fa-dumbbell', keywords: 'iron tibc anemia hemochromatosis' },
                                                     { id: 'calc-ddimer', title: 'D-Dimer Universal Converter', icon: 'fa-vial-circle-check', keywords: 'coagulation thrombosis pe vte feu ddu fibrinogen' },
-                                                    {
-                                                        id: 'calc-lights',
-                                                        title: "Light's Criteria (Pleural Effusion)",
-                                                        icon: 'fa-lungs',
-                                                        category: 'fluids',
-                                                        keywords: 'pleural fluid effusion exudate transudate ldh protein'
-                                                    },
+                                                    { id: 'calc-lights', title: "Light's Criteria (Pleural Fluid)", icon: 'fa-wind', keywords: 'pleural fluid exudate transudate protein ldh' },
                                                     { id: 'calc-a1c', title: 'Hemoglobin A1c (HbA1c) Converter', icon: 'fa-cube', keywords: 'diabetes glucose hemoglobin ifcc ngsp' },
                                                     { id: 'calc-apri', title: 'AST to Platelet Ratio Index (APRI) Score', icon: 'fa-file-medical', keywords: 'liver fibrosis ast platelet cirrhosis' },
                                                     { id: 'calc-winters', title: 'Winters Formula (Metabolic Acidosis Compensation)', icon: 'fa-wind', keywords: 'acid base metabolic acidosis pco2 bicarbonate' },
@@ -8357,23 +7730,155 @@
                                                     }
                                                 }
 
-                                                function clearCurrentCalc() {
-                                                    const activeView = document.querySelector('.calculator-view[style*="display: block"], .calculator-view[style*="display:block"]');
+                                                function destroyChartSafely(ch) {
+                                                    try { if (ch && typeof ch.destroy === 'function') ch.destroy(); } catch (e) { }
+                                                }
+                                                function resetChartsIn(container) {
+                                                    // Destroy globally tracked charts (QC, LJ, Sigma)
+                                                    if (typeof window.qcChart !== 'undefined' && window.qcChart) { destroyChartSafely(window.qcChart); window.qcChart = null; }
+                                                    if (typeof window.ljChart !== 'undefined' && window.ljChart) { destroyChartSafely(window.ljChart); window.ljChart = null; }
+                                                    if (typeof window.sigmaChartInstance !== 'undefined' && window.sigmaChartInstance) { destroyChartSafely(window.sigmaChartInstance); window.sigmaChartInstance = null; }
+                                                    // Destroy any Chart.js instances bound to canvases inside container
+                                                    const canvases = (container || document).querySelectorAll('canvas');
+                                                    canvases.forEach(cv => {
+                                                        if (!cv) return;
+                                                        try {
+                                                            const inst = (window.Chart && Chart.getChart) ? Chart.getChart(cv) : (cv.__chartInstance || cv._chartInstance || null);
+                                                            if (inst) destroyChartSafely(inst);
+                                                            const ctx = cv.getContext && cv.getContext('2d');
+                                                            if (ctx) ctx.clearRect(0, 0, cv.width || cv.clientWidth || 0, cv.height || cv.clientHeight || 0);
+                                                        } catch (e) { }
+                                                    });
+                                                }
+                                                function clearResultPanelsIn(container) {
+                                                    if (!container) return;
+                                                    container.querySelectorAll('.mini-result, .result-text, .result-box, .qc-conclusion, .qc-summary').forEach(el => { if (el) el.innerHTML = ''; });
+                                                    container.querySelectorAll('.final-result-box, .final-result, .alert-box, .warning-text').forEach(el => { if (el) { el.innerHTML = ''; el.style.display = 'none'; } });
+                                                    const ljStats = container.querySelector('#lj-stats-display'); if (ljStats) { ljStats.innerHTML = ''; ljStats.style.display = 'none'; }
+                                                    const qcStats = container.querySelector('#qc-stats'); if (qcStats) { qcStats.innerHTML = ''; qcStats.style.display = 'none'; }
+                                                    const ljArea = container.querySelector('#lj-chart-area'); if (ljArea) ljArea.style.display = 'none';
+                                                    const sigmaRes = container.querySelector('#res-sigma-final'); if (sigmaRes) { sigmaRes.innerHTML = ''; sigmaRes.style.display = 'none'; }
+                                                }
+                                                function resetInputsIn(container) {
+                                                    if (!container) return;
+                                                    // Text-like inputs
+                                                    container.querySelectorAll('input[type="number"], input[type="text"], input[type="email"], input[type="tel"], input:not([type]), input[type=""]').forEach(el => {
+                                                        if (!el) return;
+                                                        const t = (el.getAttribute('type') || '').toLowerCase();
+                                                        if (t && (t === 'checkbox' || t === 'radio')) return;
+                                                        el.value = '';
+                                                        try { el.dispatchEvent(new Event('input', { bubbles: true })); } catch (e) {}
+                                                    });
+                                                    container.querySelectorAll('textarea').forEach(el => { el.value = ''; });
+                                                    container.querySelectorAll('select').forEach(sel => { sel.selectedIndex = 0; sel.dispatchEvent(new Event('change', { bubbles: true })); });
+                                                    container.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+                                                        const def = chk.hasAttribute('checked');
+                                                        chk.checked = def;
+                                                        chk.dispatchEvent(new Event('change', { bubbles: true }));
+                                                    });
+                                                    container.querySelectorAll('input[type="radio"]').forEach(r => {
+                                                        if (r.name) {
+                                                            const group = container.querySelector(`input[type="radio"][name="${r.name}"][checked]`);
+                                                            if (group) group.checked = true;
+                                                        }
+                                                    });
+                                                    // Dynamic lists/tables
+                                                    const ljTbody = container.querySelector('#lj-data-tbody'); if (ljTbody) ljTbody.innerHTML = '';
+                                                    const manualTbody = container.querySelector('#manual-data-tbody'); if (manualTbody) manualTbody.innerHTML = '';
+                                                }
+                                                function clearQCAll() {
+                                                    const qcRoot = document.getElementById('tab-qc');
+                                                    if (!qcRoot) return;
+                                                    // Find only the visible QC tool container
+                                                    const allViews = Array.from(qcRoot.querySelectorAll('.calculator-view'));
+                                                    let activeTool = null;
+                                                    for (const v of allViews) {
+                                                        const ds = v.style && v.style.display;
+                                                        const cs = (typeof window.getComputedStyle === 'function') ? getComputedStyle(v).display : '';
+                                                        if ((ds && ds.includes('block')) || cs === 'block') { activeTool = v; break; }
+                                                    }
+                                                    const target = activeTool || qcRoot;
+                                                    const toolId = activeTool ? activeTool.id : '';
+                                                    // Generic resets (scoped to the active tool only)
+                                                    resetInputsIn(target);
+                                                    clearResultPanelsIn(target);
+                                                    resetChartsIn(target);
+                                                    // Tool-specific extras
+                                                    switch (toolId) {
+                                                        case 'qc-lj':
+                                                            if (typeof window.ljData !== 'undefined') { window.ljData = []; if (typeof renderLJData === 'function') renderLJData(); }
+                                                            ['lj-mean','lj-sd','lj-val'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+                                                            const ljArea = document.getElementById('lj-chart-area'); if (ljArea) ljArea.style.display = 'none';
+                                                            const ljStats = document.getElementById('lj-stats-display'); if (ljStats) { ljStats.innerHTML=''; ljStats.style.display='none'; }
+                                                            // default to manual
+                                                            const ljManual = qcRoot.querySelector('input[name="lj-calc-mode"][value="manual"]');
+                                                            if (ljManual) { ljManual.checked = true; if (typeof toggleLJMode === 'function') toggleLJMode(); }
+                                                            break;
+                                                        case 'qc-pbrtqc':
+                                                            if (typeof window.pbrtqcData !== 'undefined') window.pbrtqcData = [];
+                                                            const mt = document.getElementById('manual-data-tbody'); if (mt) mt.innerHTML = '';
+                                                            const qcStats = document.getElementById('qc-stats'); if (qcStats) { qcStats.innerHTML=''; qcStats.style.display='none'; }
+                                                            const qcRes = document.getElementById('qc-result-area'); if (qcRes) qcRes.style.display='none';
+                                                            break;
+                                                        case 'qc-sigma':
+                                                            ['sigma_cv_pooled','sigma_cv1','sigma_cv2','sigma_bias','sigma_tea'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+                                                            const su = document.getElementById('sigma-upload-stats'); if (su) { su.innerHTML=''; su.style.display='none'; }
+                                                            const sr = document.getElementById('res-sigma-final'); if (sr) { sr.innerHTML=''; sr.style.display='none'; }
+                                                            break;
+                                                        case 'qc-ii':
+                                                            ['ii-cvi','ii-cvg'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+                                                            // Clear result boxes by id, without removing DOM
+                                                            const iiRes = document.getElementById('ii-result') || document.getElementById('res-ii');
+                                                            if (iiRes) { iiRes.style.display = 'none'; iiRes.innerHTML = ''; }
+                                                            const iiVal = document.getElementById('ii-value'); if (iiVal) iiVal.innerHTML = '';
+                                                            const iiInt = document.getElementById('ii-interpretation'); if (iiInt) iiInt.innerHTML = '';
+                                                            // Reset any potential globals
+                                                            if (typeof window.iiData !== 'undefined') window.iiData = [];
+                                                            if (typeof window.iiChart !== 'undefined' && window.iiChart) { destroyChartSafely(window.iiChart); window.iiChart = null; }
+                                                            break;
+                                                        default:
+                                                            // Other QC tools: generic reset already applied
+                                                            break;
+                                                    }
+                                                }
+                                                function clearCalcActive() {
+                                                    const activeView = document.querySelector('#calc-detail-view .calculator-view[style*="display: block"], #calc-detail-view .calculator-view[style*="display:block"]')
+                                                        || document.querySelector('.calculator-view[style*="display: block"], .calculator-view[style*="display:block"]');
                                                     if (!activeView) return;
-                                                    activeView.querySelectorAll('input[type="number"], input[type="text"]').forEach(el => { el.value = ''; });
-                                                    activeView.querySelectorAll('.mini-result').forEach(el => el.innerHTML = '');
-                                                    activeView.querySelectorAll('.final-result-box').forEach(el => { el.innerHTML = ''; el.style.display = 'none'; });
-                                                    // Reset filter and mini mode
+                                                    resetInputsIn(activeView);
+                                                    clearResultPanelsIn(activeView);
+                                                    resetChartsIn(activeView);
+                                                    // Tool-specific extras (scoped)
+                                                    const id = activeView.id || '';
+                                                    switch (id) {
+                                                        case 'calc-a1c':
+                                                            ['a1c-ngsp','a1c-ifcc'].forEach(fid => { const el = activeView.querySelector('#'+fid); if (el) el.value=''; });
+                                                            const eagBox = activeView.querySelector('#res-a1c-eag'); if (eagBox) { eagBox.innerHTML=''; eagBox.style.display='none'; }
+                                                            break;
+                                                        case 'calc-anion':
+                                                            ['ag-na','ag-cl','ag-hco3','ag-alb'].forEach(fid => { const el = activeView.querySelector('#'+fid); if (el) el.value=''; });
+                                                            const agRes = activeView.querySelector('#res-ag-final'); if (agRes) { agRes.innerHTML=''; agRes.style.display='none'; }
+                                                            break;
+                                                        case 'calc-osmo':
+                                                            ['osmo-na','osmo-glu','osmo-bun','osmo-etoh','osmo-measured'].forEach(fid => { const el = activeView.querySelector('#'+fid); if (el) el.value=''; });
+                                                            const osRes = activeView.querySelector('#res-osmo-final'); if (osRes) { osRes.innerHTML=''; osRes.style.display='none'; }
+                                                            break;
+                                                        default:
+                                                            // Generic calculators are covered by base resets
+                                                            break;
+                                                    }
                                                     const grid = activeView.querySelector('.calc-input-grid');
                                                     if (grid) {
                                                         grid.removeAttribute('data-mini');
                                                         grid.querySelectorAll('.input-group').forEach(ig => ig.style.display = '');
                                                         grid.querySelectorAll(':scope > div:not(.input-group):not(.final-result-box)').forEach(d => d.style.display = '');
                                                     }
-                                                    const miniBtn = activeView.querySelector('.mini-toggle-btn');
-                                                    if (miniBtn) miniBtn.classList.remove('active');
-                                                    // Brief visual feedback
-                                                    const btn = document.querySelector('[onclick="clearCurrentCalc()"]');
+                                                    const miniBtn = activeView.querySelector('.mini-toggle-btn'); if (miniBtn) miniBtn.classList.remove('active');
+                                                }
+                                                function clearAll() {
+                                                    const isQCDetail = (document.getElementById('qc-detail-view') && document.getElementById('qc-detail-view').style.display === 'block');
+                                                    if (isQCDetail) clearQCAll(); else clearCalcActive();
+                                                    const btn = document.querySelector('[onclick="clearCurrentCalc()"], [onclick="clearAll()"]');
                                                     if (btn) {
                                                         const orig = btn.innerHTML;
                                                         btn.innerHTML = '<i class="fa-solid fa-check"></i> Cleared!';
@@ -8381,6 +7886,7 @@
                                                         setTimeout(() => { btn.innerHTML = orig; btn.style.background = 'linear-gradient(135deg,#94a3b8,#64748b)'; }, 800);
                                                     }
                                                 }
+                                                function clearCurrentCalc() { clearAll(); }
 
                                                 // Auto-clear: when an input is emptied, clear its associated result
                                                 document.addEventListener('DOMContentLoaded', function () {
@@ -9581,49 +9087,42 @@
                                                     }
                                                 }
                                                 function calculateAnionGap() {
-                                                    const n = getNormalizedValue('ag-na', 'mEq/L'),
-                                                        c = getNormalizedValue('ag-cl', 'mEq/L'),
-                                                        h = getNormalizedValue('ag-hco3', 'mEq/L'),
-                                                        a = getNormalizedValue('ag-alb', 'g/dL');
-                                                    const resBox = document.getElementById('res-ag-final');
-
-                                                    if (!isNaN(n) && !isNaN(c) && !isNaN(h)) {
-                                                        const albVal = isNaN(a) ? 4.0 : a;
-                                                        const ag = (n - (c + h));
-                                                        const corrAg = ag + 2.5 * (4.0 - albVal);
-
-                                                        let interpretation = "";
-                                                        let color = "#1e293b";
-
-                                                        // Klinik Yorumlama (Düzeltilmiş AG üzerinden)
-                                                        if (corrAg > 12) {
-                                                            interpretation = "High Anion Gap Metabolic Acidosis (HAGMA): Consider GOLD MARK causes (Glycols, Oxoproline, L-lactate, D-lactate, Methanol, Aspirin, Renal failure, Ketoacidosis).";
-                                                            color = "#dc2626"; // Kırmızı
-                                                        } else if (corrAg >= 8 && corrAg <= 12) {
-                                                            interpretation = "Anion Gap is within the normal range (8–12 mEq/L).";
-                                                            color = "#16a34a"; // Yeşil
-                                                        } else {
-                                                            interpretation = "Low Anion Gap: Consider hypoalbuminemia, multiple myeloma, or lithium toxicity.";
-                                                            color = "#d97706"; // Turuncu
+                                                    try {
+                                                        const resBox = document.getElementById('res-ag-final');
+                                                        if (!resBox) { console.error('Anion Gap: res-ag-final bulunamadı'); return; }
+                                                        // Güvenli sayı okuyucu (virgül toleranslı)
+                                                        const readNum = (id) => {
+                                                            const el = document.getElementById(id);
+                                                            if (!el) return NaN;
+                                                            const raw = (el.value || '').toString().trim().replace(',', '.');
+                                                            const v = parseFloat(raw);
+                                                            return Number.isFinite(v) ? v : NaN;
+                                                        };
+                                                        const na = readNum('ag-na');
+                                                        const cl = readNum('ag-cl');
+                                                        const hco3 = readNum('ag-hco3');
+                                                        let alb = readNum('ag-alb');
+                                                        if (!Number.isFinite(na) || !Number.isFinite(cl) || !Number.isFinite(hco3)) {
+                                                            resBox.style.display = 'block';
+                                                            resBox.innerHTML = '<div style="padding:12px; border-left:4px solid #dc2626; background: rgba(220,38,38,0.08); border-radius:8px; color:#dc2626; font-weight:600;">Please enter the Sodium, Chlorine, and Bicarbonate components completely.</div>';
+                                                            return;
                                                         }
-
+                                                        if (!Number.isFinite(alb)) alb = 4.0;
+                                                        const ag = na - (cl + hco3);
+                                                        const corrAg = ag + 2.5 * (4.0 - alb);
+                                                        let interpretation = '';
+                                                        let color = '#1e293b';
+                                                        if (corrAg > 12) { interpretation = 'High Anion Gap Metabolic Acidosis (HAGMA): Consider GOLD MARK causes (Glycols, Oxoproline, L‑lactate, D‑lactate, Methanol, Aspirin, Renal failure, Ketoacidosis).'; color = '#dc2626'; }
+                                                        else if (corrAg >= 8 && corrAg <= 12) { interpretation = 'Anion Gap is within the normal range (8–12 mEq/L).'; color = '#16a34a'; }
+                                                        else { interpretation = 'Low Anion Gap: Consider hypoalbuminemia, multiple myeloma, or lithium toxicity.'; color = '#d97706'; }
                                                         resBox.style.display = 'block';
-                                                        resBox.innerHTML = `
-            <div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid ${color}; padding: 12px; border-radius: 8px; margin-top: 10px;">
-                <div style="font-size: 1.1rem; font-weight: bold; color: ${color};">AG: ${ag.toFixed(1)} | Corrected AG: ${corrAg.toFixed(1)} mEq/L</div>
-                <div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">${interpretation}</div>
-                
-                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; color: #64748b; line-height:1.4;">
-                    <strong>Calculation Method:</strong><br>
-                    1. Observed AG = Na - (Cl + HCO₃)<br>
-                    2. Corrected AG = Observed AG + [2.5 × (4.0 - Albumin)]<br>
-                    <span style="font-style: italic;">*Albumin correction is critical because albumin is the primary unmeasured anion; for every 1 g/dL drop in albumin, the "normal" AG drops by approximately 2.5 mEq/L.</span>
-                </div>
-            </div>
-        `;
-                                                    } else {
-                                                        resBox.innerHTML = '';
-                                                        resBox.style.display = 'none';
+                                                        resBox.innerHTML =
+                                                            '<div style="background: rgba(var(--primary-rgb), 0.05); border-left: 4px solid '+color+'; padding: 12px; border-radius: 8px; margin-top: 10px;">'
+                                                            + '<div style="font-size: 1.1rem; font-weight: bold; color: '+color+';">AG: '+ag.toFixed(1)+' | Corrected AG: '+corrAg.toFixed(1)+' mEq/L</div>'
+                                                            + '<div style="font-size: 0.85rem; margin-top: 4px; color: #334155; font-weight: 600;">'+interpretation+'</div>'
+                                                            + '</div>';
+                                                    } catch (e) {
+                                                        console.error('Anion Gap: beklenmeyen hata', e);
                                                     }
                                                 }
                                                 function calculateOsmo() {
@@ -10786,9 +10285,10 @@
                                                 }
 
                                                 function calculateZScore() {
-                                                    const obs = getNormalizedValue('zscore-obs', 'mg/dL');
-                                                    const mean = parseFloat(document.getElementById('zscore-mean').value);
-                                                    const sd = parseFloat(document.getElementById('zscore-sd').value);
+                                                    // Z-Score / SDI özelinde birim dönüşümü yok; doğrudan numerik değeri al
+                                                    const obs = parseFloat((document.getElementById('zscore-obs')?.value || '').toString().replace(',', '.'));
+                                                    const mean = parseFloat((document.getElementById('zscore-mean')?.value || '').toString().replace(',', '.'));
+                                                    const sd = parseFloat((document.getElementById('zscore-sd')?.value || '').toString().replace(',', '.'));
                                                     const res = document.getElementById('res-zscore-final');
 
                                                     if (!isNaN(obs) && !isNaN(mean) && !isNaN(sd) && sd > 0) {
@@ -14705,19 +14205,112 @@
                                                 }
 
                                                 function clearCurrentQC() {
-                                                    const visibleCard = Array.from(document.querySelectorAll('#qc-detail-view .calculator-view')).find(card => card.style.display === 'block');
-                                                    if (visibleCard) {
-                                                        visibleCard.querySelectorAll('input').forEach(inp => inp.value = '');
-                                                        visibleCard.querySelectorAll('.final-result-box').forEach(box => {
-                                                            box.innerHTML = '';
+                                                    const detailView = document.getElementById('qc-detail-view');
+                                                    if (!detailView) return;
+
+                                                    const visibleCard = Array.from(detailView.querySelectorAll('.calculator-view')).find(card => card && card.style.display === 'block');
+                                                    if (!visibleCard) return;
+
+                                                    // Reset all basic form controls within the active QC tool
+                                                    visibleCard.querySelectorAll('input').forEach(inp => {
+                                                        inp.value = '';
+                                                        // Clear validity state so oninput tetiklenince hesaplama normal çalışsın
+                                                        inp.setCustomValidity && inp.setCustomValidity('');
+                                                    });
+                                                    visibleCard.querySelectorAll('textarea').forEach(el => { el.value = ''; });
+                                                    visibleCard.querySelectorAll('select').forEach(sel => {
+                                                        sel.selectedIndex = 0;
+                                                        sel.dispatchEvent(new Event('change'));
+                                                    });
+
+                                                    // Clear upload status, logs and helper texts if present
+                                                    visibleCard.querySelectorAll('[id$="-upload-status"], .qc-log, .qc-helper-text, .qc-violation-list').forEach(el => {
+                                                        el.textContent = '';
+                                                    });
+
+                                                    // Clear all result/summary panels but keep them visible if tasarım böyleyse
+                                                    visibleCard.querySelectorAll('.mini-result, .result-text, .result-box, .qc-conclusion, .qc-summary').forEach(el => { el.innerHTML = ''; });
+                                                    visibleCard.querySelectorAll('.final-result-box, .final-result, .alert-box, .warning-text, .qc-result-panel').forEach(box => {
+                                                        box.innerHTML = '';
+                                                        // QC kartlarının çoğunda sonuç kutuları grid yapının parçası; gizlemek yerine boş bırakmak tekrar hesaplamayı ve layout'u bozmaz
+                                                        if (box.id !== 'ii-result' && box.id !== 'res-zscore-final') {
                                                             box.style.display = 'none';
-                                                        });
-                                                        // Reset specific displays if needed (like charts)
-                                                        const canvas = visibleCard.querySelector('canvas');
-                                                        if (canvas) {
-                                                            const ctx = canvas.getContext('2d');
+                                                        }
+                                                    });
+
+                                                    // Safely destroy and reset any global Chart.js instances used by QC tools
+                                                    try {
+                                                        if (typeof ljChart !== 'undefined' && ljChart && typeof ljChart.destroy === 'function') {
+                                                            ljChart.destroy();
+                                                            ljChart = null;
+                                                        }
+                                                    } catch (e) { console.warn('LJ chart clear error', e); }
+
+                                                    try {
+                                                        if (typeof qcChart !== 'undefined' && qcChart && typeof qcChart.destroy === 'function') {
+                                                            qcChart.destroy();
+                                                            qcChart = null;
+                                                        }
+                                                    } catch (e) { console.warn('PBRTQC chart clear error', e); }
+
+                                                    try {
+                                                        if (typeof sigmaChartInstance !== 'undefined' && sigmaChartInstance && typeof sigmaChartInstance.destroy === 'function') {
+                                                            sigmaChartInstance.destroy();
+                                                            sigmaChartInstance = null;
+                                                        }
+                                                    } catch (e) { console.warn('Sigma chart clear error', e); }
+
+                                                    try {
+                                                        if (typeof baChart !== 'undefined' && baChart && typeof baChart.destroy === 'function') {
+                                                            baChart.destroy();
+                                                            baChart = null;
+                                                        }
+                                                    } catch (e) { console.warn('Bland-Altman chart clear error', e); }
+
+                                                    try {
+                                                        if (typeof baChartDiff !== 'undefined' && baChartDiff && typeof baChartDiff.destroy === 'function') {
+                                                            baChartDiff.destroy();
+                                                            baChartDiff = null;
+                                                        }
+                                                    } catch (e) { console.warn('BA diff chart clear error', e); }
+
+                                                    try {
+                                                        if (typeof baChartCorr !== 'undefined' && baChartCorr && typeof baChartCorr.destroy === 'function') {
+                                                            baChartCorr.destroy();
+                                                            baChartCorr = null;
+                                                        }
+                                                    } catch (e) { console.warn('BA corr chart clear error', e); }
+
+                                                    try {
+                                                        if (typeof baCorrelationChart !== 'undefined' && baCorrelationChart && typeof baCorrelationChart.destroy === 'function') {
+                                                            baCorrelationChart.destroy();
+                                                            baCorrelationChart = null;
+                                                        }
+                                                    } catch (e) { console.warn('BA correlation chart clear error', e); }
+
+                                                    // Also clear any canvas directly inside the card (in case charts were not stored globally)
+                                                    visibleCard.querySelectorAll('canvas').forEach(canvas => {
+                                                        if (!canvas) return;
+                                                        const ctx = canvas.getContext && canvas.getContext('2d');
+                                                        if (ctx) {
                                                             ctx.clearRect(0, 0, canvas.width, canvas.height);
                                                         }
+                                                        const chartInstance = canvas.__chartInstance || canvas._chartInstance || null;
+                                                        if (chartInstance && typeof chartInstance.destroy === 'function') {
+                                                            chartInstance.destroy();
+                                                        }
+                                                    });
+
+                                                    // Brief visual feedback on the QC Clear All button (null-safe)
+                                                    const btn = detailView.querySelector('[onclick="clearCurrentQC()"]');
+                                                    if (btn) {
+                                                        const orig = btn.innerHTML;
+                                                        btn.innerHTML = '<i class="fa-solid fa-check"></i> Cleared!';
+                                                        btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+                                                        setTimeout(() => {
+                                                            btn.innerHTML = orig;
+                                                            btn.style.background = 'linear-gradient(135deg,#94a3b8,#64748b)';
+                                                        }, 800);
                                                     }
                                                 }
 
@@ -14817,26 +14410,45 @@
 
 
                                                 function calculateII() {
-                                                    const cvi = parseFloat(document.getElementById('ii-cvi').value);
-                                                    const cvg = parseFloat(document.getElementById('ii-cvg').value);
-
-                                                    const resultDiv = document.getElementById('ii-result');
-                                                    const valueDiv = document.getElementById('ii-value');
-                                                    const interpretDiv = document.getElementById('ii-interpretation');
-
-                                                    if (isNaN(cvi) || isNaN(cvg) || cvg === 0) {
+                                                    const cviEl = document.getElementById('ii-cvi');
+                                                    const cvgEl = document.getElementById('ii-cvg');
+                                                    // Find result container (supports both #ii-result and #res-ii)
+                                                    let resultDiv = document.getElementById('ii-result') || document.getElementById('res-ii');
+                                                    let valueDiv = document.getElementById('ii-value');
+                                                    let interpretDiv = document.getElementById('ii-interpretation');
+                                                    // If markup partially missing, create minimal structure under qc-ii
+                                                    if (!resultDiv) {
+                                                        const host = document.getElementById('qc-ii') || document.querySelector('#qc-ii .calc-input-grid') || document.body;
+                                                        resultDiv = document.createElement('div');
+                                                        resultDiv.className = 'final-result-box';
+                                                        resultDiv.id = 'ii-result';
+                                                        valueDiv = document.createElement('div'); valueDiv.id = 'ii-value';
+                                                        interpretDiv = document.createElement('div'); interpretDiv.id = 'ii-interpretation';
+                                                        resultDiv.appendChild(valueDiv); resultDiv.appendChild(interpretDiv);
+                                                        host.appendChild(resultDiv);
+                                                    }
+                                                    if (!valueDiv) { valueDiv = document.createElement('div'); valueDiv.id = 'ii-value'; resultDiv.appendChild(valueDiv); }
+                                                    if (!interpretDiv) { interpretDiv = document.createElement('div'); interpretDiv.id = 'ii-interpretation'; resultDiv.appendChild(interpretDiv); }
+                                                    if (!cviEl || !cvgEl) return;
+                                                    const parseNum = (v) => {
+                                                        if (v == null) return NaN;
+                                                        const s = v.toString().trim().replace(',', '.');
+                                                        const n = Number.parseFloat(s);
+                                                        return Number.isFinite(n) ? n : NaN;
+                                                    };
+                                                    const cvi = parseNum(cviEl.value);
+                                                    const cvg = parseNum(cvgEl.value);
+                                                    if (!Number.isFinite(cvi) || !Number.isFinite(cvg) || cvg === 0) {
                                                         resultDiv.style.display = 'none';
+                                                        valueDiv.innerHTML = '';
+                                                        interpretDiv.innerHTML = '';
                                                         return;
                                                     }
-
                                                     const ii = cvi / cvg;
-
                                                     valueDiv.innerHTML = `II = ${ii.toFixed(2)}`;
-
                                                     let interpretation = '';
                                                     let bgColor = '';
                                                     let textColor = '';
-
                                                     if (ii < 0.6) {
                                                         interpretation = '<i class="fa-solid fa-user"></i> <strong>High Individuality:</strong> Results should preferably be evaluated against the patient\'s own previous results (serial monitoring recommended).';
                                                         bgColor = 'rgba(59, 130, 246, 0.15)';
@@ -14850,11 +14462,10 @@
                                                         bgColor = 'rgba(245, 158, 11, 0.15)';
                                                         textColor = '#d97706';
                                                     }
-
                                                     interpretDiv.innerHTML = interpretation;
                                                     interpretDiv.style.backgroundColor = bgColor;
                                                     interpretDiv.style.color = textColor;
-
+                                                    // Ensure result box is visible
                                                     resultDiv.style.display = 'block';
                                                 }
 
@@ -15336,7 +14947,7 @@
                                                         'calc-fib4': 'FIB-4 = (Age × AST) / (Platelets × √ALT)',
                                                         'calc-corr-na': 'Corrected Na = Measured Na + 1.6 × [(Glucose − 100) / 100]',
                                                         'calc-calcium': 'Corrected Ca = Total Ca + 0.8 × (4.0 − Albumin)',
-                                                        'calc-corr-mg': 'Corrected Mg = Measured Mg + 0.005 × (4.0 − Albumin)',
+                                                        'calc-corr-mg': 'Corrected Mg = Measured Mg + 0.05 × (4.0 − Albumin)',
                                                         'calc-anion': 'AG = Na − (Cl + HCO₃) | Corrected AG = AG + 2.5 × (4.0 − Albumin)',
                                                         'calc-osmo': 'Osm = 2×Na + Glucose/18 + BUN/2.8 + EtOH/4.6',
                                                         'calc-fena': 'FENa (%) = (U_Na × S_Cr) / (S_Na × U_Cr) × 100',
@@ -15392,12 +15003,17 @@
                                                     function stripCalcMethodBlocks(container) {
                                                         var divs = container.querySelectorAll('div');
                                                         divs.forEach(function (d) {
-                                                            if (d.innerHTML && d.innerHTML.indexOf('Calculation Method') !== -1 && d.querySelector('strong')) {
-                                                                var strong = d.querySelector('strong');
-                                                                if (strong && strong.textContent.indexOf('Calculation Method') !== -1) {
-                                                                    d.remove();
+                                                            if (!d.innerHTML || d.innerHTML.indexOf('Calculation Method') === -1) return;
+                                                            var remove = false;
+                                                            var children = d.childNodes;
+                                                            for (var i = 0; i < children.length; i++) {
+                                                                var node = children[i];
+                                                                if (node.nodeType === 1 && node.tagName === 'STRONG' && node.textContent.indexOf('Calculation Method') !== -1) {
+                                                                    remove = true;
+                                                                    break;
                                                                 }
                                                             }
+                                                            if (remove) d.remove();
                                                         });
                                                     }
                                                     var resultObserver = new MutationObserver(function (mutations) {
