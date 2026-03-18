@@ -7617,6 +7617,17 @@
                                                         window.scrollTo({ top: 0, behavior: 'instant' });
                                                         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                                                         if (btn) btn.classList.add('active');
+                                                        const calcSearchWrap = (function () {
+                                                            const el = document.getElementById('calcSearchInput');
+                                                            return el && typeof el.closest === 'function' ? el.closest('.search-container') : null;
+                                                        })();
+                                                        if (calcSearchWrap) {
+                                                            if (tabId === 'tab-qc') {
+                                                                calcSearchWrap.style.display = 'none';
+                                                            } else if (tabId === 'tab-calc') {
+                                                                calcSearchWrap.style.display = 'block';
+                                                            }
+                                                        }
                                                         document.querySelectorAll('.section').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
                                                         const sections = Array.from(document.querySelectorAll(`[id="${tabId}"]`));
                                                         if (sections.length) {
